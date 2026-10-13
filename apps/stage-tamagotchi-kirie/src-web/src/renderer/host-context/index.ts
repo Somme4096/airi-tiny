@@ -1,5 +1,4 @@
 export { useHostAppQuit } from './app'
-export { useHostAuth } from './auth'
 export { useHostAutoUpdater } from './auto-updater'
 export { useHostChat } from './chat'
 export { openApplicationDataDirectory } from './desktop-services'

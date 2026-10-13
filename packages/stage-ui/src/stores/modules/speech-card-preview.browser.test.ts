@@ -1,6 +1,5 @@
 import en from '@proj-airi/i18n/locales/en'
 
-import { PiniaColada } from '@pinia/colada'
 import { MotionPlugin } from '@vueuse/motion'
 import { createPinia, disposePinia } from 'pinia'
 import { expect, it, vi } from 'vitest'
@@ -41,7 +40,7 @@ it.each(['completed', 'unmounted', 'replaced'])('isolates card preview responses
     }],
   })
   const app = createApp({ render: () => h(RouterView) })
-  app.use(pinia).use(PiniaColada).use(MotionPlugin).use(i18n).use(router).mount(container)
+  app.use(pinia).use(MotionPlugin).use(i18n).use(router).mount(container)
   try {
     await router.push('/')
     await router.isReady()

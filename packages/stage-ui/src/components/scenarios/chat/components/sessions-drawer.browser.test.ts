@@ -1,6 +1,5 @@
 import type { ChatSessionMeta } from '../../../../types/chat-session'
 
-import { PiniaColada } from '@pinia/colada'
 import { createPinia } from 'pinia'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-vue'
@@ -97,7 +96,7 @@ describe('sessions drawer orchestration', () => {
     const pinia = createSessionsPinia()
     const screen = await render(SessionsDrawer, {
       props: { modelValue: false },
-      global: { plugins: [pinia, PiniaColada, createTestI18n()] },
+      global: { plugins: [pinia, createTestI18n()] },
     })
     const chatSession = useChatSessionStore(pinia)
     chatSession.sessionMessages['session-a'] = [
@@ -137,7 +136,7 @@ describe('sessions drawer orchestration', () => {
     const pinia = createSessionsPinia()
     const screen = await render(SessionsDrawer, {
       props: { modelValue: false },
-      global: { plugins: [pinia, PiniaColada, createTestI18n()] },
+      global: { plugins: [pinia, createTestI18n()] },
     })
     const chatSession = useChatSessionStore(pinia)
     chatSession.sessionMetas['session-a'].createdAt = now - 7_200_000
@@ -164,7 +163,7 @@ describe('sessions drawer orchestration', () => {
     const screen = await render(SessionsDrawer, {
       props: { modelValue: false },
       global: {
-        plugins: [pinia, PiniaColada, createTestI18n()],
+        plugins: [pinia, createTestI18n()],
       },
     })
     const chatSession = useChatSessionStore(pinia)
@@ -204,7 +203,7 @@ describe('sessions drawer orchestration', () => {
     const screen = await render(SessionsDrawer, {
       props: { modelValue: false },
       global: {
-        plugins: [pinia, PiniaColada, createTestI18n()],
+        plugins: [pinia, createTestI18n()],
       },
     })
     const chatSession = useChatSessionStore(pinia)

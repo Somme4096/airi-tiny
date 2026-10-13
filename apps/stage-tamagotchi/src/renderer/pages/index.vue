@@ -12,7 +12,7 @@ import {
 } from '@proj-airi/electron-vueuse'
 import { useExpressionStore } from '@proj-airi/stage-ui-live2d/stores/expression-store'
 import { useModelStore, useThreeSceneIsTransparentAtPoint } from '@proj-airi/stage-ui-three'
-import { HearingStatus, HoloCoupon } from '@proj-airi/stage-ui/components'
+import { HearingStatus } from '@proj-airi/stage-ui/components'
 import {
   createEmptyModelSettingsRuntimeSnapshot,
   resolveComponentStateToRuntimePhase,
@@ -28,7 +28,6 @@ import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref, shallowRef, toRef, watch } from 'vue'
 import { toast } from 'vue-sonner'
 
-import AuthStatusIsland from '../components/stage-islands/auth-status-island.vue'
 import ControlsIslandRoot from '../components/stage-islands/controls-island/controls-island-root.vue'
 import ControlsIsland from '../components/stage-islands/controls-island/index.vue'
 import ResourceStatusIsland from '../components/stage-islands/resource-status-island/index.vue'
@@ -44,9 +43,7 @@ import { resolveFadeOnHoverInteraction } from '../utils/fade-on-hover'
 import { shouldSampleStageTransparency } from '../utils/stage-three-transparency'
 
 const hearingStatusElement = ref<HTMLElement>()
-const authStatusElement = ref<HTMLElement>()
 const { isOutside: outsideHearingStatus } = useElectronMouseInElement(hearingStatusElement)
-const { isOutside: outsideAuthStatus } = useElectronMouseInElement(authStatusElement)
 const controlsIslandRef = ref<InstanceType<typeof ControlsIsland>>()
 const controlsIslandInteractionActive = shallowRef(false)
 const widgetStageRef = ref<InstanceType<typeof WidgetStage>>()
@@ -300,7 +297,7 @@ function handleFadeOnHoverInteractionChange() {
     return
   }
 
-  if (controlsOverlayActive.value || !outsideHearingStatus.value || !outsideAuthStatus.value) {
+  if (controlsOverlayActive.value || !outsideHearingStatus.value) {
     // Portaled controls must receive clicks even outside the Island's bounds.
     isIgnoringMouseEvents.value = false
     shouldFadeOnCursorWithin.value = false
@@ -343,7 +340,7 @@ function handleFadeOnHoverInteractionChange() {
 }
 
 watch(
-  [outsideHearingStatus, outsideAuthStatus, isOutside, isOutsideFor250Ms, isPointerOverStageCanvas, isAroundWindowBorder, isAroundWindowBorderFor250Ms, isOutsideWindow, isTransparent, isTransparentForMouseEvents, controlsOverlayActive, fadeOnHoverEnabled, alwaysOnTop, stagePaused, isWayland],
+  [outsideHearingStatus, isOutside, isOutsideFor250Ms, isPointerOverStageCanvas, isAroundWindowBorder, isAroundWindowBorderFor250Ms, isOutsideWindow, isTransparent, isTransparentForMouseEvents, controlsOverlayActive, fadeOnHoverEnabled, alwaysOnTop, stagePaused, isWayland],
   handleFadeOnHoverInteractionChange,
   { immediate: true },
 )
@@ -404,9 +401,6 @@ const cursorPosition = computed(() => ({
     <div v-show="!settingsStore.streamerMode" ref="hearingStatusElement" :class="['absolute bottom-3 left-1/2 z-30 w-fit -translate-x-1/2']">
       <HearingStatus align="center" />
     </div>
-    <div v-show="!settingsStore.streamerMode" ref="authStatusElement" :class="['absolute left-1/2 top-3 z-40 w-fit -translate-x-1/2']">
-      <AuthStatusIsland />
-    </div>
     <!-- Stage is always in DOM so TresCanvas can measure dimensions -->
     <div
       :class="[
@@ -429,8 +423,7 @@ const cursorPosition = computed(() => ({
           so that the screen sampler does not read AIRI's own colors as desktop
           light. ResourceStatusIsland marks its pill itself, because its root
           spans the whole stage width. Tooltips and dialogs need none: reka-ui
-          portals them to the body and the mask finds them there. HoloCoupon
-          never renders (v-if="false").
+          portals them to the body and the mask finds them there.
         -->
         <ResourceStatusIsland />
         <WidgetStage
@@ -441,7 +434,6 @@ const cursorPosition = computed(() => ({
           :cursor-position="cursorPosition"
           :paused="stagePaused"
         />
-        <HoloCoupon />
         <ControlsIslandRoot :frozen="controlsIslandInteractionActive">
           <ControlsIsland
             ref="controlsIslandRef"

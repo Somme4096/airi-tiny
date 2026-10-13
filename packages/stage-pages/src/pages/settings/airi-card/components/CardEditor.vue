@@ -6,7 +6,6 @@ import type { VoiceInfo } from '@proj-airi/stage-ui/stores/providers/provider'
 import type { Ref } from 'vue'
 
 import { errorMessageFrom } from '@moeru/std'
-import { isCustomProvidersDisabled } from '@proj-airi/stage-shared'
 import { useAnalytics } from '@proj-airi/stage-ui/composables'
 import { DEFAULT_ARTISTRY_WIDGET_INSTRUCTION } from '@proj-airi/stage-ui/constants/prompts/artistry-instruction'
 import { applyAiriCardEditorModules, getAiriCardEditorModuleSettings, safeParseAiriCardDraft } from '@proj-airi/stage-ui/services/airi-card-editor'
@@ -229,12 +228,8 @@ const artistryProviderOptions = computed(() => {
   return withInheritGlobalSetting([
     { value: 'none', label: t('settings.pages.card.creation.none_disabled') },
     { value: 'comfyui', label: 'ComfyUI' },
-    ...(isCustomProvidersDisabled()
-      ? []
-      : [
-          { value: 'replicate', label: 'Replicate' },
-          { value: 'nanobanana', label: 'Nano Banana' },
-        ]),
+    { value: 'replicate', label: 'Replicate' },
+    { value: 'nanobanana', label: 'Nano Banana' },
   ], selectedArtistryProvider.value)
 })
 

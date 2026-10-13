@@ -1,6 +1,5 @@
 import en from '@proj-airi/i18n/locales/en'
 
-import { PiniaColada } from '@pinia/colada'
 import { useProviderConfigStore } from '@proj-airi/stage-ui/stores/providers/config'
 import { createPinia, disposePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -37,7 +36,7 @@ describe('speech provider configuration persistence', () => {
     await router.push('/')
     return await render(component, {
       global: {
-        plugins: [pinia, PiniaColada, router, createI18n({ legacy: false, locale: 'en', messages: { en } })],
+        plugins: [pinia, router, createI18n({ legacy: false, locale: 'en', messages: { en } })],
         directives: { motion: {} },
       },
     })
@@ -89,7 +88,6 @@ describe('speech provider configuration persistence', () => {
         definitionId: providerId,
         config: { apiKey: 'issue-2449-test-key', baseUrl: 'http://127.0.0.1:8080/v1/', model: 'qwen', voice: 'assistant' },
         status: 'unconfigured',
-        configuredBy: 'user',
       },
     }))
     const screen = await renderPage()

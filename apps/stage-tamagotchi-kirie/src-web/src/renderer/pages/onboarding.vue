@@ -1,30 +1,30 @@
 <script setup lang="ts">
-import { useHostAuth, useHostOnboarding } from '@proj-airi/stage-host-context'
+import { useHostOnboarding } from '@proj-airi/stage-host-context'
 import { OnboardingScreen, OnboardingStepAnalyticsNotice } from '@proj-airi/stage-ui/components'
 import { isAnalyticsAvailableInBuild } from '@proj-airi/stage-ui/libs/product-signals'
-import { useAuthStore } from '@proj-airi/stage-ui/stores/auth'
 import { useOnboardingStore } from '@proj-airi/stage-ui/stores/onboarding'
 import { useTheme } from '@proj-airi/ui'
-import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 
-import { useOnboardingAuthentication } from '../composables/use-onboarding-authentication'
-
-const authStore = useAuthStore()
-const { needsLogin, isAuthenticated } = storeToRefs(authStore)
 const onboardingStore = useOnboardingStore()
-const { closeRequestId } = storeToRefs(onboardingStore)
 const { isDark } = useTheme()
-const { startLogin } = useHostAuth()
 const { close: closeWindow } = useHostOnboarding()
-const { closeOnboardingWindow } = useOnboardingAuthentication({
-  closeRequestId,
-  closeWindow,
-  isAuthenticated,
-  needsLogin,
-  onCloseError: error => console.error('[Onboarding] Failed to close the onboarding window.', error),
-  startLogin,
-})
+let closing = false
+
+/** Closes the onboarding window one time. A failed close permits a retry. */
+async function closeOnboardingWindow(): Promise<void> {
+  if (closing)
+    return
+
+  closing = true
+  try {
+    await closeWindow()
+  }
+  catch (error) {
+    closing = false
+    console.error('[Onboarding] Failed to close the onboarding window.', error)
+  }
+}
 
 const bgClass = computed(() => isDark.value ? 'bg-[#0f0f0f]' : 'bg-white')
 const extraSteps = computed(() => {

@@ -226,9 +226,9 @@ describe('consciousness store provider selection', () => {
     store.activeProvider = 'cerebras'
     store.activeModel = 'gpt-oss-120b'
 
-    // The set-provider-then-set-model sequence used by auth provider sync and
-    // character cards must keep the newly assigned model.
-    store.activeProvider = 'official-provider'
+    // The set-provider-then-set-model sequence used by character cards must
+    // keep the newly assigned model.
+    store.activeProvider = 'openai-compatible'
     store.activeModel = 'auto'
 
     expect(store.activeModel).toBe('auto')
@@ -257,7 +257,7 @@ describe('consciousness store provider selection', () => {
   it('does not apply storage events as a second cross-window state channel', async () => {
     const store = useConsciousnessStore()
 
-    store.activeProvider = 'official-provider'
+    store.activeProvider = 'openai-compatible'
     store.activeModel = 'auto'
     await nextTick()
 

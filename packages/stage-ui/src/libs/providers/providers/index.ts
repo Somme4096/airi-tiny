@@ -9,14 +9,9 @@ import './sherpaw'
 import './local-audio'
 import './kokoro-local'
 import './nvidia'
-import './official'
 import './prompt-api'
 
 registerProviders(portableProviderDefinitions)
-
-export {
-  OFFICIAL_TRANSCRIPTION_PROVIDER_ID,
-} from './official'
 
 export {
   getDefinedProvider,

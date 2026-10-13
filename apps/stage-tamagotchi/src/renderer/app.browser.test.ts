@@ -8,7 +8,6 @@ import localforage from 'localforage'
 
 import { defineInvoke, defineInvokeHandler } from '@moeru/eventa'
 import { createContext as createMainContext } from '@moeru/eventa/adapters/electron/main'
-import { PiniaColada } from '@pinia/colada'
 import { electron } from '@proj-airi/electron-eventa'
 import { getElectronEventaContext, resetElectronEventaContextForTesting } from '@proj-airi/electron-vueuse'
 import { parseEvent, stringifyEvent } from '@proj-airi/server-sdk'
@@ -230,11 +229,9 @@ async function renderStage(routePath: string, search: string) {
     const leaderPinia = createPinia()
     const leaderSynced = setupSynced({ leadership: 'leader-only' })
     leaderPinia.use(leaderSynced.pinia)
-    let disposeLeaderChat: (() => void) | undefined
     const leaderApp = createApp(defineComponent({
       setup() {
-        const chat = useChatStore()
-        disposeLeaderChat = () => chat.dispose()
+        useChatStore()
         // Card actions run in this leader. Create their module stores during
         // setup so their i18n consumers retain a component context.
         useSpeechStore()
@@ -245,11 +242,9 @@ async function renderStage(routePath: string, search: string) {
     leaderApp.config.errorHandler = error => errors.push(error)
     leaderApp.use(leaderPinia)
       .use(leaderSynced.vue)
-      .use(PiniaColada)
       .use(createI18n({ legacy: false, locale: 'en', messages: { en: {} }, missingWarn: false, fallbackWarn: false }))
     disposeLeader = () => {
       leaderApp.unmount()
-      disposeLeaderChat?.()
       disposePinia(leaderPinia)
     }
     leaderApp.mount(document.createElement('div'))
@@ -296,7 +291,6 @@ async function renderStage(routePath: string, search: string) {
       plugins: [
         pinia,
         synced.vue,
-        PiniaColada,
         createI18n({ legacy: false, locale: 'en', messages: { en: {} }, missingWarn: false, fallbackWarn: false }),
         router,
       ],

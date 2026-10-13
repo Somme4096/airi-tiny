@@ -1,6 +1,5 @@
 import type { Pinia } from 'pinia'
 
-import { PiniaColada } from '@pinia/colada'
 import { createPinia } from 'pinia'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-vue'
@@ -63,7 +62,7 @@ async function mountSettings(pinia: Pinia, providerId = 'voicevox') {
       defaultText: 'こんにちは',
     },
     global: {
-      plugins: [pinia, PiniaColada, i18n, router],
+      plugins: [pinia, i18n, router],
       // The settings layout animates its header. The application installs the
       // motion plugin at its own entrypoint.
       directives: { motion: {} },

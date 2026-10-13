@@ -2,7 +2,6 @@ import type { ChatAttachment, ChatOrchestratorRuntimeState, ChatOrchestratorSend
 import type { GenerationProvider, GenerationRequest } from '@proj-airi/provider-inference'
 import type { WebSocketEventInputs } from '@proj-airi/server-sdk'
 import type { Message } from '@xsai/shared-chat'
-import type { SyncedPiniaRuntime } from 'pinia-plugin-synced'
 
 import type { ChatHistoryItem, ChatToolReference } from '../types/chat'
 import type { StoredVoiceInterruption } from '../types/chat-session'
@@ -18,27 +17,19 @@ import { defineStore, storeToRefs } from 'pinia'
 import { computed, shallowRef, toRaw } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { getConversationAnalyticsSurface } from '../composables'
 import { useAiriRuntimePrompt } from '../composables/use-airi-runtime-prompt'
 import { activeTurnSpan, startSpan } from '../composables/use-io-tracer'
 import { useChatVision } from '../composables/vision/use-chat-vision'
 import { useVisionInference } from '../composables/vision/use-vision-inference'
 import { chatAssetIdFrom, inlineConversationAssets, storeChatAttachments } from '../libs/chat-assets'
-import { extractMessageText, isCloudSyncableMessage } from '../libs/chat-sync'
-import { createChatAnalyticsHooks, getProviderMode } from '../libs/product-signals/events/chat'
-import {
-  AIRI_CHAT_APP_SURFACE_HEADER,
-  AIRI_CHAT_ROUND_ID_HEADER,
-  AIRI_CHAT_SESSION_ID_HEADER,
-} from '../libs/product-signals/headers'
+import { createChatAnalyticsHooks } from '../libs/product-signals/events/chat'
 import { getSpeechBusContext, voiceGenerationEnded } from '../services/speech/bus'
 import { createWakeWordTool } from '../tools/wake-words'
 import { useLLM } from './ai/chat-llm/llm'
 import { resolveLlmTools } from './ai/chat-llm/tool-resolver'
 import { useLlmToolsStore } from './ai/chat-llm/tools'
 import { useLlmToolsetPromptsStore } from './ai/chat-llm/toolset-prompts'
-import { useAuthStore } from './auth'
-import { createMinecraftContext, createRuntimePromptContext, createUserAccountContext } from './chat/context-providers'
+import { createMinecraftContext, createRuntimePromptContext } from './chat/context-providers'
 import { useChatContextStore } from './chat/context-store'
 import { describeChatImages, replaceToolResultImages } from './chat/image-projection'
 import { useChatSessionStore } from './chat/session-store'
@@ -219,7 +210,6 @@ const UNREADABLE_EARLIER_IMAGE = 'The user attached an image here earlier. The v
 export const useChatStore = defineStore('chat', () => {
   const { t } = useI18n()
   const runtimePrompt = useAiriRuntimePrompt()
-  const authStore = useAuthStore()
   const llmStore = useLLM()
   const llmToolsStore = useLlmToolsStore()
   const llmToolsetPromptsStore = useLlmToolsetPromptsStore()
@@ -253,35 +243,12 @@ export const useChatStore = defineStore('chat', () => {
    * Concurrent sessions each own one trace. `onSendSettled` ends the span of its own turn only.
    */
   const ownedTurnSpans = new Map<string, NonNullable<typeof activeTurnSpan.value>>()
-  let stopLeadershipListener: (() => void) | undefined
   const analyticsHooks = createChatAnalyticsHooks({
     getSessionMessages: sessionId => chatSession.getSessionMessages(sessionId),
   })
 
-  /**
-   * Initializes chat state and binds local consumers to synchronized leadership.
-   * A promoted renderer restarts the leader-owned cloud consumer.
-   */
-  async function initialize(syncedPinia: SyncedPiniaRuntime) {
-    stopLeadershipListener ??= syncedPinia.onLeadershipChange((isLeader) => {
-      if (!isLeader) {
-        chatSession.dispose()
-        return
-      }
-
-      void chatSession.ensureCurrentSession().catch((error) => {
-        console.error('[chat] Failed to start chat consumers after leader promotion:', error)
-      })
-    })
-
+  async function initialize() {
     await chatSession.initialize()
-  }
-
-  /** Stops chat consumers that belong to this window. */
-  function dispose() {
-    stopLeadershipListener?.()
-    stopLeadershipListener = undefined
-    chatSession.dispose()
   }
 
   /**
@@ -325,17 +292,6 @@ export const useChatStore = defineStore('chat', () => {
     let llmTextLength = 0
     let llmOutputChunkCount = 0
     const llmOutputChunkLengths: number[] = []
-    // Analytics correlation goes only to the official provider. A resolved step can change the provider, so each request rebuilds it.
-    function requestHeaders(providerId: string | undefined) {
-      const headers = { ...options?.headers }
-      if (getProviderMode(providerId ?? activeProvider.value) === 'official' && options?.requestCorrelation) {
-        headers[AIRI_CHAT_SESSION_ID_HEADER] = options.requestCorrelation.conversationId
-        headers[AIRI_CHAT_ROUND_ID_HEADER] = options.requestCorrelation.turnId
-        headers[AIRI_CHAT_APP_SURFACE_HEADER] = getConversationAnalyticsSurface()
-      }
-      return headers
-    }
-
     // The runtime always correlates its turns. A call without correlation has no settle event, so it starts no turn span.
     const turnKey = options?.requestCorrelation
       ? JSON.stringify([options.requestCorrelation.conversationId, options.requestCorrelation.turnId])
@@ -509,13 +465,7 @@ export const useChatStore = defineStore('chat', () => {
       await llmStore.stream(model, chatProvider, providerContext, {
         ...options,
         prepareStringContent: prepareTextOnlyAudioContext,
-        headers: requestHeaders(options?.providerId),
-        resolveStep: resolveStep
-          ? async () => {
-            const step = await resolveStep()
-            return { ...step, headers: requestHeaders(step.providerId) }
-          }
-          : undefined,
+        resolveStep,
         // Audio projection follows the model of each request. A tool step can switch between audio and text models.
         prepareConversation: async (conversation, target) => {
           if (conversation === providerContext && isInitialTarget(target))
@@ -620,15 +570,7 @@ export const useChatStore = defineStore('chat', () => {
     },
     context: {
       ingest: envelope => chatContext.ingestContextMessage(envelope),
-      snapshot: () => {
-        const snapshot = { ...chatContext.getContextsSnapshot() }
-        // Account data belongs to this request, not the persistent context registry.
-        // A signed-out request therefore cannot inherit the previous account snapshot.
-        const account = createUserAccountContext(authStore)
-        if (account)
-          snapshot[account.contextId] = [account]
-        return snapshot
-      },
+      snapshot: () => chatContext.getContextsSnapshot(),
     },
     foregroundStream: {
       patch: (message) => {
@@ -658,36 +600,6 @@ export const useChatStore = defineStore('chat', () => {
     ...analyticsHooks,
     onLifecycle: record => contextObservability.recordLifecycle(record),
     onPromptProjection: payload => contextObservability.capturePromptProjection(payload),
-    onUserMessageAppended: ({ sessionId, message, messageText, source, model, provider, roundId, turnIndex }) => {
-      analyticsHooks.onUserMessageAppended?.({
-        sessionId,
-        message,
-        messageText,
-        source,
-        model,
-        provider,
-        roundId,
-        turnIndex,
-      })
-      if (isCloudSyncableMessage(message)) {
-        void chatSession.pushMessageToCloud(sessionId, {
-          id: message.id,
-          role: 'user',
-          content: messageText,
-          replyToMessageId: message.replyToMessageId,
-        })
-      }
-    },
-    onAssistantMessageAppended: ({ sessionId, message, roundId }) => {
-      const source = chatSession.getSessionMessages(sessionId).find(message => message.role === 'user' && message.id === roundId)
-      if (source && isCloudSyncableMessage(source) && isCloudSyncableMessage(message) && message.id) {
-        void chatSession.pushMessageToCloud(sessionId, {
-          id: message.id,
-          role: 'assistant',
-          content: extractMessageText(message),
-        })
-      }
-    },
     onUserTurnReady: ({ sessionId, messageText, sessionMessages }) => {
       const autonomousTarget = sessionCard(sessionId)?.extensions?.airi?.modules?.artistry?.autonomousTarget || 'user'
       if (autonomousTarget === 'user')
@@ -1108,7 +1020,6 @@ export const useChatStore = defineStore('chat', () => {
     pendingQueuedSendCount,
 
     initialize,
-    dispose,
     cleanup,
     deleteSession,
     ingest,

@@ -425,14 +425,6 @@ flowchart LR
     Other[Telegram, Factorio, MCP, and others]
   end
 
-  subgraph Hosted[Hosted backend]
-    Edge[Caddy]
-    API[api-server]
-    Auth[auth-server]
-    Database[(PostgreSQL)]
-    Cache[(Redis)]
-  end
-
   Web --> StageUI
   Desktop --> StageUI
   Pocket --> StageUI
@@ -445,12 +437,6 @@ flowchart LR
   Discord --> SDK
   Minecraft --> SDK
   Other -. optional .-> SDK
-  Edge --> API
-  Edge --> Auth
-  API --> Database
-  API --> Cache
-  Auth --> Database
-  Auth --> Cache
 ```
 
 ## Projets similaires

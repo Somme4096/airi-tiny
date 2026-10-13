@@ -2,18 +2,6 @@
 
 Shared core for stage
 
-## Experimental features
-
-Register flags in `libs/feature-flags.ts`. Read their state through `useFeatureFlagsStore().isEnabled(key)`.
-Set `availability` to `local` or `cloud`. Local flags expose device switches without Cloud access.
-Cloud decides whether each granted Cloud flag allows account opt-in or uses direct control. Client registrations do not duplicate this mode.
-`cloud-opt-in` flags expose switches only after Cloud grants access to a verified account. They start disabled and retain choices per account on this device.
-`cloud-controlled` flags follow Cloud grants directly and never expose a switch.
-Missing Cloud grants disable Cloud features. Refresh failures and account changes clear grants, not local choices.
-`useCloudFetch()` in `composables/cloud.ts` shares the Cloud origin and authenticated fetch boundary. The store reads `GET /v1/feature-flags`.
-Set `VITE_CLOUD_URL` for a custom Cloud origin. Deploy its migration and API before the client.
-Keep authorization checks on the server.
-
 ## Message times
 
 Chat history shows a centered timestamp before the first dated message and after five minutes without a message.
@@ -68,7 +56,7 @@ A recording is sent only when its control asks for it with `finish` and `send: t
 While a control records or dictates, the host publishes the microphone level on `voiceInputLevel`.
 Native audio requires declared model support and Chat Completions. Other models transcribe the recording with the configured Hearing provider.
 Each model request makes this decision again. A tool step that changes the model also changes the audio projection.
-Local history keeps the audio and cached transcription. Audio turns remain local because cloud text records cannot preserve their media.
+Local history keeps the audio and cached transcription.
 
 ### Hearing input mode
 
@@ -153,7 +141,7 @@ Choose a provider and model in **Settings → Modules → Vision** and enable
 the selected chat model replies. This flow runs when the chat provider does not
 report image input for the selected model. Most providers do not report it.
 Local history keeps the images. Provider prompts replace images with descriptions,
-including images from earlier turns and retries. Cloud history currently stores only message text.
+including images from earlier turns and retries.
 A failed read of an image in the current turn fails the send. The leader keeps a
 failed read of an earlier image in memory for its session and vision selection,
 so later turns do not read that image again.
@@ -176,10 +164,8 @@ The card store owns three distinct states:
 - Each card stores explicit overrides. An empty string means inherit.
 - Module stores expose the resolved runtime selections used by the application.
 
-Use `configureForAuthentication` for login and logout. It updates global
-defaults, then reapplies the active card without saving defaults into that card.
 Use card commands for activation and explicit edits. Settings pages must not
-save cards from watchers: authentication and remote snapshots also trigger them.
+save cards from watchers, because remote snapshots also trigger them.
 The synchronization leader owns these commands; followers receive snapshots.
 
 Models inherit only within the same provider. Voices also require the same
@@ -278,13 +264,12 @@ activity, microphone amplitude, the last transcript, and device or provider
 errors.
 
 `StatusCapsule` owns the capsule surface and expandable details. Its indicator
-slot receives business content: Hearing owns the audio bars, while sign-in owns
-its waiting and result icons. The shell has no request or microphone state. Its details
+slot receives business content: Hearing owns the audio bars. The shell has no request or microphone state. Its details
 stay inside its layout bounds so Electron can include them in mouse hit testing.
 `HearingStatus` uses the details slot to match chat error cards without adding
 microphone failures to chat history.
 The component supports reduced motion. Desktop users can enable Streamer mode in
-General settings to hide these overlays without stopping microphone input or sign-in.
+General settings to hide these overlays without stopping microphone input.
 Streamer mode is off by default.
 
 ## Chat stickers
@@ -310,7 +295,6 @@ Replacement creates a new image ID. Chat slices retain the ID selected when thei
 Deleted entries retain their images. Archived images use storage until the application's site data is cleared.
 Web Locks serialize edits across renderer windows. BroadcastChannel signals refresh the local snapshots without transferring image bytes.
 The toggle and frequency follow existing same-origin storage events. Reset restores these preferences without clearing the library.
-Cloud chat sync transfers text only. Neither imported images nor sticker slices transfer to another device.
 Runtime generation does not require an image service or image-generation model.
 
 ### Bundled artwork

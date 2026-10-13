@@ -1,6 +1,5 @@
 import type { SyncedPiniaRuntime } from 'pinia-plugin-synced'
 
-import { PiniaColada } from '@pinia/colada'
 import { createPinia, disposePinia, setActivePinia } from 'pinia'
 import { createSyncedPiniaPlugin } from 'pinia-plugin-synced'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -24,7 +23,7 @@ function createContext(runtime?: SyncedPiniaRuntime) {
     runtimes.push(runtime)
     pinia.use(runtime.plugin)
   }
-  createApp({}).use(pinia).use(PiniaColada)
+  createApp({}).use(pinia)
   setActivePinia(pinia)
   piniaInstances.push(pinia)
   return { pinia, cards: useAiriCardStore(pinia), consciousness: useConsciousnessStore(pinia) }

@@ -26,21 +26,6 @@ vi.mock('@moeru/eventa', async importOriginal => ({
   defineInvoke: () => vi.fn(),
 }))
 
-// The card store reads the account refs to synchronize cards. Without an account the user is `local`.
-vi.mock('@proj-airi/stage-ui/stores/auth', async () => {
-  const { ref } = await import('vue')
-  const auth = {
-    credits: ref(0),
-    isAuthenticated: ref(false),
-    needsLogin: ref(false),
-    user: ref(null),
-    userId: ref('local'),
-    onAuthenticated: () => () => {},
-    onLogout: () => () => {},
-  }
-  return { useAuthStore: () => auth }
-})
-
 function mountControlsIsland() {
   const pinia = createPinia()
   const dock = ref('bottom-right' as const)

@@ -2,7 +2,6 @@ import type { LeadershipMode } from 'pinia-plugin-synced'
 
 import en from '@proj-airi/i18n/locales/en'
 
-import { PiniaColada } from '@pinia/colada'
 import { createPinia, disposePinia } from 'pinia'
 import { createSyncedPiniaPlugin } from 'pinia-plugin-synced'
 import { afterEach, expect, it, vi } from 'vitest'
@@ -47,7 +46,6 @@ function mountMaintenance(namespace: string, leadership: LeadershipMode) {
   })
   app.provide(injectKeyPiniaSynced, runtime)
     .use(pinia)
-    .use(PiniaColada)
     .use(createI18n({ legacy: false, locale: 'en', messages: { en } }))
     .mount(document.createElement('div'))
   cleanups.push(() => {

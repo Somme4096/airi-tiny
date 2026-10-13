@@ -64,7 +64,6 @@ jobs:
               "scope/game-playing-ai",
               "scope/i18n",
               "scope/providers",
-              "scope/server-api",
               "scope/ui"
             ];
             const params = { ...context.repo, issue_number: itemNumber };

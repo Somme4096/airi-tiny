@@ -1,6 +1,5 @@
 import en from '@proj-airi/i18n/locales/en'
 
-import { PiniaColada } from '@pinia/colada'
 import { useSpeechStore } from '@proj-airi/stage-ui/stores/modules/speech'
 import { useProviderConfigStore } from '@proj-airi/stage-ui/stores/providers/config'
 import { createPinia, disposePinia } from 'pinia'
@@ -37,7 +36,6 @@ function storeConfiguredProvider(config: Record<string, unknown>) {
       definitionId: providerId,
       config,
       status: 'configured',
-      configuredBy: 'user',
     },
   }))
 }
@@ -58,7 +56,7 @@ async function renderPage(store: ReturnType<typeof createPinia>) {
   await router.push('/')
   return await render(MinimaxSpeechPage, {
     global: {
-      plugins: [store, PiniaColada, router, createI18n({ legacy: false, locale: 'en', messages: { en } })],
+      plugins: [store, router, createI18n({ legacy: false, locale: 'en', messages: { en } })],
       directives: { motion: {} },
     },
   })

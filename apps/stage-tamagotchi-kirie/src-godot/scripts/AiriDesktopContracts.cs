@@ -24,13 +24,6 @@ internal sealed record NoticePendingPayload(
     string? Type,
     Dictionary<string, JsonElement>? Payload);
 internal sealed record NoticeActionPayload(string Id, string Action);
-internal sealed record AuthTokensPayload(
-    string AccessToken,
-    string? RefreshToken,
-    string? IdToken,
-    int ExpiresIn);
-internal sealed record AuthErrorPayload(string Error);
-internal sealed record AuthConfigurationPayload(string ClientId, string ServerUrl);
 internal sealed record DesktopDisplayBoundsPayload(int X, int Y, int Width, int Height);
 internal sealed record DesktopDisplaySnapshotPayload(
     DesktopDisplayBoundsPayload Bounds,
@@ -92,21 +85,6 @@ internal static class AiriDesktopEvents
 
     public static readonly InvokeEventDefinition<EmptyPayload, NoticePagePayload> NoticePageUnmounted =
         new("eventa:invoke:page-unmounted:electron:windows:notice");
-
-    public static readonly InvokeEventDefinition<EmptyPayload, EmptyPayload> AuthStartLogin =
-        new("eventa:invoke:electron:auth:start-login");
-
-    public static readonly EventDefinition<AuthTokensPayload> AuthCallback =
-        new("eventa:event:electron:auth:callback");
-
-    public static readonly EventDefinition<AuthErrorPayload> AuthCallbackError =
-        new("eventa:event:electron:auth:callback-error");
-
-    public static readonly InvokeEventDefinition<EmptyPayload, EmptyPayload> AuthLogout =
-        new("eventa:invoke:electron:auth:logout");
-
-    public static readonly InvokeEventDefinition<EmptyPayload, AuthConfigurationPayload> AuthConfigure =
-        new("eventa:invoke:airi:auth:configure");
 
     public static readonly InvokeEventDefinition<DesktopDisplaySnapshotPayload, EmptyPayload> GetCurrentDisplaySnapshot =
         new("eventa:invoke:airi:desktop:current-display:get");
@@ -217,24 +195,6 @@ internal static class AiriDesktopContracts
                 AiriDesktopJsonContext.Default.EmptyPayload,
                 AiriDesktopJsonContext.Default.NoticePagePayload)
             .RegisterInvoke(
-                AiriDesktopEvents.AuthStartLogin,
-                AiriDesktopJsonContext.Default.EmptyPayload,
-                AiriDesktopJsonContext.Default.EmptyPayload)
-            .RegisterEvent(
-                AiriDesktopEvents.AuthCallback,
-                AiriDesktopJsonContext.Default.AuthTokensPayload)
-            .RegisterEvent(
-                AiriDesktopEvents.AuthCallbackError,
-                AiriDesktopJsonContext.Default.AuthErrorPayload)
-            .RegisterInvoke(
-                AiriDesktopEvents.AuthLogout,
-                AiriDesktopJsonContext.Default.EmptyPayload,
-                AiriDesktopJsonContext.Default.EmptyPayload)
-            .RegisterInvoke(
-                AiriDesktopEvents.AuthConfigure,
-                AiriDesktopJsonContext.Default.EmptyPayload,
-                AiriDesktopJsonContext.Default.AuthConfigurationPayload)
-            .RegisterInvoke(
                 AiriDesktopEvents.GetCurrentDisplaySnapshot,
                 AiriDesktopJsonContext.Default.DesktopDisplaySnapshotPayload,
                 AiriDesktopJsonContext.Default.EmptyPayload)
@@ -295,9 +255,6 @@ internal static class AiriDesktopContracts
 [JsonSerializable(typeof(NoticePagePayload))]
 [JsonSerializable(typeof(NoticePendingPayload))]
 [JsonSerializable(typeof(NoticeActionPayload))]
-[JsonSerializable(typeof(AuthTokensPayload))]
-[JsonSerializable(typeof(AuthErrorPayload))]
-[JsonSerializable(typeof(AuthConfigurationPayload))]
 [JsonSerializable(typeof(DesktopDisplayBoundsPayload))]
 [JsonSerializable(typeof(DesktopDisplaySnapshotPayload))]
 [JsonSerializable(typeof(MicrophonePermissionStatePayload))]

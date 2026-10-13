@@ -1,5 +1,8 @@
+import type { Plugin } from 'vue'
+
 import en from '@proj-airi/i18n/locales/en'
 
+import { setupSynced } from '@proj-airi/stage-ui/libs/pinia'
 import { useProviderConfigStore } from '@proj-airi/stage-ui/stores/providers/config'
 import { createPinia, disposePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -27,7 +30,7 @@ describe('speech provider configuration persistence', () => {
     }))
   })
 
-  async function renderPage(component = OpenAICompatibleSpeechPage) {
+  async function renderPage(component = OpenAICompatibleSpeechPage, options: { plugins?: Plugin[], errorHandler?: (error: unknown) => void } = {}) {
     await page.viewport(1100, 1100)
     const router = createRouter({
       history: createMemoryHistory(),
@@ -36,8 +39,9 @@ describe('speech provider configuration persistence', () => {
     await router.push('/')
     return await render(component, {
       global: {
-        plugins: [pinia, router, createI18n({ legacy: false, locale: 'en', messages: { en } })],
+        plugins: [pinia, router, createI18n({ legacy: false, locale: 'en', messages: { en } }), ...options.plugins ?? []],
         directives: { motion: {} },
+        config: { errorHandler: options.errorHandler },
       },
     })
   }
@@ -116,5 +120,27 @@ describe('speech provider configuration persistence', () => {
         return undefined
       return JSON.parse(stored)['comet-api-speech']?.config?.apiKey
     }, { timeout: 2000 }).toBe('issue-2449-comet-key')
+  })
+
+  // ROOT CAUSE:
+  //
+  // The page and its settings component both initialize a missing provider.
+  // The second `ensureProvider` call returned the stored reactive proxy.
+  // The synchronization plugin cannot clone a proxy, so a mount hook rejected.
+  // Without the plugin, the failure does not occur.
+  it('initializes a new provider with the synchronization plugin installed', async () => {
+    const synced = setupSynced({ leadership: 'leader-only' })
+    pinia.use(synced.pinia)
+    const errors: unknown[] = []
+    const screen = await renderPage(OpenAICompatibleSpeechPage, {
+      plugins: [synced.vue],
+      errorHandler: error => errors.push(error),
+    })
+
+    const testVoice = screen.getByRole('button', { name: 'Test Voice', exact: true })
+    await page.getByPlaceholder('sk-...').fill('first-visit-test-key')
+    await expect.element(testVoice, { timeout: 3000 }).toBeEnabled()
+    expect(errors).toEqual([])
+    expect(useProviderConfigStore(pinia).getProviderConfig(providerId)?.apiKey).toBe('first-visit-test-key')
   })
 })

@@ -1,6 +1,6 @@
 import type { createContext } from '@moeru/eventa/adapters/electron/main'
 import type { ResizeDirection } from '@proj-airi/electron-eventa'
-import type { BrowserWindow, BrowserWindowConstructorOptions, Rectangle } from 'electron'
+import type { BrowserWindow, BrowserWindowConstructorOptions, Rectangle, WebPreferences } from 'electron'
 
 import type { I18n } from '../../libs/i18n'
 import type { ServerChannel } from '../../services/airi/channel-server'
@@ -36,6 +36,26 @@ export function transparentWindowConfig(): BrowserWindowConstructorOptions {
     transparent: true,
     hasShadow: false,
   }
+}
+
+/**
+ * Returns the web preferences that let a renderer call any provider server.
+ *
+ * Use when:
+ * - The window sends requests to provider servers that the user configures
+ *
+ * Expects:
+ * - The window loads only AIRI-controlled renderer content
+ * - The caller also installs {@link protectPrivilegedWindowNavigation}
+ */
+export function providerRequestWebPreferences(): WebPreferences {
+  // NOTICE:
+  // This setting disables the same-origin policy for the window.
+  // A self-hosted provider server often rejects the CORS preflight request.
+  // The renderer then blocks the request, although the server accepts it.
+  // Source: https://www.electronjs.org/docs/latest/api/structures/web-preferences
+  // Remove this setting when the main process sends the provider requests.
+  return { webSecurity: false }
 }
 
 /**

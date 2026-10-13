@@ -28,7 +28,7 @@ import {
 import { baseUrl, getElectronMainDirname, load, withHashRoute } from '../../libs/electron/location'
 import { createConfig } from '../../libs/electron/persistence'
 import { createReusableWindow } from '../../libs/electron/window-manager'
-import { protectPrivilegedWindowNavigation } from '../shared'
+import { protectPrivilegedWindowNavigation, providerRequestWebPreferences } from '../shared'
 import { setupFloatingChatWindow } from './floating'
 import { createChatModeSwitch } from './mode-switch'
 import { setupChatWindowElectronInvokes } from './rpc/index.electron'
@@ -160,6 +160,7 @@ export function setupChatWindowManager(params: {
       webPreferences: {
         preload: join(getElectronMainDirname(), '../preload/index.mjs'),
         sandbox: false,
+        ...providerRequestWebPreferences(),
       },
     })
 

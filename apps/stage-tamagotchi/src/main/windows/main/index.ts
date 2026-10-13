@@ -34,7 +34,7 @@ import { electronStartDraggingWindow } from '../../../shared/eventa'
 import { onAppBeforeQuit } from '../../libs/bootkit/lifecycle'
 import { baseUrl, getElectronMainDirname, load, withHashRoute } from '../../libs/electron/location'
 import { createConfig } from '../../libs/electron/persistence'
-import { protectPrivilegedWindowNavigation, setWindowAlwaysOnTop, transparentWindowConfig } from '../shared'
+import { protectPrivilegedWindowNavigation, providerRequestWebPreferences, setWindowAlwaysOnTop, transparentWindowConfig } from '../shared'
 import { setupMainWindowElectronInvokes } from './rpc/index.electron'
 
 const appConfigSchema = object({
@@ -92,6 +92,7 @@ export async function setupMainWindow(params: {
     webPreferences: {
       preload: join(dirname(fileURLToPath(import.meta.url)), '../preload/index.mjs'),
       sandbox: false,
+      ...providerRequestWebPreferences(),
     },
     // Thanks to [@HeartArmy](https://github.com/HeartArmy) for the tip implementation.
     //

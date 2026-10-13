@@ -242,7 +242,6 @@ Capable of
   - [x] Play [Factorio](https://www.factorio.com) (WIP, but [PoC and demo available](https://github.com/moeru-ai/airi-factorio))
   - [x] Play [Kerbal Space Program](https://www.kerbalspaceprogram.com/) (announcement TBD)
   - [ ] Co-play [Helldivers 2](https://www.playstation.com/en-hk/games/helldivers-2/pc/) (WIP)
-  - [x] Chat in [Telegram](https://telegram.org)
   - [x] Chat in [Discord](https://discord.com)
   - [x] Pure in-browser database support (DuckDB WASM | `pglite`)
   - [ ] Pure in-browser local (WebGPU) inference
@@ -420,7 +419,7 @@ flowchart LR
   subgraph Integrations[Source-configured integrations]
     Discord[discord-bot]
     Minecraft[minecraft-bot]
-    Other[Telegram, Factorio, MCP, and others]
+    Other[Factorio, MCP, and others]
   end
 
   Web --> StageUI

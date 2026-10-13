@@ -239,7 +239,6 @@
   - [x] 玩 [Factorio](https://www.factorio.com)（进行中，但已提供 [PoC 和 demo](https://github.com/moeru-ai/airi-factorio)）
   - [x] 玩 [Kerbal Space Program](https://www.kerbalspaceprogram.com/)（公告待定）
   - [ ] 协作玩 [Helldivers 2](https://www.playstation.com/en-hk/games/helldivers-2/pc/)（进行中）
-  - [x] 在 [Telegram](https://telegram.org) 聊天
   - [x] 在 [Discord](https://discord.com) 聊天
   - [x] 纯浏览器内数据库支持（DuckDB WASM | `pglite`）
   - [ ] 纯浏览器的本地推理（基于 WebGPU）
@@ -428,7 +427,7 @@ flowchart LR
   subgraph Integrations[Source-configured integrations]
     Discord[discord-bot]
     Minecraft[minecraft-bot]
-    Other[Telegram, Factorio, MCP, and others]
+    Other[Factorio, MCP, and others]
   end
 
   Web --> StageUI

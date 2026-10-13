@@ -240,7 +240,6 @@
   - [x] [Factorio](https://www.factorio.com) 플레이 (진행 중, [PoC 및 데모 제공](https://github.com/moeru-ai/airi-factorio))
   - [x] [Kerbal Space Program](https://www.kerbalspaceprogram.com/) 플레이 (공지 예정)
   - [ ] [Helldivers 2](https://www.playstation.com/en-hk/games/helldivers-2/pc/) 함께 플레이 (진행 중)
-  - [x] [Telegram](https://telegram.org)에서 채팅
   - [x] [Discord](https://discord.com)에서 채팅
   - [x] 순수 브라우저 내 데이터베이스 지원 (DuckDB WASM | `pglite`)
   - [ ] 순수 브라우저 내 로컬 (WebGPU) 추론
@@ -416,7 +415,7 @@ flowchart LR
   subgraph Integrations[Source-configured integrations]
     Discord[discord-bot]
     Minecraft[minecraft-bot]
-    Other[Telegram, Factorio, MCP, and others]
+    Other[Factorio, MCP, and others]
   end
 
   Web --> StageUI

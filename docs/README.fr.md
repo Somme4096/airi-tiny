@@ -240,7 +240,6 @@ Capacités :
   - [x] Jouer à [Factorio](https://www.factorio.com) (WIP, mais [PoC et démo disponibles](https://github.com/moeru-ai/airi-factorio))
   - [x] Jouer à [Kerbal Space Program](https://www.kerbalspaceprogram.com/) (annonce à venir)
   - [ ] Jouer en coopération à [Helldivers 2](https://www.playstation.com/en-hk/games/helldivers-2/pc/) (WIP)
-  - [x] Chat sur [Telegram](https://telegram.org)
   - [x] Chat sur [Discord](https://discord.com)
   - [x] Support base de données purement navigateur (DuckDB WASM | `pglite`)
   - [ ] Inférence locale pure en navigateur (WebGPU)
@@ -420,7 +419,7 @@ flowchart LR
   subgraph Integrations[Source-configured integrations]
     Discord[discord-bot]
     Minecraft[minecraft-bot]
-    Other[Telegram, Factorio, MCP, and others]
+    Other[Factorio, MCP, and others]
   end
 
   Web --> StageUI

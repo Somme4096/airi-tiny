@@ -19,7 +19,7 @@ export interface Discord {
 export interface PluginIdentity {
   /**
    * Stable plugin identifier (shared across instances).
-   * Example: "telegram-bot", "stage-tamagotchi".
+   * Example: "discord-bot", "stage-tamagotchi".
    */
   id: string
   /**
@@ -29,7 +29,7 @@ export interface PluginIdentity {
   version?: string
   /**
    * Optional labels attached to the extension manifest.
-   * Example: { env: "prod", app: "telegram", devtools: "true" }.
+   * Example: { env: "prod", app: "discord", devtools: "true" }.
    */
   labels?: Record<string, string>
 }
@@ -37,7 +37,7 @@ export interface PluginIdentity {
 export interface ModuleIdentity {
   /**
    * Unique module instance id for this module run (per process/deployment).
-   * Example: "telegram-01", "stage-ui-2f7c9".
+   * Example: "discord-01", "stage-ui-2f7c9".
    */
   id: string
   /**
@@ -50,7 +50,7 @@ export interface ModuleIdentity {
   plugin: PluginIdentity
   /**
    * K8s-style labels for routing and policy selectors.
-   * Example: { env: "prod", app: "telegram", devtools: "true" }.
+   * Example: { env: "prod", app: "discord", devtools: "true" }.
    */
   labels?: Record<string, string>
 }

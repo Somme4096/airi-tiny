@@ -240,7 +240,6 @@
   - [x] [Factorio](https://www.factorio.com)をプレイ（進行中ですが、[PoCとデモが利用可能](https://github.com/moeru-ai/airi-factorio)）
   - [x] [Kerbal Space Program](https://www.kerbalspaceprogram.com/)をプレイ（発表予定）
   - [ ] [Helldivers 2](https://www.playstation.com/en-hk/games/helldivers-2/pc/)を一緒にプレイ（進行中）
-  - [x] [Telegram](https://telegram.org)でチャット
   - [x] [Discord](https://discord.com)でチャット
   - [x] ブラウザ内データベースサポート（DuckDB WASM | `pglite`）
   - [ ] ブラウザ内ローカル（WebGPU）推論
@@ -420,7 +419,7 @@ flowchart LR
   subgraph Integrations[Source-configured integrations]
     Discord[discord-bot]
     Minecraft[minecraft-bot]
-    Other[Telegram, Factorio, MCP, and others]
+    Other[Factorio, MCP, and others]
   end
 
   Web --> StageUI

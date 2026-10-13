@@ -240,7 +240,6 @@
   - [x] Играть в [Factorio](https://www.factorio.com) (WIP, но [PoC и демо доступны](https://github.com/moeru-ai/airi-factorio))
   - [x] Играть в [Kerbal Space Program](https://www.kerbalspaceprogram.com/) (анонс будет позже)
   - [ ] Совместно играть в [Helldivers 2](https://www.playstation.com/en-hk/games/helldivers-2/pc/) (WIP)
-  - [x] Общаться в [Telegram](https://telegram.org)
   - [x] Общаться в [Discord](https://discord.com)
   - [x] Полная поддержка базы данных в браузере (DuckDB WASM | `pglite`)
   - [ ] Полностью локальный вывод в браузере (WebGPU)
@@ -420,7 +419,7 @@ flowchart LR
   subgraph Integrations[Source-configured integrations]
     Discord[discord-bot]
     Minecraft[minecraft-bot]
-    Other[Telegram, Factorio, MCP, and others]
+    Other[Factorio, MCP, and others]
   end
 
   Web --> StageUI

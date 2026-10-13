@@ -56,7 +56,6 @@
     "@vueuse/core": "catalog:",
     "@vueuse/shared": "catalog:",
     "@xsai-ext/providers": "catalog:",
-    "@xsai-transformers/embed": "catalog:",
     "@xsai/generate-speech": "catalog:",
     "@xsai/generate-text": "catalog:",
     "@xsai/model": "catalog:",

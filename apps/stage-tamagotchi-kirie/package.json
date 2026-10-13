@@ -69,7 +69,6 @@
     "@xsai-apple-speech/transcription-electron-plugin": "catalog:",
     "@xsai-apple-speech/transcription-native": "catalog:",
     "@xsai-ext/providers": "catalog:",
-    "@xsai-transformers/embed": "catalog:",
     "@xsai-transformers/transcription": "catalog:",
     "@xsai/generate-speech": "catalog:",
     "@xsai/generate-text": "catalog:",

@@ -91,7 +91,6 @@
     "@xsai-apple-vision/vision-electron-plugin": "catalog:",
     "@xsai-apple-vision/vision-native": "catalog:",
     "@xsai-ext/providers": "catalog:",
-    "@xsai-transformers/embed": "catalog:",
     "@xsai-transformers/transcription": "catalog:",
     "@xsai/generate-speech": "catalog:",
     "@xsai/generate-text": "catalog:",

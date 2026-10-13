@@ -61,11 +61,7 @@ export const useProviderConfigStore = defineStore('provider-config', () => {
     return providers.value[providerId]?.config
   }
 
-  function ensureProvider(providerId: string, definitionId: string, config: Record<string, unknown> = {}) {
-    const current = providers.value[providerId]
-    if (current)
-      return current
-
+  function createProvider(providerId: string, definitionId: string, config: Record<string, unknown>) {
     const definition = getDefinedProvider(definitionId)
     if (!definition)
       throw new Error(`Provider definition with id "${definitionId}" not found.`)
@@ -78,6 +74,18 @@ export const useProviderConfigStore = defineStore('provider-config', () => {
     }
     providers.value[providerId] = provider
     return provider
+  }
+
+  /**
+   * Creates the provider if it does not exist.
+   *
+   * This action returns nothing. The synchronization plugin clones each action
+   * result with `structuredClone`, and a stored provider is a reactive proxy
+   * that cannot be cloned. Read the provider with `getProvider` after the call.
+   */
+  function ensureProvider(providerId: string, definitionId: string, config: Record<string, unknown> = {}) {
+    if (!providers.value[providerId])
+      createProvider(providerId, definitionId, config)
   }
 
   function markProviderAdded(providerId: string) {
@@ -152,7 +160,7 @@ export const useProviderConfigStore = defineStore('provider-config', () => {
   }
 
   async function addProvider(definitionId: string, initialConfig: Record<string, unknown> = {}) {
-    const provider = ensureProvider(nanoid(), definitionId, initialConfig)
+    const provider = createProvider(nanoid(), definitionId, initialConfig)
     markProviderAdded(provider.id)
     return provider
   }

@@ -43,6 +43,7 @@ Use pnpm workspace filters to limit a command to one workspace. Replace `<packag
 - Typecheck one workspace: `pnpm -F <package name> typecheck`. For stage-tamagotchi, this command runs `tsc` and `vue-tsc`.
 - Test one file: `pnpm exec vitest run <path>`.
 - Test one workspace: `pnpm -F <package name> exec vitest run`.
+- On Node 25 or later, set `NODE_OPTIONS=--no-experimental-webstorage` before you run Vitest. Without it, jsdom tests have no `localStorage`.
 - Test all projects: `pnpm test:run`. If Vitest finds no tests, examine the `include` patterns in `vitest.config.ts`.
 - Lint: `pnpm lint`. ESLint also does the formatting. To fix lint and format errors, run `pnpm lint:fix`.
 - Build one workspace: `pnpm -F <package name> build`. For stage-tamagotchi, this command runs the typecheck and `electron-vite build`.

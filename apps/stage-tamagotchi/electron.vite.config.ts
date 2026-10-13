@@ -130,8 +130,6 @@ export default defineConfig({
       exclude: [
         // Internal Packages
         '@proj-airi/stage-ui/*',
-        '@proj-airi/drizzle-duckdb-wasm',
-        '@proj-airi/drizzle-duckdb-wasm/*',
         '@proj-airi/electron-screen-capture',
 
         // Static Assets: Models, Images, etc.

@@ -240,7 +240,6 @@
   - [x] 玩 [Kerbal Space Program](https://www.kerbalspaceprogram.com/)（公告待定）
   - [ ] 协作玩 [Helldivers 2](https://www.playstation.com/en-hk/games/helldivers-2/pc/)（进行中）
   - [x] 在 [Discord](https://discord.com) 聊天
-  - [x] 纯浏览器内数据库支持（DuckDB WASM | `pglite`）
   - [ ] 纯浏览器的本地推理（基于 WebGPU）
 - [x] 耳朵
   - [x] 浏览器音频输入
@@ -392,8 +391,6 @@ npx bumpp --no-commit --no-tag
 - [`hfup`](https://github.com/moeru-ai/hfup)：帮助部署与打包到 HuggingFace Spaces 的工具
 - [`xsai-transformers`](https://github.com/moeru-ai/xsai-transformers)：面向 [xsAI](https://github.com/moeru-ai/xsai) 的实验性 [🤗 Transformers.js](https://github.com/huggingface/transformers.js) provider
 - [WebAI: Realtime Voice Chat](https://github.com/proj-airi/webai-realtime-voice-chat)：从零实现 ChatGPT 实时语音（VAD + STT + LLM + TTS）的完整示例
-- [`@proj-airi/drizzle-duckdb-wasm`](https://github.com/moeru-ai/airi/tree/main/packages/drizzle-duckdb-wasm/README.md)：DuckDB WASM 的 Drizzle ORM 驱动
-- [`@proj-airi/duckdb-wasm`](https://github.com/moeru-ai/airi/tree/main/packages/duckdb-wasm/README.md)：好用的 `@duckdb/duckdb-wasm` 封装
 - [AIRI Factorio](https://github.com/moeru-ai/airi-factorio): 让 AIRI 玩 Factorio
 - [Factorio RCON API](https://github.com/nekomeowww/factorio-rcon-api): Factorio 无头服务器控制台的 RESTful API 封装
 - [`autorio`](https://github.com/moeru-ai/airi-factorio/tree/main/packages/autorio): Factorio 自动化库

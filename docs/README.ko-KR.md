@@ -241,7 +241,6 @@
   - [x] [Kerbal Space Program](https://www.kerbalspaceprogram.com/) 플레이 (공지 예정)
   - [ ] [Helldivers 2](https://www.playstation.com/en-hk/games/helldivers-2/pc/) 함께 플레이 (진행 중)
   - [x] [Discord](https://discord.com)에서 채팅
-  - [x] 순수 브라우저 내 데이터베이스 지원 (DuckDB WASM | `pglite`)
   - [ ] 순수 브라우저 내 로컬 (WebGPU) 추론
 - [x] 귀
   - [x] 브라우저에서 음성 입력
@@ -379,8 +378,6 @@ npx bumpp --no-commit --no-tag
 - [`hfup`](https://github.com/moeru-ai/hfup): HuggingFace Spaces로의 배포 및 번들링을 지원하는 도구
 - [`xsai-transformers`](https://github.com/moeru-ai/xsai-transformers): [xsAI](https://github.com/moeru-ai/xsai)용 실험적 [Transformers.js](https://github.com/huggingface/transformers.js) 프로바이더
 - [WebAI: Realtime Voice Chat](https://github.com/proj-airi/webai-realtime-voice-chat): VAD + STT + LLM + TTS로 ChatGPT 실시간 음성을 처음부터 구현한 완전한 예제
-- [`@proj-airi/drizzle-duckdb-wasm`](https://github.com/moeru-ai/airi/tree/main/packages/drizzle-duckdb-wasm/README.md): DuckDB WASM용 Drizzle ORM 드라이버
-- [`@proj-airi/duckdb-wasm`](https://github.com/moeru-ai/airi/tree/main/packages/duckdb-wasm/README.md): 사용하기 쉬운 `@duckdb/duckdb-wasm` 래퍼
 - [AIRI Factorio](https://github.com/moeru-ai/airi-factorio): AIRI가 Factorio를 플레이할 수 있게 하는 프로젝트
 - [AIRI DomeKeeper](https://github.com/proj-airi/game-playing-ai-dome-keeper): AIRI가 DomeKeeper를 플레이할 수 있게 하는 프로젝트
 - [Factorio RCON API](https://github.com/nekomeowww/factorio-rcon-api): Factorio 헤드리스 서버 콘솔용 RESTful API 래퍼

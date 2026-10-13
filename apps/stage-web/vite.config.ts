@@ -47,8 +47,6 @@ export default defineConfig({
     exclude: [
       // Internal Packages
       '@proj-airi/stage-ui/*',
-      '@proj-airi/drizzle-duckdb-wasm',
-      '@proj-airi/drizzle-duckdb-wasm/*',
 
       // Static Assets: Models, Images, etc.
       'public/assets/*',
@@ -227,8 +225,7 @@ export default defineConfig({
           },
           workbox: {
             maximumFileSizeToCacheInBytes: 64 * 1024 * 1024,
-            // The WebAssembly files are over 80% of the build (DuckDB alone ships
-            // three variants and a browser loads one). Precaching them downloads
+            // The WebAssembly files are most of the build. Precaching them downloads
             // them all at install, so they are cached on first use instead.
             globIgnores: ['**/*.wasm'],
             runtimeCaching: [
@@ -315,9 +312,6 @@ export default defineConfig({
     // dist/assets/ort-wasm-simd-threaded.jsep-B0T3yYHD.wasm                21,596.01 kB │ gzip: 5,121.95 kB
     // dist/assets/XiaolaiSC-Regular-SNWuh554.ttf                           22,183.94 kB
     // dist/assets/cjkFonts_allseto_v1.11-ByBdljxl.ttf                      31,337.14 kB
-    // dist/assets/duckdb-coi-CSr8FQO4.wasm                                 32,320.49 kB │ gzip: 7,194.65 kB
-    // dist/assets/duckdb-eh-BJOC5S4x.wasm                                  32,604.02 kB │ gzip: 7,133.37 kB
-    // dist/assets/duckdb-mvp-8HYqhb4i.wasm                                 37,345.64 kB │ gzip: 8,099.69 kB
     //
     // they are too large to be able to put into deployments like Cloudflare Workers or Pages,
     // we need to upload them to external storage and use renderBuiltUrl to rewrite their URLs.

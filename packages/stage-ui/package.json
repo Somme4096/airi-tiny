@@ -87,7 +87,6 @@
     "@proj-airi/chromatic": "catalog:",
     "@proj-airi/core-agent": "workspace:^",
     "@proj-airi/core-character": "workspace:^",
-    "@proj-airi/drizzle-duckdb-wasm": "catalog:",
     "@proj-airi/font-chillroundm": "workspace:^",
     "@proj-airi/font-cjkfonts-allseto": "workspace:^",
     "@proj-airi/font-xiaolai": "workspace:^",

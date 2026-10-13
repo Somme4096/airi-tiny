@@ -188,7 +188,6 @@ catalog:
   '@pixiv/three-vrm-core': ^3.5.5
   '@pnpm/find-workspace-dir': ^1000.1.5
   '@proj-airi/chromatic': ^1.1.4
-  '@proj-airi/drizzle-duckdb-wasm': ^0.6.0
   '@proj-airi/iconify-meteocons': ^0.1.5
   '@proj-airi/lobe-icons': ^1.0.19
   '@proj-airi/unocss-preset-chromatic': ^1.1.4
@@ -452,10 +451,6 @@ allowBuilds:
   '@anthropic-ai/claude-code': true
   '@ax-llm/ax': false
   '@discordjs/opus': true
-  '@ffmpeg-installer/darwin-arm64': set this to true or false
-  '@ffmpeg-installer/darwin-x64': set this to true or false
-  '@ffmpeg-installer/linux-arm64': set this to true or false
-  '@ffmpeg-installer/linux-x64': set this to true or false
   '@napi-rs/image': true
   '@parcel/watcher': true
   '@prisma/client': false
@@ -466,7 +461,6 @@ allowBuilds:
   electron: true
   electron-click-drag-plugin: true
   electron-winstaller: true
-  es5-ext: set this to true or false
   esbuild: true
   ffmpeg-static: true
   isolated-vm: true

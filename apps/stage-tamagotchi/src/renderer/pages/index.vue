@@ -26,7 +26,7 @@ import { useFeatureFlagsStore } from '@proj-airi/stage-ui/stores/feature-flags'
 import { useOnboardingStore } from '@proj-airi/stage-ui/stores/onboarding'
 import { useSettings } from '@proj-airi/stage-ui/stores/settings'
 import { useVoiceStore } from '@proj-airi/stage-ui/stores/voice'
-import { refDebounced } from '@vueuse/core'
+import { refDebounced, useMouse } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { computed, nextTick, onMounted, onScopeDispose, ref, shallowRef, toRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
@@ -660,10 +660,16 @@ onMounted(() => {
     openOnboarding()
 })
 
-const cursorPosition = computed(() => ({
-  x: relativeMouseX.value,
-  y: relativeMouseY.value,
-}))
+// NOTICE:
+// On Wayland, DOM pointer events drive the cursor position.
+// Wayland gives an application no global cursor or window position.
+// Source: https://github.com/moeru-ai/airi/issues/2521.
+// The events stop when the cursor leaves this window.
+// Removal condition: Ozone/Wayland reports both positions reliably.
+const { x: domMouseX, y: domMouseY } = useMouse({ type: 'client' })
+const cursorPosition = computed(() => isWayland.value
+  ? { x: domMouseX.value, y: domMouseY.value }
+  : { x: relativeMouseX.value, y: relativeMouseY.value })
 </script>
 
 <template>

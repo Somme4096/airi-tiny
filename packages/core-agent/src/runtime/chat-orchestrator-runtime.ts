@@ -5,15 +5,17 @@ import type { AgentContextPort } from '../contracts/context-port'
 import type { AgentLLMPort } from '../contracts/llm-port'
 import type { AgentForegroundStreamPort } from '../contracts/stream-port'
 import type { AssistantTurn, Conversation, Turn } from '../messages/types'
-import type { ChatHistoryItem, ChatSlices, ChatStreamEventContext, ChatToolReference, ContextMessage, StreamingAssistantMessage } from '../types/chat'
+import type { ChatHistoryItem, ChatSlices, ChatStreamEventContext, ChatToolReference, ContextMessage, HistoryCompaction, StreamingAssistantMessage } from '../types/chat'
 import type { LlmUsage, StreamEvent, StreamOptions } from '../types/llm'
 
+import { errorMessageFrom } from '@moeru/std'
 import { createQueue } from '@proj-airi/stream-kit'
 
 import { chatMessagesToTurns } from '../messages/chat-completions'
 import { formatTimePrefix } from '../messages/datetime-prefix'
 import { renderConversationPreview } from '../messages/preview'
 import { createChatHooks } from './agent-hooks'
+import { findCompaction, planCompaction } from './history-compaction'
 import { useLlmmarkerParser } from './llm-marker-parser'
 import { categorizeResponse, createStreamingCategorizer } from './response-categoriser'
 
@@ -130,6 +132,11 @@ export interface ChatOrchestratorSendOptions {
   /** Model capabilities captured before the request enters its session queue. */
   supportsAudioInput?: boolean
   supportsVisionInput?: boolean
+  /**
+   * Token limit of the model's context window. The runtime compacts older history before a request that does not fit.
+   * Omission or zero selects the default window of the runtime.
+   */
+  contextWindow?: number
   /** Request-owned character instructions, captured before waiting in the session queue. */
   systemPromptSupplement?: string
   /** Eligible catalog for this request. Omission disables stickers. The queue copies entries before waiting. */
@@ -211,6 +218,8 @@ export interface ChatOrchestratorSessionPort {
   getSessionMessages: (sessionId: string) => ChatHistoryItem[]
   /** Appends a finalized user/assistant/tool history item. */
   appendSessionMessage: (sessionId: string, message: ChatHistoryItem) => void
+  /** Stores a compaction marker on one message. Later prompts start at that message and send the summary before it. */
+  setCompaction: (sessionId: string, messageId: string, compaction: HistoryCompaction) => void
   /** Returns a monotonic generation used to reject stale queued sends. */
   getSessionGeneration: (sessionId: string) => number
 }
@@ -225,7 +234,7 @@ export type ChatOrchestratorLLMPort = AgentLLMPort
  */
 export interface ChatOrchestratorLifecycleRecord {
   /** Composition phase being observed. */
-  phase: 'before-compose' | 'prompt-context-built' | 'after-compose'
+  phase: 'history-compacted' | 'history-compaction-failed' | 'before-compose' | 'prompt-context-built' | 'after-compose'
   /** Logical event channel for context observability. */
   channel: 'chat'
   /** Session associated with this send. */
@@ -577,16 +586,54 @@ export function createChatOrchestratorRuntime(deps: ChatOrchestratorRuntimeDeps)
 
   function buildContext(history: ChatHistoryItem[]): Conversation {
     const nowTs = now()
+    // A reply can point at a summarized message, so the lookup covers the whole history.
     const messagesById = new Map(history.flatMap(message => message.id ? [[message.id, message] as const] : []))
+    const { start, compaction } = findCompaction(history)
     const turns = history.flatMap((message, historyIndex): Turn[] => {
+      // The summary replaces the messages before the marker. System instructions are not part of it.
+      if (historyIndex < start && message.role !== 'system')
+        return []
       if (message.role === 'assistant' && message.generationTranscript)
         return [structuredClone(unwrapMessage(message.generationTranscript))]
       const source = message.role === 'user'
         ? prependTextToContent(unwrapMessage(message), `${formatTimePrefix(getStablePromptTimestamp(message, nowTs))}${formatReplyPromptPrefix(message.replyToMessageId, messagesById)}`)
         : unwrapMessage(message)
-      return chatMessagesToTurns(source.role === 'assistant' && source.providerTranscript?.length ? source.providerTranscript : [source], message.id ?? `history-${historyIndex}`)
+      const own = chatMessagesToTurns(source.role === 'assistant' && source.providerTranscript?.length ? source.providerTranscript : [source], message.id ?? `history-${historyIndex}`)
+      if (historyIndex !== start || !compaction)
+        return own
+      // The summary is application context with user-level authority. It has no XML wrapper,
+      // because weak local models copy such wrappers into their replies.
+      return [{ id: `compaction-${message.id}`, type: 'system', authority: 'context', content: [{ type: 'text', text: `[Summary of the earlier conversation]\n${compaction.summary}` }] }, ...own]
     })
     return { turns }
+  }
+
+  /**
+   * Asks the model of the request owner for a summary. The request has no tools and no character prompt.
+   * `resolveStep` is read once for the current model, then left out, because it replaces the system message.
+   */
+  async function summarizeHistory(prompt: { system: string, user: string }, options: ChatOrchestratorSendOptions, activeProvider: string, abortSignal: AbortSignal) {
+    const step = await options.resolveStep?.()
+    let output = ''
+    await waitForProvider(deps.llm.stream(step?.model ?? options.model, step?.chatProvider ?? options.chatProvider, {
+      turns: [
+        { id: 'compaction-instructions', type: 'system', authority: 'system', content: [{ type: 'text', text: prompt.system }] },
+        { id: 'compaction-source', type: 'user', content: [{ type: 'text', text: prompt.user }] },
+      ],
+    }, {
+      headers: step?.headers ?? (options.providerConfig?.headers || {}) as Record<string, string>,
+      providerId: step?.providerId ?? activeProvider,
+      abortSignal,
+      supportsTools: false,
+      onStreamEvent: (event) => {
+        if (event.type === 'text-delta')
+          output += event.text
+        if (event.type === 'error')
+          throw event.error ?? new Error('Stream error')
+      },
+    }), abortSignal)
+    // Models that write their reasoning inline put it in tags. Only the answer is the summary.
+    return categorizeResponse(output, activeProvider).speech
   }
 
   async function performSend(
@@ -869,7 +916,34 @@ export function createChatOrchestratorRuntime(deps: ChatOrchestratorRuntimeDeps)
         ],
       })
 
-      const context = buildContext(sessionMessagesForSend)
+      let historyForSend = sessionMessagesForSend
+      const compactionPlan = planCompaction(sessionMessagesForSend, options.contextWindow)
+      if (compactionPlan) {
+        try {
+          const summary = (await summarizeHistory(compactionPlan.prompt, options, activeProvider, abortSignal)).trim()
+          if (shouldAbort())
+            return
+          if (!summary)
+            throw new Error('The model returned an empty summary')
+          deps.session.setCompaction(sessionId, compactionPlan.messageId, { summary, createdAt: now() })
+          historyForSend = deps.session.getSessionMessages(sessionId)
+          deps.onLifecycle?.({
+            phase: 'history-compacted',
+            channel: 'chat',
+            sessionId,
+            details: { messageId: compactionPlan.messageId, summarizedCount: compactionPlan.summarizedCount, estimatedTokens: compactionPlan.estimatedTokens, summary },
+          })
+        }
+        catch (error) {
+          if (shouldAbort())
+            throw error
+          // A failed summary leaves the history as it was. The request goes out in full, and the provider
+          // decides whether it fits. The size is an estimate, so a failure here must not stop the turn.
+          deps.onLifecycle?.({ phase: 'history-compaction-failed', channel: 'chat', sessionId, details: { error: errorMessageFrom(error) } })
+        }
+      }
+
+      const context = buildContext(historyForSend)
       const stickerPrompt = stickers?.length
         ? [
             'You can send one optional sticker per reply with a marker from this catalog.',

@@ -567,6 +567,11 @@ export const useChatStore = defineStore('chat', () => {
       appendSessionMessage: (sessionId, message) => chatSession.appendSessionMessage(sessionId, message),
       commitUserMessage: (sessionId, message) => chatSession.commitUserMessage(sessionId, message),
       getSessionGeneration: sessionId => chatSession.getSessionGeneration(sessionId),
+      setCompaction: (sessionId, messageId, compaction) => {
+        const messages = chatSession.getSessionMessages(sessionId)
+        // A reactive message holds proxies, which `structuredClone` rejects when the send result leaves the leader.
+        chatSession.setSessionMessages(sessionId, messages.map(message => message.id === messageId ? { ...toRaw(message), compaction } : message))
+      },
     },
     context: {
       ingest: envelope => chatContext.ingestContextMessage(envelope),
@@ -797,6 +802,7 @@ export const useChatStore = defineStore('chat', () => {
       providerId,
       supportsAudioInput: await supportsAudioInput(providerId, modelId, chatProvider.generation(modelId)),
       supportsVisionInput: selectedModel?.metadata?.abilities?.vision === true,
+      contextWindow: selectedModel?.contextLength,
       resolveStep,
       signal,
       model: modelId,

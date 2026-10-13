@@ -75,8 +75,21 @@ export interface ContextMessage extends ContextUpdate<Record<string, unknown>, u
   createdAt: number
 }
 
+/**
+ * Summary that replaces older history in the model prompt.
+ *
+ * The first message that stays verbatim carries it. Prompt composition sends the summary, then that message and
+ * every later one. Earlier messages stay in storage and in the chat view.
+ */
+export interface HistoryCompaction {
+  summary: string
+  /** When the summary was stored. Token reports of older replies measured the history before it and do not count. */
+  createdAt: number
+}
+
 export type ChatHistoryItem = (ChatMessage | ErrorMessage) & {
   context?: ContextMessage
+  compaction?: HistoryCompaction
   createdAt?: number
   /**
    * When an assistant message stopped receiving output: at its end, or when it

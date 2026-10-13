@@ -48,6 +48,27 @@ The adapter preserves SDK continuation data without parsing nested provider fiel
 
 Local history preserves complete turns and visible output from interrupted turns. Interrupted records stay on the device because the cloud wire format cannot preserve their incomplete state. Cloud chat sync currently transfers completed text and does not restore native continuation on another device.
 
+## History compaction
+
+Before each send, the orchestrator estimates the size of the next request. If the request does not fit the context window, the orchestrator asks the model for a summary of the older messages. The design follows the compaction of `pi-durable`.
+
+The summary is stored as a `compaction` marker on the first message that stays verbatim. Prompt composition then sends the system message, the summary, and the messages from the marker on. The older messages stay in storage and in the chat view. A later compaction folds the earlier summary into the next one.
+
+A host passes `contextWindow` in the send options. A missing or zero value selects 32,000 tokens.
+
+| Limit | Value | Purpose |
+| --- | --- | --- |
+| Reserve | 16,384 tokens, or 25% of the window if that is smaller | Space for the reply, the tool schemas, and the estimate error. |
+| Kept history | 20,000 tokens, or 40% of the window if that is smaller | Recent messages that stay verbatim. |
+
+The size estimate starts from the token report of the newest reply, when the provider gave one after the last compaction. That report includes the system prompt, the tools, and the side context. Text without a report counts as four characters for each token, and each CJK character counts as one token.
+
+The cut is always at a user message, so a tool result stays with its call. The summary request has no tools and no character prompt.
+
+If the summary request fails, the turn continues with the full history. The orchestrator emits a `history-compaction-failed` lifecycle record. A successful compaction emits `history-compacted`.
+
+The orchestrator does not compact when the messages after the marker are smaller than the kept history. In that case the system prompt or the side context fills the window, and a summary cannot help.
+
 ## Responses API
 
 A provider resolves a discriminated `GenerationRequest` before context projection. The adapter owns its wire format and SDK event conversion. The adapter uses `@xsai-ext/responses` with `store: false`. It replays complete Items and executes local function tools for at most ten steps.

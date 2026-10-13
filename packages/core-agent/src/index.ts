@@ -60,6 +60,7 @@ export type {
   ChatToolReference,
   ContextMessage,
   ErrorMessage,
+  HistoryCompaction,
   StreamingAssistantMessage,
 } from './types/chat'
 

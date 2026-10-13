@@ -82,6 +82,9 @@ function createHarness(getActiveProvider = () => 'mock-provider') {
         sessionMessages[sessionId].push(message)
       },
       getSessionGeneration: () => generation,
+      setCompaction: (sessionId, messageId, compaction) => {
+        sessionMessages[sessionId] = sessionMessages[sessionId].map(message => message.id === messageId ? { ...message, compaction } : message)
+      },
     },
     context: {
       ingest: vi.fn(),
@@ -1730,5 +1733,92 @@ it('isolates sticker catalogs, providers, and supplements across concurrent and 
   expect(harness.sessionMessages['session-2']!.at(-1)).toMatchObject({
     slices: [{ type: 'text', text: 'Reply ' }, { type: 'sticker', stickerId: 'dog' }],
     categorization: { speech: 'Reply ' },
+  })
+})
+
+describe('history compaction in createChatOrchestratorRuntime', () => {
+  /** Adds ten stored turns of about 200 tokens, which exceed a window of 1000 tokens. */
+  function fillHistory(harness: ReturnType<typeof createHarness>) {
+    for (let index = 0; index < 10; index += 1) {
+      harness.sessionMessages['session-1'].push(
+        { role: 'user', content: `question-${index} ${'u'.repeat(380)}`, id: `user-${index}`, createdAt: 1000 + index },
+        { role: 'assistant', content: `answer-${index} ${'a'.repeat(380)}`, id: `assistant-${index}`, createdAt: 1000 + index, slices: [], tool_results: [] },
+      )
+    }
+  }
+
+  it('sends the summary in place of the older messages', async () => {
+    const harness = createHarness()
+    fillHistory(harness)
+    harness.stream.mockImplementationOnce(async (_model, _provider, _conversation, options) => {
+      await options?.onStreamEvent?.({ type: 'text-delta', text: '<think>plan</think>the summary' })
+    })
+
+    await harness.runtime.ingest('newest question', { model: 'model', chatProvider: provider, contextWindow: 1000, messageId: 'newest' }, 'session-1')
+
+    expect(harness.stream).toHaveBeenCalledTimes(2)
+    const [, , summaryRequest, summaryOptions] = harness.stream.mock.calls[0]
+    const summaryMessages = conversationToChatMessages(summaryRequest)
+    expect(summaryMessages[0].role).toBe('system')
+    expect(summaryMessages[1].content).toContain('question-0')
+    expect(summaryOptions?.supportsTools).toBe(false)
+    expect(summaryOptions?.resolveStep).toBeUndefined()
+
+    const sent = conversationToChatMessages(harness.stream.mock.calls[1][2])
+    expect(sent[0]).toMatchObject({ role: 'system', content: 'system prompt' })
+    expect(sent[1]).toMatchObject({ role: 'user', content: '[Summary of the earlier conversation]\nthe summary' })
+    expect(sent.map(message => message.content).join('\n')).not.toContain('question-0')
+    expect(sent.at(-1)?.content).toContain('newest question')
+
+    const marked = harness.sessionMessages['session-1'].filter(message => message.compaction)
+    expect(marked).toHaveLength(1)
+    expect(marked[0].role).toBe('user')
+    expect(marked[0].compaction?.summary).toBe('the summary')
+    expect(harness.sessionMessages['session-1'].some(message => message.id === 'user-0')).toBe(true)
+    expect(harness.lifecycleRecords).toEqual(expect.arrayContaining([
+      expect.objectContaining({ phase: 'history-compacted' }),
+    ]))
+  })
+
+  it('sends the full history when the summary request fails', async () => {
+    const harness = createHarness()
+    fillHistory(harness)
+    harness.stream.mockImplementationOnce(async () => {
+      throw new Error('summary provider failed')
+    })
+
+    await harness.runtime.ingest('newest question', { model: 'model', chatProvider: provider, contextWindow: 1000, messageId: 'newest' }, 'session-1')
+
+    expect(harness.stream).toHaveBeenCalledTimes(2)
+    const sent = conversationToChatMessages(harness.stream.mock.calls[1][2])
+    expect(sent.map(message => message.content).join('\n')).toContain('question-0')
+    expect(harness.sessionMessages['session-1'].some(message => message.compaction)).toBe(false)
+    expect(harness.lifecycleRecords).toEqual(expect.arrayContaining([
+      expect.objectContaining({ phase: 'history-compaction-failed', details: { error: 'summary provider failed' } }),
+    ]))
+    expect(harness.sessionMessages['session-1'].at(-1)).toMatchObject({ role: 'assistant' })
+  })
+
+  it('sends the full history when the summary is empty', async () => {
+    const harness = createHarness()
+    fillHistory(harness)
+    harness.stream.mockImplementationOnce(async (_model, _provider, _conversation, options) => {
+      await options?.onStreamEvent?.({ type: 'text-delta', text: '  ' })
+    })
+
+    await harness.runtime.ingest('newest question', { model: 'model', chatProvider: provider, contextWindow: 1000, messageId: 'newest' }, 'session-1')
+
+    expect(harness.sessionMessages['session-1'].some(message => message.compaction)).toBe(false)
+    expect(harness.lifecycleRecords).toEqual(expect.arrayContaining([
+      expect.objectContaining({ phase: 'history-compaction-failed', details: { error: 'The model returned an empty summary' } }),
+    ]))
+  })
+
+  it('does not ask for a summary when the history fits', async () => {
+    const harness = createHarness()
+
+    await harness.runtime.ingest('hello', { model: 'model', chatProvider: provider, contextWindow: 1000, messageId: 'hello' }, 'session-1')
+
+    expect(harness.stream).toHaveBeenCalledTimes(1)
   })
 })

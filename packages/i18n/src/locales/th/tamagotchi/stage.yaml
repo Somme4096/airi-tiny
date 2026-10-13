@@ -119,7 +119,6 @@ about:
       checking: กำลังตรวจสอบ...
       latest-version: เวอร์ชันล่าสุด
       disabled-dev: ปิดการอัปเดตในโหมด Dev
-      managed-by-store: การอัปเดตจัดการผ่านร้านแอปของคุณ
       retry-check: ตรวจสอบอีกครั้ง
       restart-silent: รีสตาร์ตเพื่ออัปเดตแบบเงียบ
       restart-install: รีสตาร์ตเพื่อติดตั้งอัปเดต

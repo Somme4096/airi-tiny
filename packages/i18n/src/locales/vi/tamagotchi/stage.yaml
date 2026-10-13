@@ -119,7 +119,6 @@ about:
       checking: Đang kiểm tra...
       latest-version: Phiên bản mới nhất
       disabled-dev: Các bản cập nhật bị vô hiệu trong Dev
-      managed-by-store: Bản cập nhật do cửa hàng ứng dụng quản lý
       retry-check: Thử lại bước kiểm tra
       restart-silent: Khởi động lại để cập nhật trong im lặng
       restart-install: Khởi động lại để tải bản cập nhật

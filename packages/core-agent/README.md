@@ -68,7 +68,7 @@ Before each send, the orchestrator estimates the size of the next request. If th
 
 The summary is stored as a `compaction` marker on the first message that stays verbatim. Prompt composition then sends the system message, the summary, and the messages from the marker on. The older messages stay in storage and in the chat view. A later compaction folds the earlier summary into the next one.
 
-A host passes `contextWindow` in the send options. A missing or zero value selects 32,000 tokens.
+A host passes `contextWindow` in the send options. A missing or zero value selects 32,000 tokens. A host can also pass `summaryInstructions` to replace the built-in instructions of the summary request, which are exported as `DEFAULT_SUMMARY_INSTRUCTIONS`. A missing or blank value selects the built-in ones. The system line of the summary request is fixed.
 
 | Limit | Value | Purpose |
 | --- | --- | --- |

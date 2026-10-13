@@ -38,6 +38,7 @@ import { useContextObservabilityStore } from './devtools/context-observability'
 import { useAiriCardStore } from './modules/airi-card'
 import { useAutonomousArtistryStore } from './modules/artistry-autonomous'
 import { useConsciousnessStore } from './modules/consciousness'
+import { useConsciousnessSettingsStore } from './modules/consciousness-settings'
 import { useHearingStore } from './modules/hearing'
 import { useStickersStore } from './modules/stickers'
 import { useVisionStore } from './modules/vision'
@@ -220,6 +221,7 @@ export const useChatStore = defineStore('chat', () => {
   // without its paired prompt-injection defense.
   useWebSearchStore()
   const consciousnessStore = useConsciousnessStore()
+  const consciousnessSettingsStore = useConsciousnessSettingsStore()
   const chatVision = useChatVision()
   const artistryAutonomousStore = useAutonomousArtistryStore()
   const { activeProvider, activeModel } = storeToRefs(consciousnessStore)
@@ -802,7 +804,9 @@ export const useChatStore = defineStore('chat', () => {
       providerId,
       supportsAudioInput: await supportsAudioInput(providerId, modelId, chatProvider.generation(modelId)),
       supportsVisionInput: selectedModel?.metadata?.abilities?.vision === true,
-      contextWindow: selectedModel?.contextLength,
+      // The window from the settings wins, because a local runtime can load a model with a smaller window than the model reports.
+      contextWindow: consciousnessSettingsStore.activeContextWindow ?? selectedModel?.contextLength,
+      summaryInstructions: consciousnessSettingsStore.summaryInstructions,
       resolveStep,
       signal,
       model: modelId,

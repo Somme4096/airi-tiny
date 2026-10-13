@@ -29,6 +29,7 @@ export type {
 export { createChatOrchestratorRuntime } from './runtime/chat-orchestrator-runtime'
 export type { ContextHistoryEntry, ContextIngestResult, ContextRegistry } from './runtime/context-registry'
 export { createContextRegistry } from './runtime/context-registry'
+export { DEFAULT_CONTEXT_WINDOW, DEFAULT_SUMMARY_INSTRUCTIONS } from './runtime/history-compaction'
 export { useLlmmarkerParser } from './runtime/llm-marker-parser'
 export {
   isContentArrayRelatedError,

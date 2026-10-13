@@ -2,6 +2,9 @@ import type { ChatHistoryItem, HistoryCompaction } from '../types/chat'
 
 import { formatTimePrefix } from '../messages/datetime-prefix'
 
+/** Window assumed when the provider reports none. It suits small local models and costs large models only an early summary. */
+export const DEFAULT_CONTEXT_WINDOW = 32_000
+
 /**
  * Limits that decide when history is compacted and how much stays verbatim.
  *
@@ -9,8 +12,7 @@ import { formatTimePrefix } from '../messages/datetime-prefix'
  * with a small window, where the fixed values exceed the window.
  */
 const compactionDefaults = {
-  /** Window assumed when the provider reports none. It suits small local models and costs large models only an early summary. */
-  contextWindow: 32_000,
+  contextWindow: DEFAULT_CONTEXT_WINDOW,
   /** Space kept free for the reply, the tool schemas, and the estimate error. */
   reserveTokens: 16_384,
   /** Largest part of the window that the reserve can take. */
@@ -32,7 +34,11 @@ const SUMMARY_SYSTEM_PROMPT = [
   'Do not continue the conversation. Do not answer its questions. Write only the summary.',
 ].join(' ')
 
-const SUMMARY_INSTRUCTIONS = [
+/**
+ * Built-in instructions of the summary request. A host can replace them with `summaryInstructions`.
+ * The system line of the request stays fixed, because without it a weak model answers the conversation.
+ */
+export const DEFAULT_SUMMARY_INSTRUCTIONS = [
   'The text above is the earlier part of a conversation.',
   'A later request replaces that part with your summary, so the character must be able to continue from the summary alone.',
   'If the text starts with an earlier summary, keep its information and add the newer messages to it.',
@@ -248,11 +254,12 @@ function selectCut(history: readonly ChatHistoryItem[], start: number, keepRecen
  * sends the summary in place of the older messages, which stay in storage.
  *
  * `contextWindow` is the token limit of the model. A missing or zero value selects the default window.
+ * `summaryInstructions` replaces the built-in instructions. A missing or blank value selects the built-in ones.
  * The function is synchronous, so a send that needs no compaction does not yield.
  *
  * Returns `undefined` when the request fits or when no earlier message can be summarized.
  */
-export function planCompaction(history: readonly ChatHistoryItem[], contextWindow?: number): CompactionPlan | undefined {
+export function planCompaction(history: readonly ChatHistoryItem[], contextWindow?: number, summaryInstructions?: string): CompactionPlan | undefined {
   // Zero is how providers report an unknown window, so it selects the default like a missing value.
   const window = contextWindow || compactionDefaults.contextWindow
   const reserveTokens = Math.min(compactionDefaults.reserveTokens, Math.floor(window * compactionDefaults.reserveRatio))
@@ -278,7 +285,7 @@ export function planCompaction(history: readonly ChatHistoryItem[], contextWindo
 
   return {
     messageId: history[cut].id!,
-    prompt: { system: SUMMARY_SYSTEM_PROMPT, user: `${source}\n\n---\n\n${SUMMARY_INSTRUCTIONS}` },
+    prompt: { system: SUMMARY_SYSTEM_PROMPT, user: `${source}\n\n---\n\n${summaryInstructions?.trim() || DEFAULT_SUMMARY_INSTRUCTIONS}` },
     summarizedCount: summarized.length,
     estimatedTokens,
   }

@@ -137,6 +137,8 @@ export interface ChatOrchestratorSendOptions {
    * Omission or zero selects the default window of the runtime.
    */
   contextWindow?: number
+  /** Instructions of the history summary request. Omission or a blank value selects the built-in instructions. */
+  summaryInstructions?: string
   /** Request-owned character instructions, captured before waiting in the session queue. */
   systemPromptSupplement?: string
   /** Eligible catalog for this request. Omission disables stickers. The queue copies entries before waiting. */
@@ -916,7 +918,7 @@ export function createChatOrchestratorRuntime(deps: ChatOrchestratorRuntimeDeps)
       })
 
       let historyForSend = sessionMessagesForSend
-      const compactionPlan = planCompaction(sessionMessagesForSend, options.contextWindow)
+      const compactionPlan = planCompaction(sessionMessagesForSend, options.contextWindow, options.summaryInstructions)
       if (compactionPlan) {
         try {
           const summary = (await summarizeHistory(compactionPlan.prompt, options, activeProvider, abortSignal)).trim()

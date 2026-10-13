@@ -1,7 +1,7 @@
 import type {} from 'pinia-plugin-synced'
 
 import { defineStore } from 'pinia'
-import { shallowRef } from 'vue'
+import { computed, shallowRef } from 'vue'
 
 function loadEnabled(key: string) {
   // Non-renderer runtimes have no durable settings owner. They use the product
@@ -19,6 +19,26 @@ function persistEnabled(key: string, value: boolean) {
   localStorage.setItem(`settings/consciousness/${key}`, String(value))
 }
 
+function loadText(key: string) {
+  if (typeof localStorage === 'undefined')
+    return ''
+
+  return localStorage.getItem(`settings/consciousness/${key}`) ?? ''
+}
+
+function persistText(key: string, value: string) {
+  if (typeof localStorage === 'undefined')
+    return
+
+  localStorage.setItem(`settings/consciousness/${key}`, value)
+}
+
+/** Reads a token count from a form field or from storage. An empty, zero, or invalid value means "not set". */
+function toTokenCount(value: unknown) {
+  const count = Math.floor(Number(value))
+  return Number.isFinite(count) && count > 0 ? count : undefined
+}
+
 /**
  * Stores request policies for the consciousness module.
  *
@@ -31,6 +51,13 @@ export const useConsciousnessSettingsStore = defineStore('consciousness-settings
   const reasoning = shallowRef(loadEnabled('reasoning'))
   const temperatureEnabled = shallowRef(loadEnabled('temperature-enabled'))
   const topPEnabled = shallowRef(loadEnabled('top-p-enabled'))
+  const contextWindowEnabled = shallowRef(loadEnabled('context-window-enabled'))
+  /** Saved context window. It applies only while `contextWindowEnabled` is on. */
+  const contextWindow = shallowRef(toTokenCount(loadText('context-window')))
+  /** Context window that replaces the one the model reports. `undefined` uses the reported one. */
+  const activeContextWindow = computed(() => contextWindowEnabled.value ? contextWindow.value : undefined)
+  /** Instructions of the history summary request. An empty text uses the built-in instructions. */
+  const summaryInstructions = shallowRef(loadText('summary-instructions'))
 
   async function setReasoning(value: boolean) {
     reasoning.value = value
@@ -47,24 +74,49 @@ export const useConsciousnessSettingsStore = defineStore('consciousness-settings
     persistEnabled('top-p-enabled', value)
   }
 
+  async function setContextWindowEnabled(value: boolean) {
+    contextWindowEnabled.value = value
+    persistEnabled('context-window-enabled', value)
+  }
+
+  async function setContextWindow(value: unknown) {
+    contextWindow.value = toTokenCount(value)
+    persistText('context-window', contextWindow.value === undefined ? '' : String(contextWindow.value))
+  }
+
+  async function setSummaryInstructions(value: string) {
+    summaryInstructions.value = value
+    persistText('summary-instructions', value)
+  }
+
   async function resetState() {
     await setReasoning(false)
     await setTemperatureEnabled(false)
     await setTopPEnabled(false)
+    await setContextWindowEnabled(false)
+    await setContextWindow(undefined)
+    await setSummaryInstructions('')
   }
 
   return {
     reasoning,
     temperatureEnabled,
     topPEnabled,
+    contextWindowEnabled,
+    contextWindow,
+    activeContextWindow,
+    summaryInstructions,
     setReasoning,
     setTemperatureEnabled,
     setTopPEnabled,
+    setContextWindowEnabled,
+    setContextWindow,
+    setSummaryInstructions,
     resetState,
   }
 }, {
   synced: {
-    actions: ['resetState', 'setReasoning', 'setTemperatureEnabled', 'setTopPEnabled'],
+    actions: ['resetState', 'setContextWindow', 'setContextWindowEnabled', 'setReasoning', 'setSummaryInstructions', 'setTemperatureEnabled', 'setTopPEnabled'],
     state: true,
   },
 })

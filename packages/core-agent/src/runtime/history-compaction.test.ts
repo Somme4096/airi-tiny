@@ -2,7 +2,7 @@ import type { ChatHistoryItem } from '../types/chat'
 
 import { describe, expect, it } from 'vitest'
 
-import { estimateTokens, findCompaction, planCompaction } from './history-compaction'
+import { DEFAULT_SUMMARY_INSTRUCTIONS, estimateTokens, findCompaction, planCompaction } from './history-compaction'
 
 const system: ChatHistoryItem = { role: 'system', content: 'system prompt', id: 'system' }
 
@@ -65,6 +65,21 @@ describe('planCompaction', () => {
     expect(plan?.prompt.user).toContain('answer-7')
     expect(plan?.prompt.user).not.toContain('question-8')
     expect(plan?.prompt.user).not.toContain('system prompt')
+  })
+
+  it('uses the built-in instructions when the custom ones are missing or blank', () => {
+    const history = [system, ...createTurns(10)]
+
+    expect(planCompaction(history, 1000)?.prompt.user).toContain(DEFAULT_SUMMARY_INSTRUCTIONS)
+    expect(planCompaction(history, 1000, '  \n')?.prompt.user).toContain(DEFAULT_SUMMARY_INSTRUCTIONS)
+  })
+
+  it('replaces the built-in instructions with the custom ones', () => {
+    const plan = planCompaction([system, ...createTurns(10)], 1000, 'List only the promises.')
+
+    expect(plan?.prompt.user).toContain('answer-7')
+    expect(plan?.prompt.user.endsWith('List only the promises.')).toBe(true)
+    expect(plan?.prompt.user).not.toContain(DEFAULT_SUMMARY_INSTRUCTIONS)
   })
 
   it('folds the earlier summary into the next one', () => {

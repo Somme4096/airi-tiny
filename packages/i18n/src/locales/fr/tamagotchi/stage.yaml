@@ -37,8 +37,6 @@ docs:
   'close': Fermer
   'expand': Développer
   'collapse': Réduire
-  'login': Se connecter
-  'logging-in': Connexion en cours...
   'account': Compte
   'logout': Compte
 'chat-window':

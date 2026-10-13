@@ -37,8 +37,6 @@ docs:
   'close': Cerrar
   'expand': Expandir
   'collapse': Contraer
-  'login': Iniciar sesión
-  'logging-in': Iniciando sesión...
   'account': Cuenta
   'logout': Cerrar sesión
 'chat-window':

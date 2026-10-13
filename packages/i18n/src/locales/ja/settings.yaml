@@ -9,8 +9,6 @@ animations:
     title: ページ固有の遷移を使用する
 dialogs:
   onboarding:
-    official:
-      title: AIRI 公式プロバイダー
     title: AIRI へようこそ！
     description: まず最初のAIプロバイダーを設定しましょう。
     selectProvider: AIプロバイダーを選択
@@ -41,12 +39,6 @@ dialogs:
     enableChatCheck: >-
       AIRI が利用可能な最初のチャットモデルに「ping」シグナルを送信して利用可能性をチェックすることを許可する
     start: 始めましょう！
-    loginPrompt: 最高の体験を得るためにログインして AIRI 公式プロバイダーを使用してください。
-    loginAction: ログイン
-    setupWithoutSigningIn: 独自のプロバイダーを設定
-    pricingLink: 料金体系
-    termsLink: 利用規約
-    buyFlux: Flux を購入
     select-model: モデルを選択
     no-models: 利用可能なモデルがありません
     no-models-help: >-
@@ -253,168 +245,11 @@ live2d:
 microphone: マイク
 models: モデル
 pages:
-  account:
-    title: アカウント
-    description: プロフィールの閲覧とアカウントの管理
-    notLoggedIn: ログインしてアカウントを表示し、すべての機能にアクセスします
-    login: ログイン
-    logout: ログアウト
-    fluxBalance: Flux 残高
-    viewFluxDetails: 詳細を見る
-    viewCapacitor: 表示
-    signedInAs: 'ログイン中:'
-    profile:
-      tab: プロフィール
-      title: プロフィール
-      description: 公開表示名の管理。
-      name:
-        label: 表示名
-        placeholder: 他のユーザーからの見え方
-      avatar:
-        gravatarNotice: Gravatar からのアバター画像。
-        gravatarLink: gravatar.com で管理
-      action:
-        save: 変更を保存
-      message:
-        saved: プロフィールを更新しました。
-      error:
-        fallback: 変更を保存できませんでした。
-    connections:
-      tab: 連携済みアカウント
-      title: 連携済みアカウント
-      description: これらのプロバイダー経由で AIRI にログインします。連携を解除してアクセス権を取り消すか、再連携して別のアカウントに切り替えます。
-      status:
-        linked: 連携済み
-        notLinked: 未連携
-        linkedSince: '{date} に連携'
-      action:
-        link: 連携
-        unlink: 連携解除
-      message:
-        loading: 連携済みアカウントを読み込み中...
-        unlinked: '{provider} の接続を解除しました。'
-        linked: '{provider} を接続しました。'
-        linkStarted: '{provider} へリダイレクト中…'
-      error:
-        listFailed: 連携済みアカウントを取得できませんでした。
-        unlinkFailed: このアカウントの連携を解除できませんでした。
-        linkFailed: 連携フローを開始できませんでした。
-        accountAlreadyLinkedToDifferentUser: この OAuth アカウントは別の AIRI アカウントにすでに連携されています。別のプロバイダーを選択するか、もう一方のアカウントから連携を解除してください。
-        oauthCallbackFailed: この OAuth アカウントを接続できませんでした。再試行するか別のプロバイダーを選択してください。
-        lastAccount: これは唯一のログイン方法です。連携を解除する前にパスワードを設定してください。
-    security:
-      tab: セキュリティ
-      title: セキュリティ
-      description: パスワードを変更します。他のデバイスからはログアウトされます。
-      setDescription: SNS アカウントでログインしているため、現在パスワードが設定されていません。パスワード設定用の保護リンクをメールでお送りします。
-      currentPassword:
-        label: 現在のパスワード
-        placeholder: 現在のパスワードを入力
-      newPassword:
-        label: 新しいパスワード
-        placeholder: 8文字以上
-      confirmPassword:
-        label: 新しいパスワードの確認
-        placeholder: 新しいパスワードを再入力
-      action:
-        changePassword: パスワードを変更
-        sendSetLink: 設定リンクをメールに送信
-      message:
-        changed: パスワードを変更しました。他のセッションからログアウトしました。
-        setLinkSent: '{email} を確認してパスワード設定リンクを開いてください。'
-      error:
-        fallback: パスワードを変更できませんでした。
-        setLinkFailed: パスワード設定リンクを送信できませんでした。
-        passwordMismatch: パスワードが一致しません。
-        passwordSameAsCurrent: 新しいパスワードは現在のパスワードと異なる必要があります。
-    danger:
-      tab: 危険ゾーン
-      title: 危険ゾーン
-      description: アカウントに対する取り消し不能な操作を行います。
-      deleteAccount:
-        title: アカウントを削除
-        description: アカウントと個人データを永久に削除します。
-        action: アカウントを削除
-        modal:
-          title: アカウントを削除しますか？
-          warning: この操作は取り消せません。有効なサブスクリプションは解約され、Flux 残高は消去されます。
-          confirmEmail:
-            label: 確認のためメールアドレスを入力してください
-            mismatch: メールアドレスが一致しません。
-          confirm: 確認メールを送信
-          cancel: キャンセル
-        message:
-          emailSent: '{email} を確認して削除リンクを開いてください。'
-        error:
-          fallback: 削除できませんでした。後ほど再試行してください。
-          subscriptionActive: サブスクリプションがまだ有効です。先に Capacitor ページで解約してから、アカウントを削除してください。
   card:
     wake-word-conflicts:
       title: '共有するウェイクワードの発音に応答するキャラクターを選択してください | {count} 個の共有ウェイクワードの発音に応答するキャラクターを選択してください'
       description: 2 枚のカードが同じ発音を使っています。応答するキャラクターを選択するまで、誰も応答しません。
       action: 応答するキャラクターを選択
-    sync:
-      notice: キャラクターカードはアカウントと同期します。削除したカードは 30 日間復元できます。
-      off_notice: ログインしていますが、キャラクターカードの同期は無効です。
-      off_notice_link: 実験的機能で有効にしてください。
-      state:
-        synced: アカウントと同期済み
-        pending: アップロード待機中
-        refused: アップロードされていません。アカウントのカード保存容量が不足しているため、このカードはこのデバイスに残ります。
-      conflict_copy_name: '{name}（競合コピー）'
-      conflict_notice: 別のデバイスが同じキャラクターを変更しました。AIRI はこのデバイスのバージョンをコピーとして保存しました。
-      history:
-        tab: 履歴
-        empty: このカードにはまだ履歴がありません。
-        loading: 履歴を読み込み中…
-        load_failed: このカードの履歴を読み込めませんでした。
-        current: 現在
-        changed_label: 変更済み
-        removed_label: 削除済み
-        fields:
-          name: 名前
-          nickname: ニックネーム
-          version: バージョン
-          creator: 作成者
-          description: 説明
-          personality: 性格
-          scenario: 背景
-          systemPrompt: システムプロンプト
-          postHistoryInstructions: 履歴後の指示
-          notes: 作成者のメモ
-          greetings: 挨拶
-          tags: タグ
-          metadata: メタデータ
-          assets: アセット
-          characterBook: ロアブック
-          source: 出典
-          wakeWords: ウェイクワード
-          agents: エージェント
-          consciousness: 意識モデル
-          vision: 視覚モデル
-          speech: 音声モデル
-          vrm: VRM モデル
-          live2d: Live2D モデル
-          displayModelId: 表示モデル
-          activeBackgroundId: 固定した背景
-          artistry: 画像生成
-        restore: このバージョンを復元
-        restore_confirm_title: このバージョンを復元しますか？
-        restore_confirm_body: '{name} の現在の内容を {date} の内容に置き換えます。'
-        restore_confirm_confirm: 復元
-        restore_confirm_cancel: キャンセル
-        restore_success: '{name} を以前のバージョンに復元しました。'
-        restore_failed: このバージョンを復元できませんでした。サーバーに残っていない可能性があります。
-      deleted:
-        title: 最近削除したカード
-        empty: 最近削除したカードはありません。
-        loading: 最近削除したカードを読み込み中…
-        load_failed: 最近削除したカードを読み込めませんでした。
-        deleted_when: '{when} に削除'
-        days_left: '復元期限まで {days} 日'
-        restore: 復元
-        restore_success: '{name} を復元しました。'
-        restore_failed: このカードを復元できませんでした。サーバーに内容が残っていない可能性があります。
     activate: 有効化
     active: 有効
     active_badge: 現在有効
@@ -923,12 +758,6 @@ pages:
             select-voice:
               loading: モデルを読み込み中...
               required: 音声を選択してください
-          voice-pack:
-            description: アクティブなキャラクター用に厳選されたボイスパックを選択します
-            empty: 利用可能なボイスパックがありません
-            error: ボイスパックの読み込みエラー
-            loading: ボイスパックを読み込み中...
-            title: ボイスパック
           provider-voice-selection:
             custom_model_placeholder: カスタムモデル名を入力…
             custom_voice_placeholder: カスタム音声IDを入力…
@@ -1354,59 +1183,6 @@ pages:
         opened: ファイルマネージャーで {path} を開きました
         json-applied: JSON をフォームに適用しました。「保存して再起動」をクリックしてディスクに保存してください。
         restarted: すべて再起動しました! {started} が開始しました。 {failed} が失敗しました。 {skipped} がスキップされました。
-  flux:
-    buy: 購入
-    currency: 通貨
-    description: 現在の Flux 残高
-    terms: 規約
-    privacy: プライバシーポリシー
-    packagesError: パッケージを読み込めませんでした。後ほど再試行してください。
-    checkout:
-      success: 決済が完了しました！ Flux がチャージされました。
-      canceled: 決済がキャンセルされました。
-      error: エラーが発生しました。後ほど再試行してください。
-    audit:
-      title: 取引履歴
-      time: 日時
-      type: 種別
-      detail: 詳細
-      amount: 数量
-      typeAddition: チャージ
-      typeConsumption: 利用
-      typeInitial: 初回付与
-      typePromo: プロモーション付与
-      loading: 履歴を読み込み中...
-      empty: 取引履歴はまだありません。
-      loadMore: さらに読み込む
-      delayHint: 利用記録の反映には最大 1 分かかる場合があります
-      ttsRequests: 回のリクエスト
-    packages:
-      title: Flux パッケージ
-      buy: 購入
-      description: 選択可能な Flux パッケージ。
-  capacitor:
-    description: Capacitor は Flux を蓄え、自動で充電されます。
-    statusError: Capacitor を読み込めませんでした。後でもう一度お試しください。
-    packagesError: Capacitor の一覧を読み込めませんでした。後でもう一度お試しください。
-    preferenceError: 設定を保存できませんでした。後でもう一度お試しください。
-    noCapacitor: Capacitor なし
-    remaining: '残り {percent}'
-    rechargesAt: '{date} に充電'
-    renewsAt: '{date} に更新'
-    expiresAt: '{date} に期限切れ'
-    perMonth: / 月
-    currentPackage: 現在
-    install: インストール
-    upgrade: アップグレード
-    downgrade: ダウングレード
-    manageSubscription: サブスクリプションを管理
-    fallbackToFlux: Capacitor が空になったら Flux を使う
-    fallbackToFluxHint: 無効にすると、Capacitor が空になった時点で使用を停止します。
-    checkout:
-      success: Capacitor のインストールと充電が完了しました。
-      pending: 支払いを受け付けました。まもなく Capacitor が充電されます。
-      canceled: 購入をキャンセルしました。
-      error: エラーが発生しました。後ほど再試行してください。
   providers:
     catalog:
       edit:
@@ -1524,10 +1300,6 @@ pages:
           title: 音声設定
     labels:
       recommended: おすすめ
-    sync:
-      synced: 同期済み
-      pending: アップロード待機中
-      not-uploaded: アップロードされていません。このデバイスでプロバイダーの設定を完了してください。
     filters:
       pricing: 料金体系
       deployment: 展開形態
@@ -1643,7 +1415,6 @@ pages:
       common:
         status:
           validating: 検証中
-          valid: 設定は有効なようです。
         fields:
           field:
             pitch:
@@ -1874,15 +1645,6 @@ pages:
         description: ブラウザ組み込み STT (Chrome/Edge/Safari が必要)
       prompt-api:
         description: Prompt API を使用すると、自然言語リクエストを Chrome の基盤モデルに送信できます。
-      official:
-        title: 公式プロバイダー
-        description: AIRI 公式の AI プロバイダー。
-        speech-title: 公式音声プロバイダー
-        speech-description: AIRI 公式のテキスト読み上げプロバイダー。
-        speech-streaming-title: 公式リアルタイム (Streaming) 音声プロバイダー
-        speech-streaming-description: AIRI 公式の超低遅延テキスト読み上げプロバイダー (双方向 WebSocket)。
-        transcription-title: 公式文字起こしプロバイダー
-        transcription-description: AIRI 公式の音声認識プロバイダー。
       transcriptions:
         playground:
           title: 文字起こし実験場
@@ -1927,24 +1689,6 @@ pages:
         title: QR コードのスキャンに失敗しました
         failed: QR コードによるスキャンまたは接続ができませんでした。
   system:
-    experimental:
-      refresh: ポリシーを更新
-      title: 実験的機能
-      description: 開発中の機能を試し、設定を管理できます。
-      notice: 実験的機能は変更や削除される場合があります。設定はこのデバイスに適用されます。
-      empty-title: 利用可能な実験的機能はありません
-      load-error: クラウド機能は利用できません。ローカル機能は引き続き利用できます。
-      retry: 再試行
-      reset: デフォルトを使用
-      sources:
-        default: アプリの初期設定
-        local: このデバイスでの設定
-        global: ログイン済みアカウントで利用可能
-        account: このアカウントで利用可能
-      features:
-        character_card_sync:
-          title: キャラクターカードのクラウド同期
-          description: ログイン中にキャラクターカードをアカウントと同期し、他のデバイスでも使えるようにします。初期設定では無効です。削除したカードはアカウントの履歴に 30 日間残ります。
     color-scheme:
       description: ステージの配色を変更します。
       title: 配色

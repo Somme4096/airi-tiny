@@ -37,8 +37,6 @@ docs:
   'close': 閉じる
   'expand': 展開
   'collapse': 折りたたむ
-  'login': サインイン
-  'logging-in': サインイン中…
   'account': アカウント
   'logout': サインアウト
 'chat-window':

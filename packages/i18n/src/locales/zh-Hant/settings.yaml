@@ -9,8 +9,6 @@ animations:
     title: 是否使用頁面特定過場動畫
 dialogs:
   onboarding:
-    official:
-      title: AIRI 官方提供者
     title: 歡迎來到 AIRI！
     description: 讓我們先設定您的第一個服務來源來開始使用。
     selectProvider: 選擇服務來源
@@ -41,12 +39,6 @@ dialogs:
     enableChatCheck: >-
       允許 airi 傳送「ping」訊息給第一個可用的聊天模型，以檢查是否可用
     start: 開始吧！
-    loginPrompt: 登入以使用 AIRI 官方服務，獲得最佳體驗。
-    loginAction: 登入
-    setupWithoutSigningIn: 使用自己的服務供應商設定
-    pricingLink: 定價
-    termsLink: 服務條款
-    buyFlux: 儲值 Flux
     select-model: 選擇模型
     no-models: 找不到可用的模型
     no-models-help: >-
@@ -253,168 +245,11 @@ live2d:
 microphone: 麥克風
 models: 模型
 pages:
-  account:
-    title: 帳戶
-    description: 檢視您的個人資料並管理帳戶
-    notLoggedIn: 登入以檢視您的帳戶並使用所有功能
-    login: 登入
-    logout: 登出
-    fluxBalance: Flux 餘額
-    viewFluxDetails: 檢視詳細資料
-    viewCapacitor: 檢視
-    signedInAs: 登入身分
-    profile:
-      tab: 個人資料
-      title: 個人資料
-      description: 管理您的公開顯示名稱。
-      name:
-        label: 顯示名稱
-        placeholder: 其他人看到的名稱
-      avatar:
-        gravatarNotice: 頭像由 Gravatar 提供。
-        gravatarLink: 前往 gravatar.com 管理
-      action:
-        save: 儲存變更
-      message:
-        saved: 個人資料已更新。
-      error:
-        fallback: 無法儲存你的變更。
-    connections:
-      tab: 已連結的帳戶
-      title: 已連結的帳戶
-      description: 透過這些服務供應商登入 AIRI。解除連結可撤銷存取權，再次連結可改用其他帳戶。
-      status:
-        linked: 已連結
-        notLinked: 未連結
-        linkedSince: 連結日期：{date}
-      action:
-        link: 連結
-        unlink: 解除連結
-      message:
-        loading: 正在載入已連結的帳戶…
-        unlinked: '已中斷 {provider} 的連結。'
-        linked: '已連結 {provider}。'
-        linkStarted: 正在重新導向至 {provider}…
-      error:
-        listFailed: 無法載入已連結的帳戶。
-        unlinkFailed: 無法解除此帳戶的連結。
-        linkFailed: 無法開始連結流程。
-        accountAlreadyLinkedToDifferentUser: 這個 OAuth 帳戶已經連結到另一個 AIRI 帳戶了。請選擇另一個第三方帳戶，或先在另一個 AIRI 帳戶中解除連結。
-        oauthCallbackFailed: 暫時無法連結這個 OAuth 帳戶。請重試，或選擇另一個第三方帳戶。
-        lastAccount: 這是你唯一的登入方式。解除連結前，請先設定密碼。
-    security:
-      tab: 安全性
-      title: 安全性
-      description: 變更密碼，其他裝置將會登出。
-      setDescription: 你透過第三方服務登入，尚未設定密碼。我們會寄送安全連結，讓你設定密碼。
-      currentPassword:
-        label: 目前密碼
-        placeholder: 輸入目前的密碼
-      newPassword:
-        label: 新密碼
-        placeholder: 至少 8 個字元
-      confirmPassword:
-        label: 確認新密碼
-        placeholder: 再次輸入新密碼
-      action:
-        changePassword: 變更密碼
-        sendSetLink: 寄送設定密碼的連結給我
-      message:
-        changed: 密碼已變更，其他工作階段已登出。
-        setLinkSent: 請查看 {email} 中的密碼設定連結。
-      error:
-        fallback: 無法變更密碼。
-        setLinkFailed: 無法寄送密碼設定連結。
-        passwordMismatch: 新密碼與確認密碼不相符。
-        passwordSameAsCurrent: 新密碼必須與目前密碼不同。
-    danger:
-      tab: 危險操作
-      title: 危險操作
-      description: 此處的帳戶操作無法復原。
-      deleteAccount:
-        title: 刪除帳戶
-        description: 永久刪除你的帳戶及個人資料。
-        action: 刪除帳戶
-        modal:
-          title: 要刪除帳戶嗎？
-          warning: 此操作無法復原，Flux 餘額將會清空。請先取消有效的訂閱。
-          confirmEmail:
-            label: 輸入電子郵件地址以確認
-            mismatch: 電子郵件不符。
-          confirm: 傳送確認郵件
-          cancel: 取消
-        message:
-          emailSent: 請查看 {email} 中的刪除連結。
-        error:
-          fallback: 無法開始刪除操作，請稍後再試。
-          subscriptionActive: 訂閱仍然有效，請先在 Capacitor 頁面取消訂閱，再刪除帳戶。
   card:
     wake-word-conflicts:
       title: '一個共用喚醒詞發音需要指定角色 | {count} 個共用喚醒詞發音需要指定角色'
       description: 兩張角色卡使用相同的發音。指定角色前，不會有角色回應。
       action: 選擇回應的角色
-    sync:
-      notice: 角色卡會同步至帳戶。已刪除的角色卡可在 30 天內還原。
-      off_notice: 你已登入，但角色卡同步尚未開啟。
-      off_notice_link: 請在實驗性功能中開啟。
-      state:
-        synced: 已同步至帳戶
-        pending: 等待上傳
-        refused: 尚未上傳。帳戶沒有空間容納更多角色卡，因此此卡片會保留在這部裝置上。
-      conflict_copy_name: '{name}（衝突副本）'
-      conflict_notice: 另一部裝置變更了同一個角色。AIRI 已將這部裝置上的版本保留為副本。
-      history:
-        tab: 歷史記錄
-        empty: 此角色卡尚無歷史記錄。
-        loading: 正在載入歷史記錄…
-        load_failed: 無法載入此角色卡的歷史記錄。
-        current: 目前版本
-        changed_label: 已變更
-        removed_label: 已移除
-        fields:
-          name: 名字
-          nickname: 暱稱
-          version: 版本
-          creator: 建立者
-          description: 描述
-          personality: 個性
-          scenario: 情境
-          systemPrompt: 系統提示詞
-          postHistoryInstructions: 歷史記錄後的指示
-          notes: 建立者備註
-          greetings: 問候語
-          tags: 標籤
-          metadata: 中繼資料
-          assets: 素材
-          characterBook: 世界書
-          source: 來源
-          wakeWords: 喚醒詞
-          agents: 代理
-          consciousness: 意識模型
-          vision: 視覺模型
-          speech: 發聲模型
-          vrm: VRM 模型
-          live2d: Live2D 模型
-          displayModelId: 外觀模型
-          activeBackgroundId: 已固定的背景
-          artistry: 繪圖
-        restore: 還原此版本
-        restore_confirm_title: 要還原此版本嗎？
-        restore_confirm_body: 這會以 {date} 的內容取代 {name} 的目前內容。
-        restore_confirm_confirm: 還原
-        restore_confirm_cancel: 取消
-        restore_success: 已將 {name} 還原至先前版本。
-        restore_failed: 無法還原此版本，伺服器可能已不再保留。
-      deleted:
-        title: 最近刪除
-        empty: 沒有最近刪除的角色卡。
-        loading: 正在載入最近刪除的角色卡…
-        load_failed: 無法載入最近刪除的角色卡。
-        deleted_when: '刪除時間：{when}'
-        days_left: '還有 {days} 天可還原'
-        restore: 還原
-        restore_success: 已還原 {name}。
-        restore_failed: 無法還原此角色卡，伺服器可能已不再保留其內容。
     activate: 啟用
     active: 已啟用
     active_badge: 目前使用中
@@ -925,12 +760,6 @@ pages:
             select-voice:
               loading: 載入模型中……
               required: 請選擇聲線
-          voice-pack:
-            description: 為目前角色選擇預先準備的聲音
-            empty: 沒有可用的語音包
-            error: 載入語音包時發生錯誤
-            loading: 正在載入語音包…
-            title: 語音包
           provider-voice-selection:
             custom_model_placeholder: 輸入指定模型名稱...
             custom_voice_placeholder: 輸入指定聲線 ID...
@@ -1357,59 +1186,6 @@ pages:
         opened: 已在檔案管理員中開啟 {path}
         json-applied: JSON 已套用至表單。按一下「儲存並重新啟動」以寫入磁碟。
         restarted: 已全部重新啟動！啟動 {started} 個、失敗 {failed} 個、略過 {skipped} 個。
-  flux:
-    buy: 儲值
-    currency: 貨幣
-    description: 目前 Flux
-    terms: 條款
-    privacy: 隱私權政策
-    packagesError: 無法載入儲值組合，請稍後再試。
-    checkout:
-      success: 付款成功！Flux 已完成儲值。
-      canceled: 已取消付款。
-      error: 發生錯誤，請稍後再試。
-    audit:
-      title: 交易記錄
-      time: 時間
-      type: 類型
-      detail: 詳細資訊
-      amount: 金額
-      typeAddition: 儲值
-      typeConsumption: 用量
-      typeInitial: 初始贈送
-      typePromo: 活動贈送
-      loading: 正在載入記錄…
-      empty: 尚無交易記錄。
-      loadMore: 載入更多
-      delayHint: 用量記錄最多可能延遲 1 分鐘
-      ttsRequests: 請求
-    packages:
-      title: Flux 儲值組合
-      buy: 儲值
-      description: 可供選擇的 Flux 儲值組合。
-  capacitor:
-    description: Capacitor 儲存 Flux，並會自行充能。
-    statusError: 無法載入你的 Capacitor，請稍後再試。
-    packagesError: 無法載入 Capacitor 清單，請稍後再試。
-    preferenceError: 無法儲存偏好設定，請稍後再試。
-    noCapacitor: 沒有 Capacitor
-    remaining: '剩餘 {percent}'
-    rechargesAt: '{date} 充能'
-    renewsAt: '{date} 續訂'
-    expiresAt: '{date} 到期'
-    perMonth: '／月'
-    currentPackage: 目前
-    install: 安裝
-    upgrade: 升級
-    downgrade: 降級
-    manageSubscription: 管理訂閱
-    fallbackToFlux: Capacitor 耗盡時使用 Flux
-    fallbackToFluxHint: 停用時，Capacitor 耗盡後將停止使用。
-    checkout:
-      success: 你的 Capacitor 已安裝並完成充能。
-      pending: 已收到付款，Capacitor 即將充能。
-      canceled: 已取消購買。
-      error: 發生錯誤，請稍後再試。
   providers:
     catalog:
       edit:
@@ -1526,10 +1302,6 @@ pages:
           title: 聲音設定
     labels:
       recommended: 推薦
-    sync:
-      synced: 已同步
-      pending: 等待上傳
-      not-uploaded: 尚未上傳，請在這部裝置上完成此服務供應商的設定。
     filters:
       pricing: 定價
       deployment: 部署方式
@@ -1647,7 +1419,6 @@ pages:
       common:
         status:
           validating: 正在驗證設定
-          valid: 設定看起來有效。
         fields:
           field:
             pitch:
@@ -1890,15 +1661,6 @@ pages:
         title: 網頁語音 API
       prompt-api:
         description: 您可以使用 Prompt API，將自然語言要求傳送至 Chrome 中的基礎模型。
-      official:
-        title: 官方服務供應商
-        description: AIRI 提供的官方 AI 服務。
-        speech-title: 官方語音服務供應商
-        speech-description: AIRI 提供的官方文字轉語音服務。
-        speech-streaming-title: 官方串流語音服務供應商
-        speech-streaming-description: AIRI 提供的官方低延遲文字轉語音服務（雙向 WebSocket）。
-        transcription-title: 官方語音轉文字服務供應商
-        transcription-description: AIRI 提供的官方語音轉文字服務。
       transcriptions:
         playground:
           title: 實驗平台
@@ -1943,24 +1705,6 @@ pages:
         title: QR 碼掃描失敗
         failed: 無法掃描 QR 碼或透過 QR 碼連線。
   system:
-    experimental:
-      refresh: 重新整理策略
-      title: 實驗性功能
-      description: 試用開發中的功能，並管理你的選擇。
-      notice: 實驗性功能可能變更或移除。你的選擇適用於這部裝置。
-      empty-title: 沒有可用的實驗性功能
-      load-error: 雲端功能無法使用，本機功能仍可使用。
-      retry: 重試
-      reset: 使用預設
-      sources:
-        default: 應用程式預設值
-        local: 你的裝置選擇
-        global: 已登入帳戶可使用
-        account: 你的帳戶可使用
-      features:
-        character_card_sync:
-          title: 角色卡雲端同步
-          description: 登入時將角色卡同步至帳戶，讓其他裝置也能使用。預設停用，已刪除的角色卡會在帳戶歷史記錄中保留 30 天。
     color-scheme:
       description: 更改舞台的配色方案
       title: 配色方案

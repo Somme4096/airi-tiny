@@ -37,8 +37,6 @@ docs:
   'close': 关闭
   'expand': 展开
   'collapse': 折叠
-  'login': 登录
-  'logging-in': 登录中...
   'account': 账号
   'logout': 退出登录
 'chat-window':

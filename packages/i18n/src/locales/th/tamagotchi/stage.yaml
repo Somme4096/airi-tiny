@@ -37,8 +37,6 @@ docs:
   'close': ปิด
   'expand': ขยาย
   'collapse': ย่อ
-  'login': เข้าสู่ระบบ
-  'logging-in': กำลังเข้าสู่ระบบ...
   'account': บัญชี
   'logout': ออกจากระบบ
 'chat-window':

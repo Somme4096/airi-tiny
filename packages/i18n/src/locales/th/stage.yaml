@@ -4,8 +4,6 @@ character-switcher:
   empty: ยังไม่มีตัวละคร
   failed: สลับตัวละครไม่สำเร็จ ลองอีกครั้ง
 mobile-tools:
-  sign-in: เข้าสู่ระบบ AIRI
-  account-description: บัญชีและการกำหนดค่า
   sound: เสียง
   character-voice: เสียงของตัวละคร
   title: การตั้งค่า
@@ -130,7 +128,6 @@ chat:
     confirm-delete: ลบบทสนทนานี้และข้อความทั้งหมดในบทสนทนาหรือไม่?
     cancel: ยกเลิก
     empty: ยังไม่มีบทสนทนา
-    cloud-badge: ซิงค์กับคลาวด์แล้ว
     new-chat-fallback: แชทใหม่
     delete: ลบบทสนทนา
 render-error:
@@ -206,43 +203,6 @@ profile-switcher:
   save-as-new: บันทึกเป็นโปรไฟล์ใหม่
   new-profile-name: ชื่อโปรไฟล์
   manage: จัดการโปรไฟล์
-promo-banner:
-  items:
-    signin:
-      watermark: ดวงจันทร์
-      fallbackLabel: ของขวัญจากดวงจันทร์
-      title: เช็กอิน 7 วัน
-      eventName: เช็กอินเพื่อรับละอองดาว กรอบอวาตาร์ และของขวัญฉลองเปิดตัว
-      reward: ละอองดาวสูงสุด 120 หน่วย
-      cta: เช็กอิน
-    build:
-      watermark: ก่อสร้าง
-      fallbackLabel: โบนัสก่อสร้าง
-      title: โบนัสกล่องเสบียง
-      eventName: ทำภารกิจก่อสร้างให้สำเร็จเพื่อรับคูปองโบนัสและวัสดุสองเท่า
-      reward: คูปองเสบียง 5 ใบ + วัสดุอัปเกรด
-      cta: ดูภารกิจ
-    spring:
-      watermark: ฤดูใบไม้ผลิ
-      fallbackLabel: สุ่มรางวัลฤดูใบไม้ผลิ
-      title: เทศกาลแคปซูล
-      eventName: ร่วมสุ่มรางวัลฤดูใบไม้ผลิเพื่อปลดล็อกฟองคำพูด เครื่องราง และเฟอร์นิเจอร์ตามธีม
-      reward: สุ่มครั้งแรกครึ่งราคา + เครื่องรางหายาก
-      cta: สุ่มเลย
-    coupon:
-      watermark: พูดคุย
-      fallbackLabel: คูปอง
-      title: คูปองเติมเงิน
-      eventName: ทำกิจกรรมสนทนาให้สำเร็จเพื่อรับคูปองสำหรับส่วนขยายและแพ็กเสียง
-      reward: ลด 6 เมื่อซื้อ 30 / ลด 15 เมื่อซื้อ 68
-      cta: รับคูปอง
-    home:
-      watermark: อยู่บ้าน
-      fallbackLabel: ธีมห้อง
-      title: อัปเดตธีมฤดูใบไม้ผลิ
-      eventName: ปลดล็อกธีมหน้าต่าง โต๊ะ และโคมไฟกลางคืนเพื่อเปลี่ยนบรรยากาศห้อง
-      reward: ตั๋วสุ่มธีมฟรีเมื่อเช็กอิน
-      cta: ดูธีม
 waiting: กำลังรอ
 websocket-status:
   connected: เชื่อมต่อแล้ว
@@ -258,10 +218,4 @@ status:
   transcribing: กำลังถอดเสียง
   hearing-error: ถอดเสียงไม่ได้
   no-transcript: เสียงพูดที่จดจำได้จะแสดงที่นี่
-  signing-in: เข้าสู่ระบบให้เสร็จในเบราว์เซอร์ของคุณ
-  confirming: กำลังยืนยันการเข้าสู่ระบบ
-  signed-in: เข้าสู่ระบบแล้ว
-  sign-in-error: เข้าสู่ระบบไม่สำเร็จ
-  sign-in-unconfirmed: ยืนยันเซสชันของคุณไม่ได้ โปรดเข้าสู่ระบบอีกครั้ง
-  dismiss: ปิด
   configure-hearing: เลือกและตั้งค่าผู้ให้บริการการฟังในการตั้งค่า

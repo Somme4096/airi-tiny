@@ -9,8 +9,6 @@ animations:
     title: Dùng hiệu ứng chuyển cảnh riêng cho từng trang
 dialogs:
   onboarding:
-    official:
-      title: Nhà cung cấp chính thức của AIRI
     title: Chào mừng đến với AIRI!
     description: Hãy thiết lập nhà cung cấp AI đầu tiên để bắt đầu.
     selectProvider: Chọn nhà cung cấp AI
@@ -41,12 +39,6 @@ dialogs:
     enableChatCheck: >-
       Cho phép AIRI gửi tín hiệu "ping" đến mô hình chat có thể dùng được đầu tiên để kiểm tra tính khả dụng
     start: Bắt đầu thôi!
-    loginPrompt: Đăng nhập để sử dụng nhà cung cấp AIRI chính thức để có trải nghiệm tốt nhất.
-    loginAction: Đăng nhập
-    setupWithoutSigningIn: Thiết lập nhà cung cấp của bạn
-    pricingLink: Bảng Giá
-    termsLink: Điều khoản dịch vụ
-    buyFlux: Mua Flux
     select-model: Chọn mô hình
     no-models: Không có mô hình khả dụng
     no-models-help: >-
@@ -253,168 +245,11 @@ live2d:
 microphone: Micro
 models: Mô hình
 pages:
-  account:
-    title: Tài khoản
-    description: Xem hồ sơ của bạn và quản lý tài khoản
-    notLoggedIn: Đăng nhập để xem tài khoản và truy cập tất cả tính năng
-    login: Đăng nhập
-    logout: Đăng xuất
-    fluxBalance: Số dư Flux
-    viewFluxDetails: Xem chi tiết
-    viewCapacitor: Xem
-    signedInAs: Đăng nhập với
-    profile:
-      tab: Hồ sơ
-      title: Hồ sơ
-      description: Quản lý tên hiển thị công khai.
-      name:
-        label: Tên hiển thị
-        placeholder: Cách người khác thấy bạn
-      avatar:
-        gravatarNotice: Ảnh đại diện từ Gravatar.
-        gravatarLink: Quản lý trên gravatar.com
-      action:
-        save: Lưu thay đổi
-      message:
-        saved: Hồ sơ đã được cập nhật.
-      error:
-        fallback: Chúng tôi không thể lưu các thay đổi của bạn.
-    connections:
-      tab: Các tài khoản đã được liên kết
-      title: Các tài khoản đã được liên kết
-      description: Đăng nhập AIRI thông qua các nhà cung cấp này. Hủy liên kết để thu hồi quyền truy cập, sau đó liên kết lại một lần nữa để chuyển sang tài khoản khác.
-      status:
-        linked: Đã liên kết
-        notLinked: Chưa được liên kết
-        linkedSince: Đã liên kết vào {date}
-      action:
-        link: Liên kết
-        unlink: Hủy liên kết
-      message:
-        loading: Đang tải các tài khoản đã được liên kết...
-        unlinked: '{provider} đã ngắt kết nối.'
-        linked: '{provider} đã kết nối.'
-        linkStarted: Đang chuyển hướng đến {provider}…
-      error:
-        listFailed: Không thể tải các tài khoản đã liên kết.
-        unlinkFailed: Không thể hủy liên kết tài khoản này.
-        linkFailed: Không thể khởi động liên kết luồng (luồng liên kết).
-        accountAlreadyLinkedToDifferentUser: Tài khoản OAuth này đã được liên kết với một tài khoản AIRI khác. Hãy chọn tài khoản nhà cung cấp khác hoặc hủy liên kết tài khoản đó khỏi tài khoản AIRI kia trước.
-        oauthCallbackFailed: Không thể kết nối tài khoản OAuth này. Hãy thử lại hoặc chọn tài khoản nhà cung cấp khác.
-        lastAccount: Đây là phương thức đăng nhập duy nhất của bạn. Đặt mật khẩu trước khi hủy liên kết.
-    security:
-      tab: Bảo mật
-      title: Bảo mật
-      description: Thay đổi mật khẩu của bạn. Các thiết bị khác sẽ được đăng xuất.
-      setDescription: Bạn đăng nhập thông qua nhà cung cấp tài khoản mạng xã hội, vì vậy hiện tại chưa có mật khẩu. Chúng tôi sẽ gửi email liên kết bảo mật để giúp bạn đặt mật khẩu.
-      currentPassword:
-        label: Mật khẩu hiện tại
-        placeholder: Nhập mật khẩu hiện tại
-      newPassword:
-        label: Mật khẩu mới
-        placeholder: Ít nhất 8 ký tự
-      confirmPassword:
-        label: Xác nhận mật khẩu mới
-        placeholder: Lặp lại mật khẩu mới
-      action:
-        changePassword: Thay đổi mật khẩu
-        sendSetLink: Gửi link thiết lập mật khẩu đến email của tôi
-      message:
-        changed: Mật khẩu đã được thay đổi. Các phiên khác đã được đăng xuất.
-        setLinkSent: Kiểm tra {email} để thấy link đặt mật khẩu.
-      error:
-        fallback: Chúng tôi không thể thay đổi mật khẩu của bạn.
-        setLinkFailed: Chúng tôi không thể gửi link thiết lập mật khẩu.
-        passwordMismatch: Mật khẩu không khớp.
-        passwordSameAsCurrent: Mật khẩu mới phải khác mật khẩu cũ.
-    danger:
-      tab: Vùng Nguy Hiểm
-      title: Vùng Nguy Hiểm
-      description: Các hành động không thể đảo ngược cho tài khoản ở đây.
-      deleteAccount:
-        title: Xóa tài khoản
-        description: Xóa tài khoản và dữ liệu cá nhân vĩnh viễn.
-        action: Xóa tài khoản
-        modal:
-          title: Xóa tài khoản?
-          warning: Hành động này không thể đảo ngược. Các gói đăng ký đang hoạt động sẽ bị hủy, số dư Flux sẽ bị xóa sạch.
-          confirmEmail:
-            label: Nhập email để xác nhận
-            mismatch: Email không khớp.
-          confirm: Gửi email xác nhận
-          cancel: Hủy
-        message:
-          emailSent: Kiểm tra {email} để thấy link xóa.
-        error:
-          fallback: Không thể xóa. Hãy thử lại sau.
-          subscriptionActive: Gói đăng ký vẫn đang hoạt động. Hãy hủy gói trên trang Capacitor trước, rồi xóa tài khoản.
   card:
     wake-word-conflicts:
       title: 'Một cách phát âm từ đánh thức dùng chung cần có nhân vật | {count} cách phát âm từ đánh thức dùng chung cần có nhân vật'
       description: Hai thẻ dùng cùng cách phát âm. Không nhân vật nào trả lời cho đến khi bạn chọn một nhân vật.
       action: Chọn nhân vật trả lời
-    sync:
-      notice: Thẻ nhân vật được đồng bộ với tài khoản. Bạn có thể khôi phục thẻ đã xóa trong 30 ngày.
-      off_notice: Bạn đã đăng nhập nhưng đồng bộ thẻ nhân vật đang tắt.
-      off_notice_link: Bật tính năng trong mục Tính năng thử nghiệm.
-      state:
-        synced: Đã đồng bộ với tài khoản
-        pending: Đang chờ tải lên
-        refused: Chưa tải lên. Tài khoản không còn chỗ cho thẻ mới nên thẻ này vẫn nằm trên thiết bị này.
-      conflict_copy_name: '{name} (bản sao do xung đột)'
-      conflict_notice: Thiết bị khác đã sửa cùng nhân vật. AIRI giữ phiên bản trên thiết bị này dưới dạng bản sao.
-      history:
-        tab: Lịch sử
-        empty: Thẻ này chưa có lịch sử.
-        loading: Đang tải lịch sử…
-        load_failed: Không thể tải lịch sử của thẻ này.
-        current: Hiện tại
-        changed_label: Đã thay đổi
-        removed_label: Đã xóa
-        fields:
-          name: Tên
-          nickname: Biệt danh
-          version: Phiên bản
-          creator: Người tạo
-          description: Mô tả
-          personality: Tính cách
-          scenario: Kịch bản
-          systemPrompt: Lời nhắc hệ thống
-          postHistoryInstructions: Chỉ dẫn sau lịch sử
-          notes: Ghi chú của người tạo
-          greetings: Lời chào
-          tags: Thẻ gắn
-          metadata: Siêu dữ liệu
-          assets: Tài nguyên
-          characterBook: Sổ bối cảnh
-          source: Nguồn
-          wakeWords: Từ đánh thức
-          agents: Tác nhân
-          consciousness: Mô hình ý thức
-          vision: Mô hình thị giác
-          speech: Mô hình giọng nói
-          vrm: Mô hình VRM
-          live2d: Mô hình Live2D
-          displayModelId: Mô hình hiển thị
-          activeBackgroundId: Nền đã ghim
-          artistry: Nghệ thuật
-        restore: Khôi phục phiên bản này
-        restore_confirm_title: Khôi phục phiên bản này?
-        restore_confirm_body: Nội dung hiện tại của {name} sẽ được thay bằng nội dung từ {date}.
-        restore_confirm_confirm: Khôi phục
-        restore_confirm_cancel: Hủy
-        restore_success: Đã khôi phục {name} về phiên bản trước.
-        restore_failed: Không thể khôi phục phiên bản này. Có thể máy chủ không còn lưu phiên bản đó.
-      deleted:
-        title: Đã xóa gần đây
-        empty: Không có thẻ nào bị xóa gần đây.
-        loading: Đang tải các thẻ đã xóa gần đây…
-        load_failed: Không thể tải các thẻ đã xóa gần đây.
-        deleted_when: 'Đã xóa {when}'
-        days_left: 'Còn {days} ngày để khôi phục'
-        restore: Khôi phục
-        restore_success: Đã khôi phục {name}.
-        restore_failed: Không thể khôi phục thẻ này. Có thể máy chủ không còn lưu nội dung thẻ.
     activate: Kích hoạt
     active: Đang hoạt động
     active_badge: Hiện đang hoạt động
@@ -923,12 +758,6 @@ pages:
             select-voice:
               loading: Đang tải mô hình...
               required: Vui lòng chọn một giọng nói
-          voice-pack:
-            description: Chọn một giọng nói được tuyển chọn cho nhân vật đang hoạt động
-            empty: Không có Gói Giọng Nói khả dụng nào
-            error: Lỗi khi tải Gói Giọng Nói
-            loading: Đang tải Gói Giọng Nói...
-            title: Gói Giọng Nói
           provider-voice-selection:
             custom_model_placeholder: Nhập tên mô hình tùy chỉnh...
             custom_voice_placeholder: Nhập ID giọng nói tùy chỉnh...
@@ -1354,59 +1183,6 @@ pages:
         opened: Đã mở {path} trong trình quản lý tệp của bạn
         json-applied: Đã áp dụng JSON vào biểu mẫu. Nhấp "Lưu và khởi động lại" để lưu vào đĩa.
         restarted: Tất cả đã được khởi động lại! {started} đã khởi động, {failed} thất bại, {skipped} đã bỏ qua.
-  flux:
-    buy: Mua
-    currency: Tiền tệ
-    description: Số Flux hiện tại
-    terms: Điều khoản
-    privacy: Chính sách quyền riêng tư
-    packagesError: Không thể tải các gói. Vui lòng thử lại sau.
-    checkout:
-      success: Thanh toán hoàn tất! Flux của bạn đã được nạp.
-      canceled: Thanh toán đã bị hủy.
-      error: Đã xảy ra sự cố. Xin vui lòng thử lại sau.
-    audit:
-      title: Lịch Sử Giao Dịch
-      time: Thời gian
-      type: Loại
-      detail: Chi tiết
-      amount: Số lượng
-      typeAddition: Nạp thêm
-      typeConsumption: Mức sử dụng
-      typeInitial: Khoản Cấp Ban Đầu
-      typePromo: Tặng khuyến mãi
-      loading: Đang tải lịch sử...
-      empty: Chưa có giao dịch nào.
-      loadMore: Tải Thêm
-      delayHint: Các bản ghi về mức sử dụng có thể bị trễ 1 phút
-      ttsRequests: các yêu cầu
-    packages:
-      title: Gói Flux
-      buy: Mua
-      description: Các gói Flux để lựa chọn.
-  capacitor:
-    description: Capacitor chứa Flux và tự nạp lại.
-    statusError: Không thể tải Capacitor của bạn. Thử lại sau.
-    packagesError: Không thể tải danh sách Capacitor. Thử lại sau.
-    preferenceError: Không thể lưu tùy chọn. Thử lại sau.
-    noCapacitor: Không có Capacitor
-    remaining: 'Còn {percent}'
-    rechargesAt: Nạp lại vào {date}
-    renewsAt: Gia hạn vào {date}
-    expiresAt: Hết hạn vào {date}
-    perMonth: / tháng
-    currentPackage: Hiện tại
-    install: Cài đặt
-    upgrade: Nâng cấp
-    downgrade: Hạ cấp
-    manageSubscription: Quản lý đăng ký
-    fallbackToFlux: Dùng Flux khi Capacitor cạn
-    fallbackToFluxHint: Khi tắt, việc sử dụng dừng khi Capacitor cạn.
-    checkout:
-      success: Capacitor của bạn đã được cài và nạp đầy.
-      pending: Đã nhận thanh toán. Capacitor của bạn sẽ sớm được nạp.
-      canceled: Đã hủy mua.
-      error: Đã xảy ra sự cố. Xin vui lòng thử lại sau.
   providers:
     catalog:
       edit:
@@ -1523,10 +1299,6 @@ pages:
           title: Cài đặt giọng nói
     labels:
       recommended: Được gợi ý
-    sync:
-      synced: Đã đồng bộ
-      pending: Đang chờ tải lên
-      not-uploaded: Chưa tải lên. Hoàn tất cấu hình nhà cung cấp trên thiết bị này.
     filters:
       pricing: Bảng Giá
       deployment: Triển khai
@@ -1643,7 +1415,6 @@ pages:
       common:
         status:
           validating: Đang xác thực
-          valid: Cấu hình có vẻ hợp lệ.
         fields:
           field:
             pitch:
@@ -1875,15 +1646,6 @@ pages:
         title: Web Giọng nói API
       prompt-api:
         description: Với Prompt API, bạn có thể gửi yêu cầu bằng ngôn ngữ tự nhiên đến mô hình cơ sở trong Chrome.
-      official:
-        title: Nhà Cung Cấp Chính Thức
-        description: Nhà cung cấp AI chính thức bởi AIRI.
-        speech-title: Nhà cung cấp giọng nói chính thức
-        speech-description: Nhà cung cấp chuyển văn bản thành giọng nói chính thức của AIRI.
-        speech-streaming-title: Nhà Cung Cấp Giọng Nói Thời Gian Thực (Streaming) Chính Thức
-        speech-streaming-description: Nhà cung cấp text-to-speech độ trễ thấp chính thức bởi AIRI (WebSocket hai chiều).
-        transcription-title: Nhà Cung Cấp Phiên Âm Chính Thức
-        transcription-description: Nhà cung cấp speech-to-text chính thức bởi AIRI.
       transcriptions:
         playground:
           title: Thử nghiệm chuyển văn bản
@@ -1928,24 +1690,6 @@ pages:
         title: Quét mã QR thất bại
         failed: Không thể quét hoặc kết nối bằng mã QR.
   system:
-    experimental:
-      refresh: Làm mới chính sách
-      title: Tính năng thử nghiệm
-      description: Thử tính năng đang phát triển và quản lý lựa chọn của bạn.
-      notice: Tính năng thử nghiệm có thể thay đổi hoặc bị xóa. Lựa chọn của bạn áp dụng cho thiết bị này.
-      empty-title: Không có tính năng thử nghiệm
-      load-error: Tính năng đám mây không khả dụng. Tính năng cục bộ vẫn khả dụng.
-      retry: Thử lại
-      reset: Sử dụng mặc định
-      sources:
-        default: Mặc định của ứng dụng
-        local: Lựa chọn trên thiết bị
-        global: Khả dụng cho tài khoản đã đăng nhập
-        account: Khả dụng cho tài khoản của bạn
-      features:
-        character_card_sync:
-          title: Đồng bộ thẻ nhân vật trên đám mây
-          description: Đồng bộ thẻ nhân vật với tài khoản khi đăng nhập để dùng trên thiết bị khác. Mặc định tắt. Thẻ đã xóa vẫn nằm trong lịch sử tài khoản trong 30 ngày.
     color-scheme:
       description: Đổi bảng màu sân khấu.
       title: Bảng màu

@@ -4,8 +4,6 @@ character-switcher:
   empty: 尚無角色
   failed: 無法切換角色，請再試一次。
 mobile-tools:
-  sign-in: 登入 AIRI
-  account-description: 帳戶與偏好設定
   sound: 聲音
   character-voice: 角色聲音
   title: 設定
@@ -130,7 +128,6 @@ chat:
     confirm-delete: 要刪除此對話及其訊息嗎？
     cancel: 取消
     empty: 尚無對話
-    cloud-badge: 已同步至雲端
     new-chat-fallback: 新對話
     delete: 刪除對話
 render-error:
@@ -206,43 +203,6 @@ profile-switcher:
   save-as-new: 儲存為新設定檔
   new-profile-name: 設定檔名稱
   manage: 管理設定檔
-promo-banner:
-  items:
-    signin:
-      watermark: 月石
-      fallbackLabel: 月石禮包
-      title: 7日簽到
-      eventName: 登入即可領取星塵、頭像框與啟動禮物。
-      reward: 最多 120 星塵
-      cta: 登入
-    build:
-      watermark: 建造
-      fallbackLabel: 建造獎勵
-      title: 補給箱獎勵
-      eventName: 完成建造任務即可獲得獎勵券與雙倍材料。
-      reward: 5 張補給券 + 升級材料
-      cta: 查看任務
-    spring:
-      watermark: 春天
-      fallbackLabel: 春日抽獎
-      title: 扭蛋嘉年華
-      eventName: 參加春日抽獎，解鎖氣泡、掛飾與主題家具。
-      reward: 首抽半價 + 稀有掛飾
-      cta: 立即抽取
-    coupon:
-      watermark: 對話
-      fallbackLabel: 優惠券
-      title: 儲值優惠券
-      eventName: 完成聊天互動即可領取擴充包與語音包優惠券。
-      reward: 滿 30 減 6 / 滿 68 減 15
-      cta: 領取優惠券
-    home:
-      watermark: 首頁
-      fallbackLabel: 房間主題
-      title: 春日主題更新
-      eventName: 解鎖窗戶、書桌與夜燈主題，為房間煥然一新。
-      reward: 登入即贈主題抽獎券
-      cta: 查看主題
 waiting: 等待中
 websocket-status:
   connected: 已連線
@@ -258,10 +218,4 @@ status:
   transcribing: 正在轉錄
   hearing-error: 無法轉錄音訊
   no-transcript: 辨識到的語音會顯示在此處。
-  signing-in: 在瀏覽器中完成登入
-  confirming: 正在確認登入
-  signed-in: 已登入
-  sign-in-error: 登入失敗
-  sign-in-unconfirmed: 無法確認你的工作階段。請重新登入。
-  dismiss: 關閉提示
   configure-hearing: 在設定中選擇並設定聽覺供應商。

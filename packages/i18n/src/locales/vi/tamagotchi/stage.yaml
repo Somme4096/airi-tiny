@@ -37,8 +37,6 @@ docs:
   'close': Đóng
   'expand': Mở rộng
   'collapse': Sụp đổ
-  'login': Đăng nhập
-  'logging-in': Đang đăng nhập...
   'account': Tài khoản
   'logout': Đăng xuất
 'chat-window':

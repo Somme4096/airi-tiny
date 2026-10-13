@@ -4,8 +4,6 @@ character-switcher:
   empty: Aún no hay personajes
   failed: No se pudo cambiar de personajes. Inténtelo de nuevo.
 mobile-tools:
-  sign-in: Iniciar sesión en AIRI
-  account-description: Cuenta y preferencias
   sound: Sonido
   character-voice: Voz del personaje
   title: Configuración
@@ -130,7 +128,6 @@ chat:
     confirm-delete: '¿Eliminar esta conversación y sus mensajes?'
     cancel: Cancelar
     empty: No hay conversaciones todavía
-    cloud-badge: Sincronizado en la nube
     new-chat-fallback: Nuevo Chat
     delete: Eliminar conversación
 render-error:
@@ -208,43 +205,6 @@ profile-switcher:
   save-as-new: Guardar como Nuevo Perfil
   new-profile-name: Nombre del perfil
   manage: Administrar Perfiles
-promo-banner:
-  items:
-    signin:
-      watermark: Luna
-      fallbackLabel: Regalo lunar
-      title: 7 días de inicio de sesión
-      eventName: Inicia sesión para reclamar stardust, marcos de avatar y regalos de lanzamiento.
-      reward: Hasta 120 Stardust
-      cta: Iniciar sesión
-    build:
-      watermark: Construir
-      fallbackLabel: Bonificación de construcción
-      title: Bono de caja de suministro
-      eventName: Termina las tareas de construcción para ganar cupones de bonificación y materiales dobles.
-      reward: 5 Cupones de Suministros + Materiales de Mejora
-      cta: Ver tareas
-    spring:
-      watermark: Primavera
-      fallbackLabel: Dibujo Primaveral
-      title: Cápsula de Carnaval
-      eventName: Participa en el sorteo de primavera para desbloquear burbujas, amuletos y muebles temáticos.
-      reward: Primera tirada a mitad de precio + Talismán raro
-      cta: Participar ahora
-    coupon:
-      watermark: Hablar
-      fallbackLabel: Cupón
-      title: Cupón Top-Up
-      eventName: Termina las interacciones del chat para reclamar cupones para la expansión y los paquetes de voz.
-      reward: Ahorre 6 en 30 / Ahorre 15 en 68
-      cta: Reclamar Cupón
-    home:
-      watermark: Inicio
-      fallbackLabel: Tema de sala
-      title: Actualización del tema primavera
-      eventName: Desbloquea los temas de ventana, escritorio y lámparas nocturnas para actualizar tu habitación.
-      reward: Ticket de Dibujo de Tema gratis al iniciar sesión
-      cta: Ver temas
 waiting: Esperando...
 websocket-status:
   connected: Conectado
@@ -260,10 +220,4 @@ status:
   transcribing: Transcribiendo
   hearing-error: No se pudo transcribir el audio
   no-transcript: El texto reconocido aparecerá aquí.
-  signing-in: Completa el inicio de sesión en el navegador
-  confirming: Confirmando el inicio de sesión
-  signed-in: Sesión iniciada
-  sign-in-error: Error al iniciar sesión
-  sign-in-unconfirmed: No se pudo confirmar la sesión. Inicia sesión de nuevo.
-  dismiss: Descartar
   configure-hearing: Selecciona y configura un proveedor de Audición en los ajustes.

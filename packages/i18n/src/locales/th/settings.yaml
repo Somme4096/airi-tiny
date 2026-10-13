@@ -9,8 +9,6 @@ animations:
     title: ใช้การเปลี่ยนฉากเฉพาะของแต่ละหน้า
 dialogs:
   onboarding:
-    official:
-      title: ผู้ให้บริการทางการของ AIRI
     title: ยินดีต้อนรับสู่ AIRI!
     description: มาตั้งค่าผู้ให้บริการ AI รายแรกของคุณเพื่อเริ่มต้นกัน
     selectProvider: เลือกผู้ให้บริการ AI
@@ -41,12 +39,6 @@ dialogs:
     enableChatCheck: >-
       อนุญาตให้ AIRI ส่งข้อความ "ping" ไปยังโมเดลแชทตัวแรกที่ใช้ได้ เพื่อตรวจสอบว่าพร้อมใช้งาน
     start: เริ่มกันเลย!
-    loginPrompt: เข้าสู่ระบบเพื่อใช้ผู้ให้บริการทางการของ AIRI และรับประสบการณ์ที่ดีที่สุด
-    loginAction: เข้าสู่ระบบ
-    setupWithoutSigningIn: ตั้งค่าด้วยผู้ให้บริการของคุณเอง
-    pricingLink: ราคา
-    termsLink: ข้อกำหนดในการให้บริการ
-    buyFlux: เติม Flux
     select-model: เลือกโมเดล
     no-models: ไม่มีโมเดลที่ใช้ได้
     no-models-help: >-
@@ -253,168 +245,11 @@ live2d:
 microphone: ไมโครโฟน
 models: โมเดล
 pages:
-  account:
-    title: บัญชี
-    description: ดูโปรไฟล์และจัดการบัญชีของคุณ
-    notLoggedIn: เข้าสู่ระบบเพื่อดูบัญชีและใช้งานฟีเจอร์ทั้งหมด
-    login: เข้าสู่ระบบ
-    logout: ออกจากระบบ
-    fluxBalance: ยอด Flux คงเหลือ
-    viewFluxDetails: ดูรายละเอียด
-    viewCapacitor: ดู
-    signedInAs: เข้าสู่ระบบในชื่อ
-    profile:
-      tab: โปรไฟล์
-      title: โปรไฟล์
-      description: จัดการชื่อที่แสดงต่อสาธารณะของคุณ
-      name:
-        label: ชื่อที่แสดง
-        placeholder: ชื่อที่คนอื่นเห็น
-      avatar:
-        gravatarNotice: รูปโปรไฟล์จาก Gravatar
-        gravatarLink: จัดการที่ gravatar.com
-      action:
-        save: บันทึกการเปลี่ยนแปลง
-      message:
-        saved: อัปเดตโปรไฟล์แล้ว
-      error:
-        fallback: เราบันทึกการเปลี่ยนแปลงของคุณไม่ได้
-    connections:
-      tab: บัญชีที่เชื่อมต่อ
-      title: บัญชีที่เชื่อมต่อ
-      description: เข้าสู่ระบบ AIRI ผ่านผู้ให้บริการเหล่านี้ ยกเลิกการเชื่อมโยงเพื่อเพิกถอนการเข้าถึง แล้วเชื่อมโยงอีกครั้งเพื่อเปลี่ยนไปใช้บัญชีอื่น
-      status:
-        linked: เชื่อมโยงแล้ว
-        notLinked: ยังไม่ได้เชื่อมโยง
-        linkedSince: เชื่อมโยงเมื่อ {date}
-      action:
-        link: เชื่อมโยง
-        unlink: ยกเลิกการเชื่อมโยง
-      message:
-        loading: กำลังโหลดบัญชีที่เชื่อมต่อ...
-        unlinked: 'ยกเลิกการเชื่อมต่อ {provider} แล้ว'
-        linked: 'เชื่อมต่อ {provider} แล้ว'
-        linkStarted: กำลังเปลี่ยนเส้นทางไปยัง {provider}…
-      error:
-        listFailed: โหลดบัญชีที่เชื่อมต่อไม่ได้
-        unlinkFailed: ยกเลิกการเชื่อมโยงบัญชีนี้ไม่ได้
-        linkFailed: เริ่มขั้นตอนการเชื่อมโยงไม่ได้
-        accountAlreadyLinkedToDifferentUser: บัญชี OAuth นี้เชื่อมโยงกับบัญชี AIRI อื่นอยู่แล้ว เลือกบัญชีอื่นของผู้ให้บริการ หรือยกเลิกการเชื่อมโยงจากบัญชี AIRI นั้นก่อน
-        oauthCallbackFailed: เราเชื่อมต่อบัญชี OAuth นี้ไม่ได้ ลองอีกครั้งหรือเลือกบัญชีอื่นของผู้ให้บริการ
-        lastAccount: นี่เป็นวิธีเข้าสู่ระบบเพียงวิธีเดียวของคุณ ตั้งรหัสผ่านก่อน แล้วจึงยกเลิกการเชื่อมโยง
-    security:
-      tab: ความปลอดภัย
-      title: ความปลอดภัย
-      description: เปลี่ยนรหัสผ่านของคุณ อุปกรณ์อื่น ๆ ของคุณจะถูกออกจากระบบ
-      setDescription: คุณเข้าสู่ระบบผ่านผู้ให้บริการโซเชียล จึงยังไม่มีรหัสผ่านปัจจุบัน เราจะส่งลิงก์ที่ปลอดภัยไปทางอีเมลเพื่อให้คุณตั้งรหัสผ่าน
-      currentPassword:
-        label: รหัสผ่านปัจจุบัน
-        placeholder: กรอกรหัสผ่านปัจจุบันของคุณ
-      newPassword:
-        label: รหัสผ่านใหม่
-        placeholder: อย่างน้อย 8 ตัวอักษร
-      confirmPassword:
-        label: ยืนยันรหัสผ่านใหม่
-        placeholder: กรอกรหัสผ่านใหม่อีกครั้ง
-      action:
-        changePassword: เปลี่ยนรหัสผ่าน
-        sendSetLink: ส่งลิงก์สำหรับตั้งรหัสผ่านทางอีเมล
-      message:
-        changed: เปลี่ยนรหัสผ่านแล้ว เซสชันอื่น ๆ ถูกออกจากระบบแล้ว
-        setLinkSent: ตรวจสอบลิงก์สำหรับตั้งรหัสผ่านที่ {email}
-      error:
-        fallback: เราเปลี่ยนรหัสผ่านของคุณไม่ได้
-        setLinkFailed: เราส่งลิงก์สำหรับตั้งรหัสผ่านไม่ได้
-        passwordMismatch: รหัสผ่านใหม่กับการยืนยันรหัสผ่านไม่ตรงกัน
-        passwordSameAsCurrent: รหัสผ่านใหม่ต้องไม่ซ้ำกับรหัสผ่านปัจจุบัน
-    danger:
-      tab: โซนอันตราย
-      title: โซนอันตราย
-      description: การดำเนินการกับบัญชีที่ย้อนกลับไม่ได้อยู่ที่นี่
-      deleteAccount:
-        title: ลบบัญชี
-        description: ลบบัญชีและข้อมูลส่วนตัวของคุณอย่างถาวร
-        action: ลบบัญชี
-        modal:
-          title: ลบบัญชีไหม?
-          warning: การดำเนินการนี้ย้อนกลับไม่ได้ ยอด Flux ของคุณจะถูกล้าง โปรดยกเลิกการสมัครสมาชิกที่ยังใช้งานอยู่ก่อน
-          confirmEmail:
-            label: พิมพ์อีเมลของคุณเพื่อยืนยัน
-            mismatch: อีเมลไม่ตรงกัน
-          confirm: ส่งอีเมลยืนยัน
-          cancel: ยกเลิก
-        message:
-          emailSent: ตรวจสอบลิงก์สำหรับลบบัญชีที่ {email}
-        error:
-          fallback: เริ่มการลบไม่ได้ โปรดลองอีกครั้งภายหลัง
-          subscriptionActive: การสมัครสมาชิกของคุณยังใช้งานอยู่ ยกเลิกที่หน้า Capacitor ก่อน แล้วจึงลบบัญชี
   card:
     wake-word-conflicts:
       title: 'ต้องเลือกตัวละครให้การออกเสียงคำปลุกที่ใช้ร่วมกัน 1 รายการ | ต้องเลือกตัวละครให้การออกเสียงคำปลุกที่ใช้ร่วมกัน {count} รายการ'
       description: มีการ์ดสองใบใช้การออกเสียงเดียวกัน จะไม่มีตัวละครตอบจนกว่าคุณจะเลือก
       action: เลือกตัวละครที่จะตอบ
-    sync:
-      notice: การ์ดตัวละครจะซิงค์กับบัญชีของคุณ การ์ดที่ลบแล้วกู้คืนได้ภายใน 30 วัน
-      off_notice: คุณเข้าสู่ระบบแล้ว แต่การซิงค์การ์ดตัวละครปิดอยู่
-      off_notice_link: เปิดได้ในฟีเจอร์ทดลอง
-      state:
-        synced: ซิงค์กับบัญชีของคุณแล้ว
-        pending: กำลังรออัปโหลด
-        refused: ไม่ได้อัปโหลด บัญชีของคุณไม่มีที่ว่างสำหรับการ์ดเพิ่ม การ์ดนี้จึงอยู่บนอุปกรณ์นี้
-      conflict_copy_name: '{name} (สำเนาที่ขัดแย้ง)'
-      conflict_notice: อุปกรณ์อื่นแก้ไขตัวละครเดียวกัน AIRI เก็บเวอร์ชันจากอุปกรณ์นี้ไว้เป็นสำเนา
-      history:
-        tab: ประวัติ
-        empty: การ์ดนี้ยังไม่มีประวัติ
-        loading: กำลังโหลดประวัติ…
-        load_failed: โหลดประวัติของการ์ดนี้ไม่ได้
-        current: ปัจจุบัน
-        changed_label: เปลี่ยนแปลง
-        removed_label: ลบออก
-        fields:
-          name: ชื่อ
-          nickname: ชื่อเล่น
-          version: เวอร์ชัน
-          creator: ผู้สร้าง
-          description: คำอธิบาย
-          personality: บุคลิกภาพ
-          scenario: สถานการณ์
-          systemPrompt: พรอมต์ระบบ
-          postHistoryInstructions: คำสั่งหลังประวัติข้อความ
-          notes: บันทึกของผู้สร้าง
-          greetings: คำทักทาย
-          tags: แท็ก
-          metadata: เมทาดาทา
-          assets: ไฟล์ประกอบ
-          characterBook: สมุดข้อมูลโลก
-          source: แหล่งที่มา
-          wakeWords: คำปลุก
-          agents: เอเจนต์
-          consciousness: โมเดลจิตสำนึก
-          vision: โมเดลการมองเห็น
-          speech: โมเดลการพูด
-          vrm: โมเดล VRM
-          live2d: โมเดล Live2D
-          displayModelId: โมเดลที่แสดง
-          activeBackgroundId: พื้นหลังที่ปักหมุด
-          artistry: การสร้างภาพ
-        restore: กู้คืนเวอร์ชันนี้
-        restore_confirm_title: กู้คืนเวอร์ชันนี้ไหม?
-        restore_confirm_body: การดำเนินการนี้จะแทนที่เนื้อหาปัจจุบันของ {name} ด้วยเนื้อหาจาก {date}
-        restore_confirm_confirm: กู้คืน
-        restore_confirm_cancel: ยกเลิก
-        restore_success: กู้คืน {name} เป็นเวอร์ชันก่อนหน้าแล้ว
-        restore_failed: กู้คืนเวอร์ชันนี้ไม่ได้ เซิร์ฟเวอร์อาจไม่มีเวอร์ชันนี้แล้ว
-      deleted:
-        title: ลบล่าสุด
-        empty: ไม่มีการ์ดที่ลบล่าสุด
-        loading: กำลังโหลดการ์ดที่ลบล่าสุด…
-        load_failed: โหลดการ์ดที่ลบล่าสุดไม่ได้
-        deleted_when: 'ลบเมื่อ {when}'
-        days_left: 'เหลือเวลากู้คืนอีก {days} วัน'
-        restore: กู้คืน
-        restore_success: กู้คืน {name} แล้ว
-        restore_failed: กู้คืนการ์ดนี้ไม่ได้ เซิร์ฟเวอร์อาจไม่มีเนื้อหาของการ์ดนี้แล้ว
     activate: เปิดใช้งาน
     active: ใช้งานอยู่
     active_badge: กำลังใช้งาน
@@ -923,12 +758,6 @@ pages:
             select-voice:
               loading: กำลังโหลดโมเดล...
               required: โปรดเลือกเสียง
-          voice-pack:
-            description: เลือกเสียงที่คัดสรรไว้สำหรับตัวละครที่ใช้งานอยู่
-            empty: ไม่มีแพ็กเสียงที่ใช้ได้
-            error: โหลดแพ็กเสียงไม่สำเร็จ
-            loading: กำลังโหลดแพ็กเสียง...
-            title: แพ็กเสียง
           provider-voice-selection:
             custom_model_placeholder: กรอกชื่อโมเดลที่กำหนดเอง...
             custom_voice_placeholder: กรอก ID เสียงที่กำหนดเอง...
@@ -1354,60 +1183,6 @@ pages:
         opened: เปิด {path} ในตัวจัดการไฟล์แล้ว
         json-applied: นำ JSON ไปใช้กับแบบฟอร์มแล้ว คลิก "บันทึกและรีสตาร์ต" เพื่อบันทึกลงดิสก์
         restarted: รีสตาร์ตทั้งหมดแล้ว! เริ่มทำงาน {started} ล้มเหลว {failed} ข้าม {skipped}
-  flux:
-    buy: เติมเงิน
-    currency: สกุลเงิน
-    description: Flux ปัจจุบัน
-    terms: ข้อกำหนด
-    privacy: นโยบายความเป็นส่วนตัว
-    packagesError: โหลดแพ็กเกจไม่สำเร็จ โปรดลองอีกครั้งภายหลัง
-    checkout:
-      success: ชำระเงินสำเร็จ! เติม Flux ของคุณแล้ว
-      canceled: ยกเลิกการชำระเงินแล้ว
-      error: เกิดข้อผิดพลาด โปรดลองอีกครั้งภายหลัง
-    audit:
-      title: ประวัติธุรกรรม
-      time: เวลา
-      type: ประเภท
-      detail: รายละเอียด
-      amount: จำนวน
-      typeAddition: เติมเงิน
-      typeConsumption: การใช้งาน
-      typeInitial: เครดิตเริ่มต้น
-      typePromo: เครดิตโปรโมชัน
-      loading: กำลังโหลดประวัติ...
-      empty: ยังไม่มีรายการธุรกรรม
-      loadMore: โหลดเพิ่มเติม
-      delayHint: รายการการใช้งานอาจล่าช้าได้ถึง 1 นาที
-      ttsRequests: คำขอ
-    packages:
-      title: แพ็กเกจ Flux
-      buy: เติมเงิน
-      description: แพ็กเกจ Flux ที่เลือกได้
-  capacitor:
-    description: Capacitor เก็บ Flux ไว้และเติมเองโดยอัตโนมัติ
-    statusError: โหลด Capacitor ของคุณไม่สำเร็จ โปรดลองอีกครั้งภายหลัง
-    packagesError: โหลด Capacitor ไม่สำเร็จ โปรดลองอีกครั้งภายหลัง
-    preferenceError: บันทึกการกำหนดค่าไม่สำเร็จ โปรดลองอีกครั้งภายหลัง
-    noCapacitor: ไม่มี Capacitor
-    available: Capacitor ที่มี
-    remaining: 'เหลือ {percent}'
-    rechargesAt: เติมใหม่ {date}
-    renewsAt: ต่ออายุ {date}
-    expiresAt: หมดอายุ {date}
-    perMonth: / เดือน
-    currentPackage: ปัจจุบัน
-    install: ติดตั้ง
-    upgrade: อัปเกรด
-    downgrade: ดาวน์เกรด
-    manageSubscription: จัดการการสมัครสมาชิก
-    fallbackToFlux: ใช้ Flux เมื่อ Capacitor ว่าง
-    fallbackToFluxHint: เมื่อปิด การใช้งานจะหยุดเมื่อ Capacitor ว่าง
-    checkout:
-      success: ติดตั้งและเติม Capacitor ของคุณแล้ว
-      pending: ได้รับการชำระเงินแล้ว Capacitor ของคุณจะได้รับการเติมในไม่ช้า
-      canceled: ยกเลิกการซื้อแล้ว
-      error: เกิดข้อผิดพลาด โปรดลองอีกครั้งภายหลัง
   providers:
     catalog:
       edit:
@@ -1524,10 +1299,6 @@ pages:
           title: การตั้งค่าเสียง
     labels:
       recommended: แนะนำ
-    sync:
-      synced: ซิงค์แล้ว
-      pending: กำลังรออัปโหลด
-      not-uploaded: ไม่ได้อัปโหลด ตั้งค่าผู้ให้บริการนี้ให้ครบบนอุปกรณ์นี้
     filters:
       pricing: ราคา
       deployment: การติดตั้งใช้งาน
@@ -1641,7 +1412,6 @@ pages:
       common:
         status:
           validating: กำลังตรวจสอบ
-          valid: การตั้งค่าดูเหมือนจะถูกต้อง
         fields:
           field:
             pitch:
@@ -1859,15 +1629,6 @@ pages:
         description: STT ในตัวเบราว์เซอร์ (ต้องใช้ Chrome/Edge/Safari)
       prompt-api:
         description: Prompt API ช่วยให้คุณส่งคำขอเป็นภาษาธรรมชาติไปยังโมเดลพื้นฐานใน Chrome ได้
-      official:
-        title: ผู้ให้บริการทางการ
-        description: ผู้ให้บริการ AI ทางการของ AIRI
-        speech-title: ผู้ให้บริการเสียงพูดทางการ
-        speech-description: ผู้ให้บริการแปลงข้อความเป็นเสียงพูดทางการของ AIRI
-        speech-streaming-title: ผู้ให้บริการเสียงพูดแบบสตรีมทางการ
-        speech-streaming-description: ผู้ให้บริการแปลงข้อความเป็นเสียงพูดแบบหน่วงเวลาต่ำทางการของ AIRI (WebSocket สองทาง)
-        transcription-title: ผู้ให้บริการถอดเสียงทางการ
-        transcription-description: ผู้ให้บริการแปลงเสียงพูดเป็นข้อความทางการของ AIRI
       transcriptions:
         playground:
           title: พื้นที่ทดลองการถอดเสียง
@@ -1912,24 +1673,6 @@ pages:
         title: สแกนคิวอาร์โค้ดไม่สำเร็จ
         failed: สแกนหรือเชื่อมต่อด้วยคิวอาร์โค้ดไม่สำเร็จ
   system:
-    experimental:
-      refresh: รีเฟรชนโยบาย
-      title: ฟีเจอร์ทดลอง
-      description: ลองใช้ฟีเจอร์ที่กำลังพัฒนาและจัดการตัวเลือกของคุณ
-      notice: ฟีเจอร์ทดลองอาจเปลี่ยนแปลงหรือถูกนำออก ตัวเลือกของคุณมีผลกับอุปกรณ์นี้
-      empty-title: ไม่มีฟีเจอร์ทดลองที่ใช้ได้
-      load-error: ฟีเจอร์บนคลาวด์ไม่พร้อมใช้งาน ฟีเจอร์ในเครื่องยังใช้ได้ตามปกติ
-      retry: ลองอีกครั้ง
-      reset: ใช้ค่าเริ่มต้น
-      sources:
-        default: ค่าเริ่มต้นของแอป
-        local: ตัวเลือกบนอุปกรณ์ของคุณ
-        global: เปิดให้บัญชีที่เข้าสู่ระบบแล้ว
-        account: เปิดให้บัญชีของคุณ
-      features:
-        character_card_sync:
-          title: ซิงค์การ์ดตัวละครกับคลาวด์
-          description: ซิงค์การ์ดตัวละครกับบัญชีของคุณเมื่อเข้าสู่ระบบ เพื่อให้ใช้ได้บนอุปกรณ์อื่นของคุณ ปิดไว้เป็นค่าเริ่มต้น การ์ดที่คุณลบจะยังอยู่ในประวัติบัญชีของคุณเป็นเวลา 30 วัน
     color-scheme:
       description: เปลี่ยนชุดสีของเวที
       title: ชุดสี

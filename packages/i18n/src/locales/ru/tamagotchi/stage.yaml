@@ -37,8 +37,6 @@ docs:
   'close': Закрыть
   'expand': Развернуть
   'collapse': Свернуть
-  'login': Войти
-  'logging-in': Выполняется вход...
   'account': Аккаунт
   'logout': Выйти
 'chat-window':

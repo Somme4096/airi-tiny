@@ -36,6 +36,13 @@ export interface ContextIngestResult {
 export interface ContextRegistry {
   /** Stores a context message and returns a mutation summary for known strategies. */
   ingest: (envelope: ContextMessage) => ContextIngestResult | undefined
+  /**
+   * Removes the active bucket of one source, for example when its module disconnects.
+   * The ingest history keeps the entries of that source.
+   *
+   * @returns `true` when the source had a bucket.
+   */
+  remove: (sourceKey: string) => boolean
   /** Clears active context buckets and ingest history. */
   reset: () => void
   /** Returns a cloned active context bucket snapshot. */
@@ -53,6 +60,12 @@ interface CreateContextRegistryOptions {
    * @default 400
    */
   historyLimit?: number
+  /**
+   * Maximum number of active entries in one source bucket. The oldest entries leave first.
+   *
+   * @default 20
+   */
+  bucketLimit?: number
   /**
    * Resolves a context message into a stable source bucket key.
    *
@@ -83,6 +96,11 @@ function defaultGetSourceKey(event: EventSourcePayload, fallback = 'unknown') {
 /**
  * Creates a context registry that owns active buckets and bounded ingest history.
  *
+ * Each source has one bucket. Inside a bucket, `lane` names a slot:
+ * - A replace-self update replaces the entries of its own lane. Other lanes of the source stay.
+ * - An append-self update adds an entry. A repeated `contextId` is a retry, so it replaces the first attempt.
+ * - Updates without a lane share one slot.
+ *
  * Use when:
  * - Runtime contexts need replace-self or append-self bucket semantics.
  * - UI or transport layers need cloned snapshots without owning mutation policy.
@@ -96,6 +114,7 @@ function defaultGetSourceKey(event: EventSourcePayload, fallback = 'unknown') {
  */
 export function createContextRegistry(options: CreateContextRegistryOptions = {}): ContextRegistry {
   const historyLimit = options.historyLimit ?? 400
+  const bucketLimit = options.bucketLimit ?? 20
   const getSourceKey = options.getSourceKey ?? defaultGetSourceKey
 
   let currentActiveContexts = new Map<string, ContextMessage[]>()
@@ -105,28 +124,24 @@ export function createContextRegistry(options: CreateContextRegistryOptions = {}
     const sourceKey = getSourceKey(envelope)
     const safeEnvelopeToStore = structuredClone(envelope)
 
-    if (!currentActiveContexts.has(sourceKey)) {
-      currentActiveContexts.set(sourceKey, [])
-    }
+    const bucket = currentActiveContexts.get(sourceKey) ?? []
 
     let result: ContextIngestResult | undefined
+    let nextBucket = bucket
 
     if (envelope.strategy === CONTEXT_UPDATE_REPLACE_SELF) {
-      currentActiveContexts.set(sourceKey, [safeEnvelopeToStore])
-      result = {
-        sourceKey,
-        mutation: 'replace',
-        entryCount: currentActiveContexts.get(sourceKey)?.length ?? 0,
-      }
+      nextBucket = [...bucket.filter(message => message.lane !== envelope.lane), safeEnvelopeToStore]
+      result = { sourceKey, mutation: 'replace', entryCount: 0 }
     }
     else if (envelope.strategy === CONTEXT_UPDATE_APPEND_SELF) {
-      currentActiveContexts.get(sourceKey)?.push(safeEnvelopeToStore)
-      result = {
-        sourceKey,
-        mutation: 'append',
-        entryCount: currentActiveContexts.get(sourceKey)?.length ?? 0,
-      }
+      nextBucket = [...bucket.filter(message => message.contextId !== envelope.contextId), safeEnvelopeToStore]
+      result = { sourceKey, mutation: 'append', entryCount: 0 }
     }
+
+    nextBucket = nextBucket.slice(-bucketLimit)
+    currentActiveContexts.set(sourceKey, nextBucket)
+    if (result)
+      result.entryCount = nextBucket.length
 
     currentContextHistory = [
       ...currentContextHistory,
@@ -137,6 +152,10 @@ export function createContextRegistry(options: CreateContextRegistryOptions = {}
     ].slice(-historyLimit)
 
     return result
+  }
+
+  function remove(sourceKey: string) {
+    return currentActiveContexts.delete(sourceKey)
   }
 
   function reset() {
@@ -155,6 +174,7 @@ export function createContextRegistry(options: CreateContextRegistryOptions = {}
 
   return {
     ingest,
+    remove,
     reset,
     snapshot,
     activeContexts: snapshot,

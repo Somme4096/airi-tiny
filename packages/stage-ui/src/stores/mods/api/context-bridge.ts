@@ -657,6 +657,19 @@ export const useContextBridgeStore = defineStore('mods:api:context-bridge', () =
         })
       }))
 
+      // The server sends the whole module list after each connect and disconnect. A source that leaves the
+      // list has disconnected, so its side context is stale. A source that never announced a module is not
+      // tracked, because the list cannot tell whether it is connected.
+      let announcedSourceKeys = new Set<string>()
+      disposeHookFns.value.push(serverChannelStore.onEvent('registry:modules:sync', (event) => {
+        const nextSourceKeys = new Set(event.data.modules.flatMap(module => getMetadataSourceLabel(module.identity) ?? []))
+        for (const sourceKey of announcedSourceKeys) {
+          if (!nextSourceKeys.has(sourceKey))
+            chatContext.removeContextSource(sourceKey)
+        }
+        announcedSourceKeys = nextSourceKeys
+      }))
+
       // Chat events reference images and recordings. A module reads their bytes here. Every stage window that holds
       // the channel answers, and the module keeps the first answer.
       disposeHookFns.value.push(serverChannelStore.onEvent('asset:get:request', async (event) => {

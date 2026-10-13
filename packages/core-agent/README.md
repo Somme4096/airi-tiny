@@ -48,6 +48,20 @@ The adapter preserves SDK continuation data without parsing nested provider fiel
 
 Local history preserves complete turns and visible output from interrupted turns. Interrupted records stay on the device because the cloud wire format cannot preserve their incomplete state. Cloud chat sync currently transfers completed text and does not restore native continuation on another device.
 
+## Side context
+
+Modules and services send `context:update` events. The context registry stores them, and each send adds them to the last user turn as a `[Context]` block.
+
+The registry keeps one bucket for each source. Inside a bucket, `lane` names a slot:
+
+- A `replace-self` update replaces the entries of its own lane. The other lanes of the source stay.
+- An `append-self` update adds an entry. A repeated `contextId` is a retry, and it replaces the first attempt.
+- Updates without a lane share one slot.
+
+A bucket holds at most 20 entries by default. The oldest entries leave first.
+
+`remove(sourceKey)` drops the bucket of one source. The stage calls it when a module leaves the module list of the server. The registry has no time limit, so the context of a source that never announced a module stays until the application restarts.
+
 ## History compaction
 
 Before each send, the orchestrator estimates the size of the next request. If the request does not fit the context window, the orchestrator asks the model for a summary of the older messages. The design follows the compaction of `pi-durable`.

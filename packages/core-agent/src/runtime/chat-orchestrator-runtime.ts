@@ -667,7 +667,6 @@ export function createChatOrchestratorRuntime(deps: ChatOrchestratorRuntimeDeps)
 
     const sendingCreatedAt = now()
 
-    // TODO: Expire or prune stale runtime contexts from disconnected services before composing.
     // Allocate the three per-round ids in their historical order so callers
     // with deterministic id factories keep the same durable message ids.
     const streamContextMessageId = createId()

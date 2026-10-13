@@ -244,4 +244,23 @@ describe('useChatContextStore', () => {
 
     expect(store.getContextsSnapshot().sensor?.[0]?.text).toBe('original bucket text')
   })
+
+  /**
+   * @example
+   * removeContextSource('game') drops the bucket of a disconnected module from the registry and the mirror.
+   */
+  it('removes one source from the registry and the reactive mirror', () => {
+    const store = useChatContextStore()
+    const runtimePrompt = createRuntimePromptContext('Keep replies short.')
+    if (!runtimePrompt)
+      throw new Error('Expected a runtime prompt context')
+
+    store.ingestContextMessage(runtimePrompt)
+    store.ingestContextMessage(createContextMessage({ text: 'Minecraft is online.' }))
+
+    expect(store.removeContextSource('unknown')).toBe(true)
+    expect(store.removeContextSource('unknown')).toBe(false)
+    expect(Object.keys(store.getContextsSnapshot())).toEqual(['system:airi-runtime-prompt'])
+    expect(Object.keys(store.activeContexts)).toEqual(['system:airi-runtime-prompt'])
+  })
 })

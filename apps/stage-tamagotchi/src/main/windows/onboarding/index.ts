@@ -14,7 +14,7 @@ import icon from '../../../../resources/icon.png?asset'
 import { electronOnboardingClose } from '../../../shared/eventa'
 import { baseUrl, getElectronMainDirname, load, withHashRoute } from '../../libs/electron/location'
 import { createReusableWindow } from '../../libs/electron/window-manager'
-import { protectPrivilegedWindowNavigation, toggleWindowShow } from '../shared'
+import { protectPrivilegedWindowNavigation, providerRequestWebPreferences, toggleWindowShow } from '../shared'
 import { setupBaseWindowElectronInvokes } from '../shared/window'
 
 export interface OnboardingWindowManager {
@@ -53,6 +53,7 @@ export function setupOnboardingWindowManager(params: {
       webPreferences: {
         preload: join(getElectronMainDirname(), '../preload/index.mjs'),
         sandbox: false,
+        ...providerRequestWebPreferences(),
       },
     })
 

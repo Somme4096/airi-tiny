@@ -1,6 +1,7 @@
 # Project AIRI Agent Guide
 
-This file gives the core rules for all work in the `moeru-ai/airi` monorepo. Skills and nested `AGENTS.md` files give the rules for specific tasks. Before you start a task, find it in [Task Routing](#task-routing) and read the listed file.
+This file gives the core rules for all work in the `Somme4096/airi-tiny` monorepo, which is a fork of moeru-ai/airi. Skills and nested `AGENTS.md` files give the rules for specific tasks. Before you start a task, find it in [Task Routing](#task-routing) and read the listed file.
+This project is not a commercial product, and will never be. You don't need to ship features fast, but be happy when we code together.
 
 ## Project Map
 
@@ -19,11 +20,6 @@ All apps use Vue 3, Vite, TypeScript, Pinia, VueUse, UnoCSS, Vitest, and ESLint.
 | `packages/ui` | Primitives built on reka-ui, such as inputs, buttons, and layout. They have minimal business logic. |
 | `packages/i18n` | All translations. |
 | `packages/server-runtime`, `packages/server-sdk`, `packages/server-shared` | The server channel that `services/` and `plugins/` use. |
-| `server/apps/api` | The hosted Hono resource API and its business domains. |
-| `server/apps/auth` | The standalone Better Auth and OIDC service. |
-| `server/packages` | Backend-only schema and Node infrastructure packages. |
-| `server/dev/caddy` | Local Auth and API edge routing. |
-| `server/docker-compose.yaml` | The complete local backend stack. |
 
 Key files and directories:
 
@@ -109,7 +105,7 @@ Use pnpm workspace filters to limit a command to one workspace. Replace `<packag
 
 ## Documentation
 
-- Put project-wide and client ADRs in `docs/ai/adr/`. Put hosted backend ADRs in `server/docs/ai/adr/`, and obey the ADR rules in `server/AGENTS.md`.
+- Put ADRs in `docs/ai/adr/`.
 - Put a documentation change in the same commit or PR as the code that it describes. This rule applies to ADRs, `README.md` files, and component references.
 - Put agent configuration changes in a separate commit or PR. Agent configuration includes `AGENTS.md`, `CLAUDE.md`, skills, and `.github/copilot-instructions.md`.
 - Keep a structured `README.md` in each `packages/` and `apps/` entry. It tells what the entry does, how to use it, when to use it, and when not to use it.
@@ -149,7 +145,6 @@ Skills are in `.agents/skills/<name>/SKILL.md`. Read the listed file before you 
 | Add `synced` to a Pinia store, or change a synced store | [`enforce-rules-for-pinia-synced`](.agents/skills/enforce-rules-for-pinia-synced/SKILL.md) |
 | Write or change a string that users see, or a glossary term | [`packages/i18n/AGENTS.md`](packages/i18n/AGENTS.md) |
 | Review pending Crowdin translations, or find why approved translations did not reach the repository | [`enforce-rules-for-i18n`](.agents/skills/enforce-rules-for-i18n/SKILL.md) |
-| Work under `server/` | [`server/AGENTS.md`](server/AGENTS.md). For `server/apps/api`, also read [`server/apps/api/AGENTS.md`](server/apps/api/AGENTS.md). |
 | Write documentation, code comments, commit messages, or PR and issue text | [`simple-english`](.agents/skills/simple-english/SKILL.md) |
 | Analyze why a chat, speech, or audio turn was slow or failed, using saved IO traces | [`analyze-io-traces`](.agents/skills/analyze-io-traces/SKILL.md) |
 | Create or prepare a pull request | [`create-pr`](.agents/skills/create-pr/SKILL.md) |

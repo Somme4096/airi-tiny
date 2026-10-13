@@ -368,9 +368,6 @@ pages:
     import_invalid_file: Неверный файл пакета карт
     upload: Загрузить
     upload_desc: Нажмите или перетащите пакет карт AIRI для импорта
-  memory:
-    description: Хранилище и организация воспоминаний
-    title: Память
   data:
     title: Данные
     description: Управление сохраненными данными AIRI, экспортом и сбросами
@@ -733,12 +730,6 @@ pages:
               Примечание: Если ваш провайдер не поддерживает verbose_json ответы, эта настройка не будет иметь никакого эффекта.
             verbose-json-unsupported: >-
               Ваш провайдер не вернул сегменты verbose_json. Фильтрация по уверенности не повлияла на последнюю транскрипцию.
-    memory-long-term:
-      description: Настройки долговременной памяти
-      title: Долговременная память
-    memory-short-term:
-      description: Настройки кратковременной памяти
-      title: Кратковременная память
     messaging-discord:
       description: Чат и голосовой чат через Discord
       enable: Включить интеграцию Discord

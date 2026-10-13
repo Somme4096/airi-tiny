@@ -242,9 +242,7 @@
   - [ ] Совместно играть в [Helldivers 2](https://www.playstation.com/en-hk/games/helldivers-2/pc/) (WIP)
   - [x] Общаться в [Telegram](https://telegram.org)
   - [x] Общаться в [Discord](https://discord.com)
-  - [ ] Память
-    - [x] Полная поддержка базы данных в браузере (DuckDB WASM | `pglite`)
-    - [ ] Memory Alaya (WIP)
+  - [x] Полная поддержка базы данных в браузере (DuckDB WASM | `pglite`)
   - [ ] Полностью локальный вывод в браузере (WebGPU)
 - [x] Уши
   - [x] Аудиовход из браузера

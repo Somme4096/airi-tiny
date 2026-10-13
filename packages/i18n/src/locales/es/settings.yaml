@@ -367,9 +367,6 @@ pages:
     import_invalid_file: El archivo del paquete de la tarjeta no es válido
     upload: Subir
     upload_desc: Haz clic o arrastra un paquete de tarjeta de AIRI para importarlo
-  memory:
-    description: Donde se almacenan y organizan las memorias
-    title: Memoria
   data:
     title: Datos
     description: Administrar, exportar y restablecer los datos de AIRI
@@ -732,12 +729,6 @@ pages:
               Nota: Si tu proveedor no admite respuestas en formato verbose_json, esta configuración no tendrá efecto.
             verbose-json-unsupported: >-
               Tu proveedor no devolvió segmentos verbose_json. El filtrado de confianza no tuvo efecto en la última transcripción.
-    memory-long-term:
-      description: Configuraciones específicas y gestión de memoria a largo plazo
-      title: Memoria a Largo Plazo
-    memory-short-term:
-      description: Configuraciones específicas y gestión de memoria a corto plazo
-      title: Memoria a Corto Plazo
     messaging-discord:
       description: Chat y chat de voz por Discord
       enable: Habilitar integración con Discord

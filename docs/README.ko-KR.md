@@ -242,9 +242,7 @@
   - [ ] [Helldivers 2](https://www.playstation.com/en-hk/games/helldivers-2/pc/) 함께 플레이 (진행 중)
   - [x] [Telegram](https://telegram.org)에서 채팅
   - [x] [Discord](https://discord.com)에서 채팅
-  - [ ] 메모리
-    - [x] 순수 브라우저 내 데이터베이스 지원 (DuckDB WASM | `pglite`)
-    - [ ] Memory Alaya (진행 중)
+  - [x] 순수 브라우저 내 데이터베이스 지원 (DuckDB WASM | `pglite`)
   - [ ] 순수 브라우저 내 로컬 (WebGPU) 추론
 - [x] 귀
   - [x] 브라우저에서 음성 입력

@@ -368,9 +368,6 @@ pages:
     import_invalid_file: 角色卡套件檔案無效
     upload: 上傳
     upload_desc: 點擊或拖曳 AIRI 角色卡套件以匯入
-  memory:
-    description: 存放記憶的地方，以及策略
-    title: 記憶體
   data:
     title: 資料
     description: 管理已儲存的 AIRI 資料、匯出與重置作業
@@ -735,12 +732,6 @@ pages:
               注意：若服務供應商不支援 verbose_json 回應，此設定不會生效。
             verbose-json-unsupported: >-
               服務供應商未回傳 verbose_json 片段，信賴度篩選未影響上次轉錄。
-    memory-long-term:
-      description: 長期記憶
-      title: 長期記憶
-    memory-short-term:
-      description: 短期記憶
-      title: 短期記憶
     messaging-discord:
       description: Discord 訊息與語音聊天
       enable: 啟用 Discord 集成

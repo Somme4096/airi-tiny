@@ -423,46 +423,6 @@
       context: Artistry Provider Configuration
 
 # ---------------------------------------------------------------------------------------
-# Memory
-# ---------------------------------------------------------------------------------------
-
-- id: memory
-  subject: memory
-  translatable: true
-  definition: What the character keeps and can use again in a later conversation.
-  note: >
-    Not the computer's RAM, which the performance overlay means by the same word; use the
-    word for what a person remembers.
-  terms:
-    - text: Memory
-      part-of-speech: noun
-      status: preferred
-      context: Memory
-
-- id: long-term-memory
-  subject: memory
-  translatable: true
-  # TODO: confirm this definition. The module has a settings page and a route, but no
-  # implementation that describes the behavior.
-  definition: The module that holds what the character keeps across many conversations.
-  terms:
-    - text: Long-Term Memory
-      part-of-speech: noun
-      status: preferred
-      context: Long-term memory specific settings and management
-
-- id: short-term-memory
-  subject: memory
-  translatable: true
-  # TODO: confirm this definition. Read the note on "long-term-memory".
-  definition: The module that holds what the character keeps inside the current conversation.
-  terms:
-    - text: Short-Term Memory
-      part-of-speech: noun
-      status: preferred
-      context: Short-term memory specific settings and management
-
-# ---------------------------------------------------------------------------------------
 # The character
 # ---------------------------------------------------------------------------------------
 

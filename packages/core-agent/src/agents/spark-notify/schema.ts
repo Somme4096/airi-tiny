@@ -81,7 +81,7 @@ export const sparkCommandPersonaSchema = z.object({
 }).strict()
 
 export const sparkNotifyCommandGuidanceSchema = z.object({
-  type: z.enum(['proposal', 'instruction', 'memory-recall']),
+  type: z.enum(['proposal', 'instruction']),
   persona: z.union([z.array(sparkCommandPersonaSchema), z.null()]).describe('Optional persona controls for the receiver.'),
   options: z.array(sparkCommandGuidanceOptionSchema),
 }).strict()

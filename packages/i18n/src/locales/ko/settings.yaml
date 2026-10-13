@@ -370,9 +370,6 @@ pages:
     import_invalid_file: 카드 패키지 파일이 유효하지 않습니다
     upload: 업로드
     upload_desc: AIRI 카드 패키지를 클릭하거나 끌어다 놓아 가져오세요
-  memory:
-    description: 기억이 저장되고 정리된 곳
-    title: 메모리
   data:
     title: 데이터
     description: 저장된 AIRI 데이터, 내보낸 항목, 초기화된 항목 관리
@@ -735,12 +732,6 @@ pages:
               참고: 제공업체가 verbose_json 응답을 지원하지 않으면 이 설정은 적용되지 않습니다.
             verbose-json-unsupported: >-
               제공업체가 verbose_json 구간을 반환하지 않아 마지막 인식 결과에 신뢰도 필터가 적용되지 않았습니다.
-    memory-long-term:
-      description: 장기 메모리 관련 설정 및 관리
-      title: 장기 메모리
-    memory-short-term:
-      description: 단기 메모리 관련 설정 및 관리
-      title: 단기 메모리
     messaging-discord:
       description: Discord를 통한 채팅 및 음성 채팅
       enable: Discord 통합 사용

@@ -1156,7 +1156,7 @@ interface SparkCommandGuidanceOption {
 }
 
 interface SparkCommandGuidance {
-  type: 'proposal' | 'instruction' | 'memory-recall'
+  type: 'proposal' | 'instruction'
   /**
    * Personas can be used to adjust the behavior of sub-agents.
    * For example, when using as NPC in games, or player in Minecraft,

@@ -244,9 +244,7 @@ Capable of
   - [ ] Co-play [Helldivers 2](https://www.playstation.com/en-hk/games/helldivers-2/pc/) (WIP)
   - [x] Chat in [Telegram](https://telegram.org)
   - [x] Chat in [Discord](https://discord.com)
-  - [ ] Memory
-    - [x] Pure in-browser database support (DuckDB WASM | `pglite`)
-    - [ ] Memory Alaya (WIP)
+  - [x] Pure in-browser database support (DuckDB WASM | `pglite`)
   - [ ] Pure in-browser local (WebGPU) inference
 - [x] Ears
   - [x] Audio input from browser

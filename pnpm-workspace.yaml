@@ -368,7 +368,6 @@ catalog:
   pixi-live2d-display: ^0.4.0
   playwright: ^1.62.1
   popmotion: ^11.0.5
-  postgres: ^3.4.9
   postprocessing: ^6.39.4
   prismarine-block: ^1.23.0
   prismarine-entity: ^2.6.0

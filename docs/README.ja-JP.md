@@ -242,9 +242,7 @@
   - [ ] [Helldivers 2](https://www.playstation.com/en-hk/games/helldivers-2/pc/)を一緒にプレイ（進行中）
   - [x] [Telegram](https://telegram.org)でチャット
   - [x] [Discord](https://discord.com)でチャット
-  - [ ] メモリ
-    - [x] ブラウザ内データベースサポート（DuckDB WASM | `pglite`）
-    - [ ] メモリアラヤ（進行中）
+  - [x] ブラウザ内データベースサポート（DuckDB WASM | `pglite`）
   - [ ] ブラウザ内ローカル（WebGPU）推論
 - [x] 耳
   - [x] ブラウザからの音声入力

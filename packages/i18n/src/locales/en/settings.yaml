@@ -395,9 +395,6 @@ pages:
     import_invalid_file: Card package file is invalid
     upload: Upload
     upload_desc: Click or drag an AIRI card package to import
-  memory:
-    description: Where memories got stored, and organized
-    title: Memory
   data:
     title: Data
     description: Manage stored AIRI data, exports, and resets
@@ -785,12 +782,6 @@ pages:
             verbose-json-unsupported: >-
               Your provider did not return verbose_json segments. Confidence
               filtering had no effect on the last transcription.
-    memory-long-term:
-      description: Long-term memory specific settings and management
-      title: Long-Term Memory
-    memory-short-term:
-      description: Short-term memory specific settings and management
-      title: Short-Term Memory
     messaging-discord:
       description: Chat & voice chat over Discord
       title: Discord

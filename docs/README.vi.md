@@ -242,9 +242,7 @@ Khả năng:
   - [ ] Chơi cùng trong [Helldivers 2](https://www.playstation.com/en-hk/games/helldivers-2/pc/) (đang thực hiện)
   - [x] Trò chuyện trên [Telegram](https://telegram.org)
   - [x] Trò chuyện trên [Discord](https://discord.com)
-  - [ ] Bộ nhớ
-    - [x] Hỗ trợ CSDL trong trình duyệt (DuckDB WASM | `pglite`)
-    - [ ] Memory Alaya (WIP)
+  - [x] Hỗ trợ CSDL trong trình duyệt (DuckDB WASM | `pglite`)
   - [ ] Suy luận cục bộ trong trình duyệt (WebGPU)
 - [x] Khả năng nghe hiểu
   - [x] Nhận âm thanh từ trình duyệt

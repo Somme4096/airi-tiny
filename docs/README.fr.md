@@ -242,9 +242,7 @@ Capacités :
   - [ ] Jouer en coopération à [Helldivers 2](https://www.playstation.com/en-hk/games/helldivers-2/pc/) (WIP)
   - [x] Chat sur [Telegram](https://telegram.org)
   - [x] Chat sur [Discord](https://discord.com)
-  - [ ] Mémoire
-    - [x] Support base de données purement navigateur (DuckDB WASM | `pglite`)
-    - [ ] Mémoire Alaya (WIP)
+  - [x] Support base de données purement navigateur (DuckDB WASM | `pglite`)
   - [ ] Inférence locale pure en navigateur (WebGPU)
 - [x] Oreilles
   - [x] Entrée audio depuis le navigateur

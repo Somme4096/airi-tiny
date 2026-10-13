@@ -825,9 +825,6 @@ catalogs:
     popmotion:
       specifier: ^11.0.5
       version: 11.0.5
-    postgres:
-      specifier: ^3.4.9
-      version: 3.4.9
     postprocessing:
       specifier: ^6.39.4
       version: 6.39.4
@@ -3831,25 +3828,6 @@ importers:
       '@types/w3c-web-hid':
         specifier: 'catalog:'
         version: 1.0.7
-
-  packages/memory-pgvector:
-    dependencies:
-      '@guiiai/logg':
-        specifier: 'catalog:'
-        version: 1.2.12
-      '@proj-airi/server-sdk':
-        specifier: workspace:^
-        version: link:../server-sdk
-      drizzle-orm:
-        specifier: 'catalog:'
-        version: 0.45.2(@electric-sql/pglite@0.5.6)(@opentelemetry/api@1.9.1)(@prisma/client@5.22.0)(@types/pg@8.23.1)(better-sqlite3@12.11.1)(kysely@0.29.5)(pg@8.23.0)(postgres@3.4.9)
-      postgres:
-        specifier: 'catalog:'
-        version: 3.4.9
-    devDependencies:
-      tsx:
-        specifier: 'catalog:'
-        version: 4.23.12
 
   packages/model-driver-lipsync:
     dependencies:
@@ -31289,7 +31267,8 @@ snapshots:
     dependencies:
       xtend: 4.0.2
 
-  postgres@3.4.9: {}
+  postgres@3.4.9:
+    optional: true
 
   postject@1.0.0-alpha.6:
     dependencies:

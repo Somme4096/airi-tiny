@@ -368,9 +368,6 @@ pages:
     import_invalid_file: Tệp gói thẻ không hợp lệ
     upload: Tải lên
     upload_desc: Nhấp hoặc kéo thả gói thẻ AIRI vào đây để nhập
-  memory:
-    description: Nơi lưu trữ và tổ chức ký ức
-    title: Bộ nhớ
   data:
     title: Dữ liệu
     description: Quản lý dữ liệu AIRI đã lưu, xuất và đặt lại
@@ -733,12 +730,6 @@ pages:
               Lưu ý: Nếu nhà cung cấp của bạn không hỗ trợ phản hồi verbose_json, cài đặt này sẽ không có tác dụng.
             verbose-json-unsupported: >-
               Nhà cung cấp của bạn không trả về các đoạn (segment) verbose_json. Lọc kết quả dựa trên độ tin cậy không có tác dụng cho đoạn phiên âm mới nhất.
-    memory-long-term:
-      description: Cài đặt và quản lý trí nhớ dài hạn
-      title: Trí nhớ dài hạn
-    memory-short-term:
-      description: Cài đặt và quản lý trí nhớ ngắn hạn
-      title: Trí nhớ ngắn hạn
     messaging-discord:
       description: Trò chuyện & gọi thoại qua Discord
       enable: Bật tích hợp Discord

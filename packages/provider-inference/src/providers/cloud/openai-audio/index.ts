@@ -47,6 +47,19 @@ function createAudioProvider(config: AudioConfig) {
   return createOpenAI(config.apiKey.trim(), normalizeBaseUrl(config.baseUrl))
 }
 
+// OpenAI defaults `response_format` to mp3 when the field is absent. Some
+// compatible servers, for example Irodori-TTS, reject a request without it.
+// WAV needs no encoder on the server, and the browser can decode it.
+function createCompatibleSpeechProvider(config: OpenAICompatibleAudioConfig) {
+  const provider = createAudioProvider(config)
+  const speech = provider.speech.bind(provider)
+  provider.speech = (model: string) => ({
+    ...speech(model),
+    responseFormat: 'wav' as const,
+  })
+  return provider
+}
+
 function createTranscriptionProvider(config: AudioConfig) {
   const provider = createAudioProvider(config)
   const transcription = provider.transcription.bind(provider)
@@ -201,7 +214,7 @@ export const providerOpenAICompatibleAudioSpeech = defineProvider<OpenAICompatib
   tasks: ['text-to-speech'],
   icon: 'i-lobe-icons:openai',
   createProviderConfig: ({ t }) => createAudioConfigSchema(openAICompatibleAudioConfigSchema, t),
-  createProvider: createAudioProvider,
+  createProvider: createCompatibleSpeechProvider,
   validationRequiredWhen: config => Boolean(config.apiKey?.trim() && config.baseUrl?.trim()),
   validators: createAudioValidators<OpenAICompatibleAudioConfig>(),
   extraMethods: {

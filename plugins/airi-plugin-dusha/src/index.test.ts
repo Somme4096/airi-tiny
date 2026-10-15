@@ -36,6 +36,8 @@ interface RecordedRequest {
  * It plays the two mods of a typical companion:
  * - "love": a decision (system_one) picks intimacy, and a mod delta moves elation further. The expression follows intimacy.
  * - "angry": no decision, so the ingest response gives `affect: null`, and a mod delta moves irritability.
+ * - "calm": no decision, and a mod delta lowers anxiety.
+ * A second "love" keeps intimacy at 0.45, like a decided dimension at its cap.
  */
 function createFakeDusha() {
   const requests: RecordedRequest[] = []
@@ -80,6 +82,8 @@ function createFakeDusha() {
         }
         if (body?.role === 'user' && String(body.content).includes('angry'))
           affect.base.irritability = 1
+        if (body?.role === 'user' && String(body.content).includes('calm'))
+          affect.base.anxiety = 0.05
         return reply(200, { id: nextMessageId++, duplicate: false, affect: isLove ? { emotion: 'intimacy', increment: 0.1, decision_id: 1, state: affect } : null })
       }
       case 'GET /state/v1/affect':
@@ -307,6 +311,22 @@ describe('airi-plugin-dusha in the extension host', () => {
     expect(contextUpdates.at(-1)?.text).toContain('<affect_shift>The user\'s last message moved irritability the most: it rose by 0.85 to 1.00. Open your reply with <|ACT {"emotion":"angry"}|> to show it.</affect_shift>')
   })
 
+  it('shows no emotion when the largest change is a fall, and still shows a decided emotion that cannot rise', async () => {
+    prepareLog.length = 0
+    stage.send({ type: 'chat:prepare:request', data: { turnId: 'turn-calm', sessionId: 'session-1', text: 'Stay calm, it is fine.' } })
+    await expect.poll(() => prepareLog.at(-1)).toBe('chat:prepare:response turn-calm')
+
+    expect(prepareLog).toEqual(['context:update', 'chat:prepare:response turn-calm'])
+    expect(contextUpdates.at(-1)?.text).toContain('<affect_shift>The user\'s last message moved anxiety the most: it fell by 0.15 to 0.05.</affect_shift>')
+
+    prepareLog.length = 0
+    stage.send({ type: 'chat:prepare:request', data: { turnId: 'turn-love', sessionId: 'session-1', text: 'I love you' } })
+    await expect.poll(() => prepareLog.at(-1)).toBe('chat:prepare:response turn-love')
+
+    expect(prepareLog[0]).toBe('character:emotion happy')
+    expect(contextUpdates.at(-1)?.text).toContain('<affect_shift>The user\'s last message stirred intimacy: it stays at 0.45. Open your reply with <|ACT {"emotion":"happy"}|> to show it.</affect_shift>')
+  })
+
   it('answers the prepare request even when Dusha fails, so the turn does not wait', async () => {
     dusha.failNext()
     prepareLog.length = 0
@@ -346,5 +366,15 @@ describe('airi-plugin-dusha in the extension host', () => {
     await host.stop(sessionId)
 
     expect((await registry.listSerializedXsaiTools()).tools).toEqual([])
+  })
+
+  // A typo in the config file stops the start, so the plugin never runs on a silent default.
+  it('refuses to start when the config file has an unknown key', async () => {
+    await writeFile(configPath, JSON.stringify({ dusha: { tokn: dushaToken } }))
+    const parsed = parseExtensionManifest(JSON.parse(await readFile(join(import.meta.dirname, '..', 'extension.airi.json'), 'utf-8')))
+    if (!parsed.success)
+      throw new Error('extension.airi.json is not a valid manifest')
+
+    await expect(host.startExtension(extension, { manifest: parsed.manifest })).rejects.toThrow(/is not valid/)
   })
 })

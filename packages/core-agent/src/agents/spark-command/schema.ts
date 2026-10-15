@@ -54,7 +54,7 @@ export const sparkCommandMetadataEntrySchema = z.object({
 }).strict()
 
 export const sparkCommandContextSchema = z.object({
-  lane: z.union([z.string(), z.null()]).describe('Logical context lane, for example "game" or "memory".'),
+  lane: z.union([z.string(), z.null()]).describe('Logical context lane, for example "game" or "status".'),
   ideas: z.union([z.array(z.string()), z.null()]).describe('Loose ideas to attach to the target context.'),
   hints: z.union([z.array(z.string()), z.null()]).describe('Hints to attach to the target context.'),
   strategy: z.enum(ContextUpdateStrategy).describe('How the target should merge this context update.'),

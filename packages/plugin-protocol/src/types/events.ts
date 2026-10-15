@@ -1121,6 +1121,36 @@ export type AssetGetResponseEvent
   = | { ref: string, mimeType: string, /** Base64 bytes. */ data: string }
     | { ref: string, error: string }
 
+/**
+ * The identity label that makes a module a chat preparer. Set it to `'true'` in the module identity `labels`.
+ * The stage reads it from `registry:modules:sync` and waits for each preparer before it composes a chat turn.
+ */
+export const CHAT_PREPARE_LABEL = 'chat-prepare'
+
+/** Tells chat preparers that a chat turn is about to be composed. */
+export interface ChatPrepareRequestEvent {
+  /** The turn ID. The response repeats it. */
+  turnId: string
+  sessionId: string
+  /** The text of the user message. */
+  text: string
+}
+
+/** A preparer's answer to `chat:prepare:request`. The preparer sends its `context:update` events before it. */
+export interface ChatPrepareResponseEvent {
+  turnId: string
+}
+
+/**
+ * Shows an emotion on the stage model. The stage plays it the same way as an ACT token from the model.
+ * `name` is one of the stage emotions, for example `happy` or `angry`. The stage ignores other names.
+ */
+export interface CharacterEmotionEvent {
+  name: string
+  /** From 0 to 1. The default is 1. */
+  intensity?: number
+}
+
 interface SparkNotifyEvent {
   id: string
   eventId: string
@@ -1318,6 +1348,9 @@ export const outputGenAiChatComplete = defineProtocolEventa<OutputGenAiChatCompl
 
 export const assetGetRequest = defineProtocolEventa<AssetGetRequestEvent>('asset:get:request')
 export const assetGetResponse = defineProtocolEventa<AssetGetResponseEvent>('asset:get:response')
+export const chatPrepareRequest = defineProtocolEventa<ChatPrepareRequestEvent>('chat:prepare:request')
+export const chatPrepareResponse = defineProtocolEventa<ChatPrepareResponseEvent>('chat:prepare:response')
+export const characterEmotion = defineProtocolEventa<CharacterEmotionEvent>('character:emotion')
 
 export const sparkNotify = defineProtocolEventa<SparkNotifyEvent>('spark:notify')
 export const sparkEmit = defineProtocolEventa<SparkEmitEvent>('spark:emit')
@@ -1523,6 +1556,28 @@ export interface ProtocolEvents<C = undefined> {
    * The stage answer to `asset:get:request` (stage → module). `metadata.event.parentId` names the request.
    */
   'asset:get:response': AssetGetResponseEvent
+
+  /**
+   * Lets a module prepare a chat turn before the stage composes it (stage → module).
+   *
+   * Use when:
+   * - A module must update the context of the turn that the user just started, for example from the user text
+   *
+   * Expectations:
+   * - The stage sends it only when a module with the `chat-prepare` label is connected. See `CHAT_PREPARE_LABEL`
+   * - The stage waits for one `chat:prepare:response` from each such module, up to a time limit, then composes the turn
+   * - A `context:update` that the module sends before its response is part of the turn
+   */
+  'chat:prepare:request': ChatPrepareRequestEvent
+  /**
+   * The answer to `chat:prepare:request` (module → stage). Send it also when preparation failed, so the turn does not wait.
+   */
+  'chat:prepare:response': ChatPrepareResponseEvent
+
+  /**
+   * Shows an emotion on the stage model (module → stage), without a model reply.
+   */
+  'character:emotion': CharacterEmotionEvent
 
   /**
    * Spark used for allowing agents in a network to raise an event toward the other destinations (e.g. character).

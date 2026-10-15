@@ -35,6 +35,7 @@ import { useAudioContext, useSpeakingStore } from '../../stores/audio'
 import { useBackgroundStore } from '../../stores/background'
 import { useChatStore } from '../../stores/chat'
 import { useChatSessionStore } from '../../stores/chat/session-store'
+import { useModsServerChannelStore } from '../../stores/mods/api/channel-server'
 import { useAiriCardStore } from '../../stores/modules/airi-card'
 import { useSpeechStore } from '../../stores/modules/speech'
 import { useSettingsPresenceBubble } from '../../stores/presence-bubble'
@@ -333,6 +334,15 @@ chatHookCleanups.push(streamingControl.onSignal(async (signal) => {
     console.debug('delay detected', signal.seconds)
     await sleep(signal.seconds * 1000)
   }
+}))
+
+// A module can show an emotion without a model reply, for example from its own affect state.
+// It goes through the ACT normalizer, so a module gets the same names and intensity range as the model.
+chatHookCleanups.push(useModsServerChannelStore().onEvent('character:emotion', (event) => {
+  const act = normalizeActPayload({ emotion: event.data })
+  const emotion = act.emotion && toStageEmotionPayload(act.emotion)
+  if (emotion)
+    emotionsQueue.enqueue(emotion)
 }))
 
 // Play special token: plugin CALL, delay, or emotion.

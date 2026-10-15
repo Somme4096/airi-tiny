@@ -95,6 +95,8 @@ export const useModsServerChannelStore = defineStore('mods:channels:proj-airi:se
     'output:gen-ai:chat:tool-call',
     'ui:configure',
     'asset:get:request',
+    'chat:prepare:response',
+    'character:emotion',
   ]
 
   async function initialize(options?: {

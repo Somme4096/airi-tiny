@@ -405,6 +405,43 @@ describe('context bridge contract', () => {
     await chatAssetsRepo.clear()
   })
 
+  it('holds the turn until a chat preparer has sent its context', async () => {
+    const store = useContextBridgeStore()
+    await store.initialize()
+    await emitServerEvent('registry:modules:sync', {
+      type: 'registry:modules:sync',
+      data: { modules: [{ name: 'dusha', identity: { id: 'dusha', extension: { id: 'airi-plugin-dusha' }, labels: { 'chat-prepare': 'true' } } }] },
+    })
+
+    let composed = false
+    const composing = emitHooks(beforeComposeHooks, 'I am angry at you', {
+      sessionId: 'session-1',
+      turnId: 'turn-1',
+      message: { role: 'user', content: 'I am angry at you' },
+      contexts: {},
+      composedMessage: [],
+    }).then(() => {
+      composed = true
+    })
+    await vi.waitFor(() => expect(serverSendMock).toHaveBeenCalledWith({
+      type: 'chat:prepare:request',
+      data: { turnId: 'turn-1', sessionId: 'session-1', text: 'I am angry at you' },
+    }))
+
+    await emitContextUpdate({ ...createContextUpdateEvent({ text: 'irritability rose' }), metadata: createMetadata('airi-plugin-dusha', 'dusha') })
+    expect(chatContextIngestMock).toHaveBeenCalledWith(expect.objectContaining({ text: 'irritability rose' }))
+    expect(composed).toBe(false)
+
+    await emitServerEvent('chat:prepare:response', {
+      type: 'chat:prepare:response',
+      data: { turnId: 'turn-1' },
+      metadata: createMetadata('airi-plugin-dusha', 'dusha'),
+    })
+    await composing
+
+    expect(composed).toBe(true)
+  })
+
   it('records core ingest result for broadcast context updates', async () => {
     chatContextIngestMock.mockReturnValueOnce({
       sourceKey: 'weather:station-1',

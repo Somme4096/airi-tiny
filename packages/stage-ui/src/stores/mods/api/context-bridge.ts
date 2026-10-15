@@ -26,6 +26,7 @@ import { useChatStreamStore } from '../../chat/stream-store'
 import { useContextObservabilityStore } from '../../devtools/context-observability'
 import { useConsciousnessStore } from '../../modules/consciousness'
 import { useModsServerChannelStore } from './channel-server'
+import { ChatPrepareGate } from './chat-prepare'
 import { createContextChannel } from './context-channel'
 
 export function normalizeContextSnapshot<C extends Pick<ChatStreamEventContext, 'contexts'>>(contexts: C): C {
@@ -657,11 +658,18 @@ export const useContextBridgeStore = defineStore('mods:api:context-bridge', () =
         })
       }))
 
+      // Modules with the `chat-prepare` label update the context of a turn before it is composed.
+      const chatPrepareGate = new ChatPrepareGate()
+      disposeHookFns.value.push(serverChannelStore.onEvent('chat:prepare:response', (event) => {
+        chatPrepareGate.respond(event.data.turnId, event.metadata?.source)
+      }))
+
       // The server sends the whole module list after each connect and disconnect. A source that leaves the
       // list has disconnected, so its side context is stale. A source that never announced a module is not
       // tracked, because the list cannot tell whether it is connected.
       let announcedSourceKeys = new Set<string>()
       disposeHookFns.value.push(serverChannelStore.onEvent('registry:modules:sync', (event) => {
+        chatPrepareGate.syncModules(event.data.modules)
         const nextSourceKeys = new Set(event.data.modules.flatMap(module => getMetadataSourceLabel(module.identity) ?? []))
         for (const sourceKey of announcedSourceKeys) {
           if (!nextSourceKeys.has(sourceKey))
@@ -835,6 +843,11 @@ export const useContextBridgeStore = defineStore('mods:api:context-bridge', () =
           if (remoteContexts.has(context))
             return
 
+          // The orchestrator reads the context after this hook, so a preparer's `context:update` is part of this turn.
+          await chatPrepareGate.prepare(
+            { turnId: context.turnId, sessionId: context.sessionId, text: message },
+            data => serverChannelStore.send({ type: 'chat:prepare:request', data }),
+          )
           await contextChannel?.emitStream({ type: 'before-compose', message, sessionId: context.sessionId, context: structuredClone(normalizeContextSnapshot(context)) })
         }),
         chatOrchestrator.onAfterMessageComposed(async (message, context) => {

@@ -35,6 +35,7 @@ function createHarness(options: Partial<Pick<ChatOrchestratorRuntimeDeps, 'getSy
         return { status: 'inserted', messageId: message.id }
       },
       getSessionGeneration: () => 1,
+      setCompaction: vi.fn(),
     },
     context: { ingest: vi.fn(), snapshot: () => ({}) },
     foregroundStream: { patch: vi.fn(), reset: vi.fn() },

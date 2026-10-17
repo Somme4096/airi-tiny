@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { DEFAULT_CONTEXT_WINDOW, DEFAULT_SUMMARY_INSTRUCTIONS } from '@proj-airi/core-agent'
 import { Alert, ErrorContainer, RadioCardManySelect, RadioCardSimple } from '@proj-airi/stage-ui/components'
 import { useAnalytics } from '@proj-airi/stage-ui/composables'
 import { useAiriCardStore } from '@proj-airi/stage-ui/stores/modules/airi-card'
@@ -6,9 +7,9 @@ import { useConsciousnessStore } from '@proj-airi/stage-ui/stores/modules/consci
 import { useConsciousnessSettingsStore } from '@proj-airi/stage-ui/stores/modules/consciousness-settings'
 import { useProviderConfigStore } from '@proj-airi/stage-ui/stores/providers/config'
 import { useProviderStore } from '@proj-airi/stage-ui/stores/providers/provider'
-import { FieldCheckbox, FieldRange, SettingsCard } from '@proj-airi/ui'
+import { FieldCheckbox, FieldInput, FieldRange, FieldTextArea, SettingsCard } from '@proj-airi/ui'
 import { storeToRefs } from 'pinia'
-import { watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterLink } from 'vue-router'
 
@@ -19,7 +20,7 @@ const consciousnessStore = useConsciousnessStore()
 const consciousnessSettingsStore = useConsciousnessSettingsStore()
 const { configuredProviders } = storeToRefs(providerStore)
 const { moduleChatProvidersMetadata } = storeToRefs(providersStore)
-const { reasoning, temperatureEnabled, topPEnabled } = storeToRefs(consciousnessSettingsStore)
+const { reasoning, temperatureEnabled, topPEnabled, contextWindowEnabled, contextWindow, summaryInstructions } = storeToRefs(consciousnessSettingsStore)
 const {
   activeProvider,
   activeModel,
@@ -77,6 +78,32 @@ async function updateTemperatureEnabled(value: boolean) {
 async function updateTopPEnabled(value: boolean) {
   await consciousnessSettingsStore.setTopPEnabled(value)
 }
+
+const contextWindowPlaceholder = computed(() => {
+  const reported = providerModels.value.find(model => model.id === activeModel.value)?.contextLength
+  return reported
+    ? t('settings.pages.modules.consciousness.sections.section.model-options.context-window.placeholder-reported', { tokens: reported.toLocaleString() })
+    : t('settings.pages.modules.consciousness.sections.section.model-options.context-window.placeholder-default', { tokens: DEFAULT_CONTEXT_WINDOW.toLocaleString() })
+})
+
+// The form shows the built-in instructions until the user changes them. The store keeps an empty text
+// for "built-in", so a later version of the built-in instructions reaches a user who did not edit them.
+const summaryInstructionsDraft = ref(summaryInstructions.value || DEFAULT_SUMMARY_INSTRUCTIONS)
+
+function toStoredInstructions(draft: string) {
+  return !draft.trim() || draft === DEFAULT_SUMMARY_INSTRUCTIONS ? '' : draft
+}
+
+async function updateSummaryInstructions(value: string | undefined) {
+  summaryInstructionsDraft.value = value ?? ''
+  await consciousnessSettingsStore.setSummaryInstructions(toStoredInstructions(summaryInstructionsDraft.value))
+}
+
+// Another window or a data reset can change the stored text. An empty field stays empty while the user types.
+watch(summaryInstructions, (stored) => {
+  if (toStoredInstructions(summaryInstructionsDraft.value) !== stored)
+    summaryInstructionsDraft.value = stored || DEFAULT_SUMMARY_INSTRUCTIONS
+})
 </script>
 
 <template>
@@ -302,7 +329,7 @@ async function updateTopPEnabled(value: boolean) {
     </div>
 
     <section
-      v-if="activeProvider && activeModel"
+      v-if="activeProvider"
       :class="['flex', 'flex-col', 'gap-4', 'border-t', 'border-neutral-200', 'pt-4', 'dark:border-neutral-800']"
     >
       <h2 :class="['text-lg', 'text-neutral-500', 'md:text-2xl', 'dark:text-neutral-400']">
@@ -310,7 +337,7 @@ async function updateTopPEnabled(value: boolean) {
       </h2>
 
       <div
-        v-if="activeModelUsesProviderReasoningDefault"
+        v-if="activeModel && activeModelUsesProviderReasoningDefault"
         :class="['flex', 'flex-col', 'gap-1']"
       >
         <span class="text-sm font-medium">
@@ -321,18 +348,28 @@ async function updateTopPEnabled(value: boolean) {
         </span>
       </div>
       <FieldCheckbox
-        v-else
+        v-else-if="activeModel"
         :model-value="reasoning || activeModelRequiresReasoning"
         :label="t('settings.pages.modules.consciousness.sections.section.model-options.thinking.label')"
         :description="activeModelRequiresReasoning ? t('settings.pages.modules.consciousness.sections.section.model-options.thinking.required-description') : undefined"
         :disabled="activeModelRequiresReasoning"
         @update:model-value="updateReasoning"
       />
-    </section>
-  </SettingsCard>
-
-  <SettingsCard v-if="activeProvider" class="mt-4">
-    <div :class="['flex flex-col gap-4']">
+      <FieldCheckbox
+        :model-value="contextWindowEnabled"
+        :label="t('settings.pages.modules.consciousness.sections.section.model-options.context-window.enabled')"
+        :description="t('settings.pages.modules.consciousness.sections.section.model-options.context-window.enabled-description')"
+        @update:model-value="consciousnessSettingsStore.setContextWindowEnabled"
+      />
+      <FieldInput
+        v-if="contextWindowEnabled"
+        :model-value="contextWindow"
+        type="number"
+        :label="t('settings.pages.modules.consciousness.sections.section.model-options.context-window.label')"
+        :description="t('settings.pages.modules.consciousness.sections.section.model-options.context-window.description')"
+        :placeholder="contextWindowPlaceholder"
+        @update:model-value="consciousnessSettingsStore.setContextWindow"
+      />
       <FieldCheckbox
         :model-value="temperatureEnabled"
         :label="t('settings.pages.modules.consciousness.sections.section.provider-model-selection.temperature_enabled')"
@@ -364,6 +401,28 @@ async function updateTopPEnabled(value: boolean) {
         :max="1"
         :step="0.1"
         :format-value="value => value.toFixed(1)"
+      />
+    </section>
+  </SettingsCard>
+
+  <SettingsCard v-if="activeProvider" class="mt-4">
+    <div :class="['flex', 'flex-col', 'gap-4']">
+      <div>
+        <h2 :class="['text-lg', 'text-neutral-500', 'md:text-2xl', 'dark:text-neutral-400']">
+          {{ t('settings.pages.modules.consciousness.sections.section.history-summary.title') }}
+        </h2>
+        <div :class="['text-neutral-400', 'dark:text-neutral-400']">
+          {{ t('settings.pages.modules.consciousness.sections.section.history-summary.description') }}
+        </div>
+      </div>
+      <FieldTextArea
+        :model-value="summaryInstructionsDraft"
+        :label="t('settings.pages.modules.consciousness.sections.section.history-summary.instructions.label')"
+        :description="t('settings.pages.modules.consciousness.sections.section.history-summary.instructions.description')"
+        :placeholder="t('settings.pages.modules.consciousness.sections.section.history-summary.instructions.placeholder')"
+        :required="false"
+        :rows="12"
+        @update:model-value="updateSummaryInstructions"
       />
     </div>
   </SettingsCard>

@@ -302,6 +302,82 @@ describe('createContextRegistry', () => {
     })
     expect(registry.contextHistory().map(message => message.id)).toEqual(['stable'])
   })
+
+  /**
+   * @example
+   * A page update and a video update of one source keep one entry each.
+   */
+  it('replaces only the entries of the same lane for replace-self updates', () => {
+    const registry = createContextRegistry()
+
+    registry.ingest(createContextMessage({ id: 'page-1', source: 'browser', lane: 'web:page', text: 'first page' }))
+    registry.ingest(createContextMessage({ id: 'video-1', source: 'browser', lane: 'web:video', text: 'first video' }))
+    const result = registry.ingest(createContextMessage({ id: 'page-2', source: 'browser', lane: 'web:page', text: 'second page' }))
+
+    expect(result).toEqual({ sourceKey: 'browser', mutation: 'replace', entryCount: 2 })
+    expect(registry.snapshot().browser?.map(message => message.text)).toEqual(['first video', 'second page'])
+  })
+
+  /**
+   * @example
+   * A status update keeps the events that the same source appended in another lane.
+   */
+  it('keeps appended entries of another lane when a replace-self update arrives', () => {
+    const registry = createContextRegistry()
+
+    registry.ingest(createContextMessage({ id: 'event-1', source: 'game', lane: 'game', strategy: ContextUpdateStrategy.AppendSelf, text: 'found a village' }))
+    registry.ingest(createContextMessage({ id: 'status-1', source: 'game', lane: 'status', text: 'online' }))
+    registry.ingest(createContextMessage({ id: 'status-2', source: 'game', lane: 'status', text: 'offline' }))
+
+    expect(registry.snapshot().game?.map(message => message.text)).toEqual(['found a village', 'offline'])
+  })
+
+  /**
+   * @example
+   * The same contextId sent two times is one entry with the text of the retry.
+   */
+  it('treats an append-self update with a repeated contextId as a retry', () => {
+    const registry = createContextRegistry()
+
+    registry.ingest(createContextMessage({ id: 'attempt-1', contextId: 'event', source: 'game', strategy: ContextUpdateStrategy.AppendSelf, text: 'first attempt' }))
+    registry.ingest(createContextMessage({ id: 'other', source: 'game', strategy: ContextUpdateStrategy.AppendSelf, text: 'other event' }))
+    const result = registry.ingest(createContextMessage({ id: 'attempt-2', contextId: 'event', source: 'game', strategy: ContextUpdateStrategy.AppendSelf, text: 'second attempt' }))
+
+    expect(result?.entryCount).toBe(2)
+    expect(registry.snapshot().game?.map(message => message.text)).toEqual(['other event', 'second attempt'])
+  })
+
+  /**
+   * @example
+   * createContextRegistry({ bucketLimit: 2 }) keeps the two newest entries of each source.
+   */
+  it('drops the oldest entries of a bucket above the bucket limit', () => {
+    const registry = createContextRegistry({ bucketLimit: 2 })
+
+    for (const id of ['first', 'second', 'third'])
+      registry.ingest(createContextMessage({ id, source: 'game', strategy: ContextUpdateStrategy.AppendSelf, text: id }))
+    const result = registry.ingest(createContextMessage({ id: 'elsewhere', source: 'browser', strategy: ContextUpdateStrategy.AppendSelf }))
+
+    expect(registry.snapshot().game?.map(message => message.text)).toEqual(['second', 'third'])
+    expect(result?.entryCount).toBe(1)
+    expect(registry.contextHistory()).toHaveLength(4)
+  })
+
+  /**
+   * @example
+   * registry.remove('game') drops the bucket of a disconnected source and keeps the others.
+   */
+  it('removes one source bucket and keeps its ingest history', () => {
+    const registry = createContextRegistry()
+
+    registry.ingest(createContextMessage({ id: 'game-1', source: 'game' }))
+    registry.ingest(createContextMessage({ id: 'browser-1', source: 'browser' }))
+
+    expect(registry.remove('game')).toBe(true)
+    expect(registry.remove('game')).toBe(false)
+    expect(Object.keys(registry.snapshot())).toEqual(['browser'])
+    expect(registry.contextHistory().map(message => message.id)).toEqual(['game-1', 'browser-1'])
+  })
 })
 
 describe('context registry writers', () => {

@@ -45,6 +45,13 @@ export const useChatContextStore = defineStore('chat-context', () => {
     return result
   }
 
+  function removeContextSource(sourceKey: string) {
+    const removed = registry.remove(sourceKey)
+    if (removed)
+      syncRegistrySnapshot()
+    return removed
+  }
+
   function resetContexts() {
     registry.reset()
     syncRegistrySnapshot()
@@ -77,6 +84,7 @@ export const useChatContextStore = defineStore('chat-context', () => {
 
   return {
     ingestContextMessage,
+    removeContextSource,
     resetContexts,
     removeContextWriter,
     getContextsSnapshot,

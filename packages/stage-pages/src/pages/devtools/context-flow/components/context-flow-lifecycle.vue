@@ -48,6 +48,8 @@ function phaseBadgeClass(phase: ContextLifecycleRecord['phase']) {
     case 'broadcast-received':
     case 'broadcast-posted':
       return ['bg-violet-500/15', 'text-violet-600', 'dark:text-violet-300']
+    case 'history-compacted':
+    case 'history-compaction-failed':
     case 'before-compose':
     case 'prompt-context-built':
     case 'after-compose':

@@ -47,6 +47,7 @@ import { useMemoryStore } from './memory'
 import { useAiriCardStore } from './modules/airi-card'
 import { useAutonomousArtistryStore } from './modules/artistry-autonomous'
 import { useConsciousnessStore } from './modules/consciousness'
+import { useConsciousnessSettingsStore } from './modules/consciousness-settings'
 import { useHearingStore } from './modules/hearing'
 import { useStickersStore } from './modules/stickers'
 import { useVisionStore } from './modules/vision'
@@ -250,6 +251,7 @@ export const useChatStore = defineStore('chat', () => {
   // without its paired prompt-injection defense.
   useWebSearchStore()
   const consciousnessStore = useConsciousnessStore()
+  const consciousnessSettingsStore = useConsciousnessSettingsStore()
   const chatVision = useChatVision()
   const artistryAutonomousStore = useAutonomousArtistryStore()
   const { activeProvider, activeModel } = storeToRefs(consciousnessStore)
@@ -905,6 +907,11 @@ export const useChatStore = defineStore('chat', () => {
       appendSessionMessage: (sessionId, message) => chatSession.appendSessionMessage(sessionId, message),
       commitUserMessage: (sessionId, message) => chatSession.commitUserMessage(sessionId, message),
       getSessionGeneration: sessionId => chatSession.getSessionGeneration(sessionId),
+      setCompaction: (sessionId, messageId, compaction) => {
+        const messages = chatSession.getSessionMessages(sessionId)
+        // A reactive message holds proxies, which `structuredClone` rejects when the send result leaves the leader.
+        chatSession.setSessionMessages(sessionId, messages.map(message => message.id === messageId ? { ...toRaw(message), compaction } : message))
+      },
     },
     context: {
       ingest: envelope => chatContext.ingestContextMessage(envelope),
@@ -1179,6 +1186,9 @@ export const useChatStore = defineStore('chat', () => {
       providerId,
       supportsAudioInput: await supportsAudioInput(providerId, modelId, chatProvider.generation(modelId)),
       supportsVisionInput: selectedModel?.metadata?.abilities?.vision === true,
+      // The window from the settings wins, because a local runtime can load a model with a smaller window than the model reports.
+      contextWindow: consciousnessSettingsStore.activeContextWindow ?? selectedModel?.contextLength,
+      summaryInstructions: consciousnessSettingsStore.summaryInstructions,
       resolveStep,
       signal,
       model: modelId,

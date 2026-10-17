@@ -583,6 +583,11 @@ export interface ContextUpdate<
    * and trials, (e.g. notified first but not ACKed, then retried).
    */
   contextId: string
+  /**
+   * Slot of this update among the contexts of its sender, for example "web:page".
+   * A replace-self update replaces only the sender's entries of the same lane.
+   * Updates without a lane share one slot.
+   */
   lane?: string
   ideas?: Array<string>
   hints?: Array<string>

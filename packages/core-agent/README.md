@@ -51,6 +51,41 @@ The adapter preserves SDK continuation data without parsing nested provider fiel
 
 Local history preserves complete turns and visible output from interrupted turns. Interrupted records stay on the device because the cloud wire format cannot preserve their incomplete state. Cloud chat sync currently transfers completed text and does not restore native continuation on another device.
 
+## Side context
+
+Modules and services send `context:update` events. The context registry stores them, and each send adds them to the last user turn as a `[Context]` block.
+
+The registry keeps one bucket for each source. Inside a bucket, `lane` names a slot:
+
+- A `replace-self` update replaces the entries of its own lane. The other lanes of the source stay.
+- An `append-self` update adds an entry. A repeated `contextId` is a retry, and it replaces the first attempt.
+- Updates without a lane share one slot.
+
+A bucket holds at most 20 entries by default. The oldest entries leave first.
+
+`remove(sourceKey)` drops the bucket of one source. The stage calls it when a module leaves the module list of the server. The registry has no time limit, so the context of a source that never announced a module stays until the application restarts.
+
+## History compaction
+
+Before each send, the orchestrator estimates the size of the next request. If the request does not fit the context window, the orchestrator asks the model for a summary of the older messages. The design follows the compaction of `pi-durable`.
+
+The summary is stored as a `compaction` marker on the first message that stays verbatim. Prompt composition then sends the system message, the summary, and the messages from the marker on. The older messages stay in storage and in the chat view. A later compaction folds the earlier summary into the next one.
+
+A host passes `contextWindow` in the send options. A missing or zero value selects 32,000 tokens. A host can also pass `summaryInstructions` to replace the built-in instructions of the summary request, which are exported as `DEFAULT_SUMMARY_INSTRUCTIONS`. A missing or blank value selects the built-in ones. The system line of the summary request is fixed.
+
+| Limit | Value | Purpose |
+| --- | --- | --- |
+| Reserve | 16,384 tokens, or 25% of the window if that is smaller | Space for the reply, the tool schemas, and the estimate error. |
+| Kept history | 20,000 tokens, or 40% of the window if that is smaller | Recent messages that stay verbatim. |
+
+The size estimate starts from the token report of the newest reply, when the provider gave one after the last compaction. That report includes the system prompt, the tools, and the side context. Text without a report counts as four characters for each token, and each CJK character counts as one token.
+
+The cut is always at a user message, so a tool result stays with its call. The summary request has no tools and no character prompt.
+
+If the summary request fails, the turn continues with the full history. The orchestrator emits a `history-compaction-failed` lifecycle record. A successful compaction emits `history-compacted`.
+
+The orchestrator does not compact when the messages after the marker are smaller than the kept history. In that case the system prompt or the side context fills the window, and a summary cannot help.
+
 ## Responses API
 
 A provider resolves a discriminated `GenerationRequest` before context projection. The adapter owns its wire format and SDK event conversion. The adapter uses `@xsai-ext/responses` with `store: false`. It replays complete Items and executes local function tools for at most ten steps.

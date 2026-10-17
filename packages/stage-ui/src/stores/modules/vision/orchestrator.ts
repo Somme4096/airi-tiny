@@ -92,6 +92,8 @@ export const useVisionOrchestratorStore = defineStore('vision-orchestrator', () 
         modsServerChannelStore.sendContextUpdate({
           strategy: ContextUpdateStrategy.ReplaceSelf,
           contextId: getVisionContextId(payload),
+          // One lane for each workload and source, so a capture replaces only its own earlier capture.
+          lane: getVisionContextId(payload),
           text,
           content,
           metadata: {

@@ -615,7 +615,7 @@ pages:
             temperature_label: Temperature
             temperature_enabled: Custom temperature
             top_p_enabled: Custom Top P
-            sampling_override_description: Off by default. Enable only if your model supports this parameter. Some models accept only one sampling parameter at a time.
+            sampling_override_description: Set it if your model supports this parameter. Some models accept only one sampling parameter at a time.
             temperature_description: Control the randomness of the model's output. A lower value (e.g. 0.2) results in more deterministic, precise, and analytical output, while a higher value (e.g. 1.0) increases creativity and diversity.
             top_p_label: Top P
             top_p_description: Control the diversity of the model's output via nucleus sampling. A lower value (e.g. 0.2) limits the output to only high-probability tokens, while a higher value (e.g. 1.0) includes a broader set of possibilities.
@@ -627,6 +627,20 @@ pages:
               label: Thinking
               required-description: This model requires Thinking.
               provider-default-description: AIRI has no reasoning settings for this model. OpenRouter applies its default.
+            context-window:
+              enabled: Custom context length
+              enabled-description: Set it if your model has a different limit. Use the tokens that provider reports by default.
+              label: Context length
+              description: The number of tokens that the model reads in one request.
+              placeholder-reported: 'Use the {tokens} tokens that the model reports'
+              placeholder-default: '{tokens}'
+          history-summary:
+            title: Compaction options
+            description: When a conversation gets too long for the model, AIRI replaces the older messages with a summary.
+            instructions:
+              label: Summary instructions
+              description: Tell the model how to summarize older messages.
+              placeholder: 'Write your compaction prompt here.'
       title: Consciousness
     description: Thinking, vision, speech synthesis, gaming, etc.
     gaming-factorio:

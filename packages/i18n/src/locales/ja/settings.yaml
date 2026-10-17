@@ -368,9 +368,6 @@ pages:
     import_invalid_file: 無効なカードパックファイルです
     upload: アップロード
     upload_desc: ここをクリックするか AIRI カードパックをドラッグ＆ドロップしてインポートします
-  memory:
-    description: 記憶が保存され、整理される場所
-    title: 記憶
   data:
     title: データ
     description: AIRIデータの保存、エクスポート、およびリセットの管理
@@ -742,9 +739,6 @@ pages:
     memory-long-term:
       description: 長期記憶固有の設定と管理
       title: 長期記憶
-    memory-short-term:
-      description: 短期記憶固有の設定と管理
-      title: 短期記憶
     messaging-discord:
       description: Discordでのチャットとボイスチャット
       enable: Discord連携を有効にする

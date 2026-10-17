@@ -240,11 +240,7 @@ Khả năng:
   - [x] Chơi game: [Factorio](https://www.factorio.com) (WIP, [PoC và demo có sẵn](https://github.com/moeru-ai/airi-factorio))
   - [x] Chơi game: [Kerbal Space Program](https://www.kerbalspaceprogram.com/) (sẽ công bố sau)
   - [ ] Chơi cùng trong [Helldivers 2](https://www.playstation.com/en-hk/games/helldivers-2/pc/) (đang thực hiện)
-  - [x] Trò chuyện trên [Telegram](https://telegram.org)
   - [x] Trò chuyện trên [Discord](https://discord.com)
-  - [ ] Bộ nhớ
-    - [x] Hỗ trợ CSDL trong trình duyệt (DuckDB WASM | `pglite`)
-    - [ ] Memory Alaya (WIP)
   - [ ] Suy luận cục bộ trong trình duyệt (WebGPU)
 - [x] Khả năng nghe hiểu
   - [x] Nhận âm thanh từ trình duyệt
@@ -387,8 +383,6 @@ npx bumpp --no-commit --no-tag
 - [`hfup`](https://github.com/moeru-ai/hfup): Các công cụ hỗ trợ triển khai, đóng gói lên HuggingFace Spaces
 - [`xsai-transformers`](https://github.com/moeru-ai/xsai-transformers): Nhà cung cấp thử nghiệm [🤗 Transformers.js](https://github.com/huggingface/transformers.js) cho [xsAI](https://github.com/moeru-ai/xsai).
 - [WebAI: Realtime Voice Chat](https://github.com/proj-airi/webai-realtime-voice-chat): Ví dụ đầy đủ về việc triển khai voice realtime của ChatGPT từ đầu với VAD + STT + LLM + TTS.
-- [`@proj-airi/drizzle-duckdb-wasm`](https://github.com/moeru-ai/airi/tree/main/packages/drizzle-duckdb-wasm/README.md): Trình điều khiển Drizzle ORM cho DuckDB WASM
-- [`@proj-airi/duckdb-wasm`](https://github.com/moeru-ai/airi/tree/main/packages/duckdb-wasm/README.md): Wrapper dễ sử dụng cho `@duckdb/duckdb-wasm`
 - [AIRI Factorio](https://github.com/moeru-ai/airi-factorio): Cho phép AIRI chơi Factorio
 - [Factorio RCON API](https://github.com/nekomeowww/factorio-rcon-api): RESTful API wrapper cho console máy chủ headless Factorio
 - [`autorio`](https://github.com/moeru-ai/airi-factorio/tree/main/packages/autorio): Thư viện tự động hóa Factorio
@@ -422,7 +416,7 @@ flowchart LR
   subgraph Integrations[Source-configured integrations]
     Discord[discord-bot]
     Minecraft[minecraft-bot]
-    Other[Telegram, Factorio, MCP, and others]
+    Other[Factorio, MCP, and others]
   end
 
   Web --> StageUI

@@ -465,17 +465,6 @@
       status: preferred
       context: Long-term memory specific settings and management
 
-- id: short-term-memory
-  subject: memory
-  translatable: true
-  # TODO: confirm this definition. Read the note on "long-term-memory".
-  definition: The module that holds what the character keeps inside the current conversation.
-  terms:
-    - text: Short-Term Memory
-      part-of-speech: noun
-      status: preferred
-      context: Short-term memory specific settings and management
-
 # ---------------------------------------------------------------------------------------
 # The character
 # ---------------------------------------------------------------------------------------

@@ -368,9 +368,6 @@ pages:
     import_invalid_file: 卡片包文件无效
     upload: 上传
     upload_desc: 点击或拖动 AIRI 角色卡包以导入
-  memory:
-    description: 存放记忆的地方，以及策略
-    title: 记忆体
   data:
     title: 数据
     description: 管理存储 AIRI 数据、导出和重置
@@ -859,9 +856,6 @@ pages:
           description: 你让角色建配方时，它会先存成提议，你批准后才生效。
         model_flow: 每次做什么由角色决定
       title: 长期记忆
-    memory-short-term:
-      description: 短期记忆
-      title: 短期记忆
     messaging-discord:
       description: Discord 发消息和语音聊天
       enable: 启用Discord集成

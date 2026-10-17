@@ -368,9 +368,6 @@ pages:
     import_invalid_file: ไฟล์แพ็กเกจการ์ดไม่ถูกต้อง
     upload: อัปโหลด
     upload_desc: คลิกหรือลากแพ็กเกจการ์ด AIRI มาวางเพื่อนำเข้า
-  memory:
-    description: ที่จัดเก็บและจัดระเบียบความทรงจำ
-    title: ความทรงจำ
   data:
     title: ข้อมูล
     description: จัดการข้อมูล AIRI ที่จัดเก็บไว้ การส่งออก และการรีเซ็ต
@@ -741,9 +738,6 @@ pages:
     memory-long-term:
       description: การตั้งค่าและการจัดการเฉพาะของความทรงจำระยะยาว
       title: ความทรงจำระยะยาว
-    memory-short-term:
-      description: การตั้งค่าและการจัดการเฉพาะของความทรงจำระยะสั้น
-      title: ความทรงจำระยะสั้น
     messaging-discord:
       description: แชทและแชทด้วยเสียงผ่าน Discord
       enable: เปิดการเชื่อมต่อกับ Discord

@@ -43,7 +43,7 @@ export const sparkCommandPersonaSchema = z.object({
  * `propertyNames`. The command tool converts it back to the runtime record shape.
  */
 export const sparkCommandGuidanceSchema = z.object({
-  type: z.enum(['proposal', 'instruction', 'memory-recall']),
+  type: z.enum(['proposal', 'instruction']),
   persona: z.union([z.array(sparkCommandPersonaSchema), z.null()]).describe('Personas can be used to adjust the behavior of sub-agents. For example, when using as NPC in games, or player in Minecraft, the persona can help define the character\'s traits and decision-making style.'),
   options: z.array(sparkCommandGuidanceOptionSchema).min(1).describe('Concrete execution options for the target.'),
 }).strict()
@@ -54,7 +54,7 @@ export const sparkCommandMetadataEntrySchema = z.object({
 }).strict()
 
 export const sparkCommandContextSchema = z.object({
-  lane: z.union([z.string(), z.null()]).describe('Logical context lane, for example "game" or "memory".'),
+  lane: z.union([z.string(), z.null()]).describe('Logical context lane, for example "game" or "status".'),
   ideas: z.union([z.array(z.string()), z.null()]).describe('Loose ideas to attach to the target context.'),
   hints: z.union([z.array(z.string()), z.null()]).describe('Hints to attach to the target context.'),
   strategy: z.enum(ContextUpdateStrategy).describe('How the target should merge this context update.'),

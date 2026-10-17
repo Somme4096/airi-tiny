@@ -161,7 +161,7 @@ function openGeneratedImagePreview() {
       <div class="mb-2 flex items-center gap-2">
         <div class="i-solar:notebook-bookmark-bold-duotone text-base text-emerald-500" />
         <div class="rounded-full bg-emerald-500/12 px-2.5 py-1 text-xs text-emerald-700 dark:text-emerald-300">
-          Saved to long-term memory
+          Saved to journal
         </div>
       </div>
       <MarkdownRenderer :content="textJournalMarkdown" />

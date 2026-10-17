@@ -68,7 +68,6 @@ catalog:
   '@capacitor/local-notifications': ^8.3.1
   '@date-fns/utc': ^2.1.1
   '@discordjs/voice': ^0.19.2
-  '@dotenvx/dotenvx': ^2.21.0
   '@electric-sql/pglite': ^0.5.6
   '@electron-toolkit/eslint-config-ts': ^3.1.0
   '@electron-toolkit/preload': ^3.0.2
@@ -78,7 +77,6 @@ catalog:
   '@esotericsoftware/spine-webgl': ~4.2.0
   '@esotericsoftware/spine-webgl-4-0': npm:@esotericsoftware/spine-webgl@~4.0.31
   '@esotericsoftware/spine-webgl-4-1': npm:@esotericsoftware/spine-webgl@~4.1.56
-  '@ffmpeg-installer/ffmpeg': ^1.1.0
   '@fontsource-variable/comfortaa': ^5.3.0
   '@fontsource-variable/dm-sans': ^5.3.0
   '@fontsource-variable/jura': ^5.3.0
@@ -91,7 +89,6 @@ catalog:
   '@fontsource/kiwi-maru': ^5.3.0
   '@fontsource/m-plus-rounded-1c': ^5.3.0
   '@formkit/auto-animate': ^0.10.0
-  '@grammyjs/files': ^1.2.0
   '@guiiai/logg': ^1.2.12
   '@histoire/plugin-vue': 1.0.0-beta.1
   '@huggingface/transformers': 3.8.1
@@ -126,17 +123,8 @@ catalog:
   '@nekopaw/tempora': 0.4.0-alpha.1
   '@openpanel/web': 1.4.1
   '@opentelemetry/api': ^1.9.1
-  '@opentelemetry/auto-instrumentations-node': ^0.79.0
   '@opentelemetry/core': ^2.10.0
-  '@opentelemetry/exporter-metrics-otlp-proto': ^0.221.0
-  '@opentelemetry/exporter-trace-otlp-proto': ^0.221.0
-  '@opentelemetry/instrumentation-pg': ^0.73.0
-  '@opentelemetry/resources': ^2.10.0
-  '@opentelemetry/sdk-metrics': ^2.10.0
-  '@opentelemetry/sdk-node': ^0.221.0
   '@opentelemetry/sdk-trace-base': ^2.10.0
-  '@opentelemetry/sdk-trace-node': ^2.10.0
-  '@opentelemetry/semantic-conventions': ^1.43.0
   '@pinia/testing': ^2.0.1
   '@pixi/app': ^6.5.10
   '@pixi/constants': ^6.5.10
@@ -156,7 +144,6 @@ catalog:
   '@pixiv/three-vrm-core': ^3.5.5
   '@pnpm/find-workspace-dir': ^1000.1.5
   '@proj-airi/chromatic': ^1.1.4
-  '@proj-airi/drizzle-duckdb-wasm': ^0.6.0
   '@proj-airi/iconify-meteocons': ^0.1.5
   '@proj-airi/lobe-icons': ^1.0.19
   '@proj-airi/unocss-preset-chromatic': ^1.1.4
@@ -181,7 +168,6 @@ catalog:
   '@types/mdast': ^4.0.4
   '@types/node': ^26.2.0
   '@types/nprogress': ^0.2.3
-  '@types/pg': ^8.23.1
   '@types/semver': ^7.8.0
   '@types/splitpanes': ^2.2.6
   '@types/three': ^0.185.4
@@ -220,10 +206,8 @@ catalog:
   '@xsai-apple-vision/vision-native-darwin-arm64': 0.1.0
   '@xsai-ext/providers': 0.5.1
   '@xsai-ext/responses': 0.5.1
-  '@xsai-transformers/embed': ^0.1.0
   '@xsai-transformers/shared': ^0.1.0
   '@xsai-transformers/transcription': ^0.1.0
-  '@xsai/embed': 0.5.1
   '@xsai/generate-speech': 0.5.1
   '@xsai/generate-text': 0.5.1
   '@xsai/generate-transcription': 0.5.1
@@ -277,10 +261,8 @@ catalog:
   eventemitter3: ^5.0.4
   fflate: ^0.8.3
   floating-vue: ^5.2.2
-  fluent-ffmpeg: ^2.1.3
   get-port-please: ^3.2.0
   gpuu: ^1.0.7
-  grammy: ^1.45.1
   h3: 2.0.1-rc.29
   hfup: ^1.0.4
   histoire: 1.0.0-beta.1
@@ -318,15 +300,12 @@ catalog:
   opusscript: ^0.1.1
   oxc-minify: ^0.146.0
   oxlint: ^1.79.0
-  p-limit: ^7.3.1
-  pg: ^8.23.0
   pinia: ^4.0.3
   pinia-plugin-synced: ^0.1.5
   pixi-filters: ^4.2.0
   pixi-live2d-display: ^0.4.0
   playwright: ^1.62.1
   popmotion: ^11.0.5
-  postgres: ^3.4.9
   postprocessing: ^6.39.4
   prismarine-block: ^1.23.0
   prismarine-entity: ^2.6.0
@@ -355,7 +334,6 @@ catalog:
   stockfish: ^18.0.8
   superjson: ^2.2.6
   taze: ^21.1.0
-  telegram: ^2.26.22
   three: ^0.185.1
   three-stdlib: ^2.36.1
   tinyexec: ^1.3.0
@@ -430,10 +408,6 @@ allowBuilds:
   '@anthropic-ai/claude-code': true
   '@ax-llm/ax': false
   '@discordjs/opus': true
-  '@ffmpeg-installer/darwin-arm64': true
-  '@ffmpeg-installer/darwin-x64': true
-  '@ffmpeg-installer/linux-arm64': true
-  '@ffmpeg-installer/linux-x64': true
   '@napi-rs/image': true
   '@parcel/watcher': true
   '@prisma/client': false
@@ -444,7 +418,6 @@ allowBuilds:
   electron: true
   electron-click-drag-plugin: true
   electron-winstaller: true
-  es5-ext: true
   esbuild: true
   ffmpeg-static: true
   isolated-vm: true

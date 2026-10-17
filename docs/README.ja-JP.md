@@ -240,11 +240,7 @@
   - [x] [Factorio](https://www.factorio.com)をプレイ（進行中ですが、[PoCとデモが利用可能](https://github.com/moeru-ai/airi-factorio)）
   - [x] [Kerbal Space Program](https://www.kerbalspaceprogram.com/)をプレイ（発表予定）
   - [ ] [Helldivers 2](https://www.playstation.com/en-hk/games/helldivers-2/pc/)を一緒にプレイ（進行中）
-  - [x] [Telegram](https://telegram.org)でチャット
   - [x] [Discord](https://discord.com)でチャット
-  - [ ] メモリ
-    - [x] ブラウザ内データベースサポート（DuckDB WASM | `pglite`）
-    - [ ] メモリアラヤ（進行中）
   - [ ] ブラウザ内ローカル（WebGPU）推論
 - [x] 耳
   - [x] ブラウザからの音声入力
@@ -387,8 +383,6 @@ npx bumpp --no-commit --no-tag
 - [`hfup`](https://github.com/moeru-ai/hfup): HuggingFace Spaces へのデプロイとバンドルを支援するツール
 - [`xsai-transformers`](https://github.com/moeru-ai/xsai-transformers): [xsAI](https://github.com/moeru-ai/xsai)向けの実験的な [🤗 Transformers.js](https://github.com/huggingface/transformers.js) プロバイダー
 - [WebAI: Realtime Voice Chat](https://github.com/proj-airi/webai-realtime-voice-chat): VAD + STT + LLM + TTS で ChatGPT のリアルタイム音声をゼロから実装する完全例
-- [`@proj-airi/drizzle-duckdb-wasm`](https://github.com/moeru-ai/airi/tree/main/packages/drizzle-duckdb-wasm/README.md): DuckDB WASM の Drizzle ORM ドライバー
-- [`@proj-airi/duckdb-wasm`](https://github.com/moeru-ai/airi/tree/main/packages/duckdb-wasm/README.md): 使いやすい `@duckdb/duckdb-wasm` ラッパー
 - [AIRI Factorio](https://github.com/moeru-ai/airi-factorio): AIRI が Factorio をプレイできるようにする
 - [Factorio RCON API](https://github.com/nekomeowww/factorio-rcon-api): Factorio ヘッドレスサーバーコンソールの RESTful API ラッパー
 - [`autorio`](https://github.com/moeru-ai/airi-factorio/tree/main/packages/autorio): Factorio 自動化ライブラリ
@@ -422,7 +416,7 @@ flowchart LR
   subgraph Integrations[Source-configured integrations]
     Discord[discord-bot]
     Minecraft[minecraft-bot]
-    Other[Telegram, Factorio, MCP, and others]
+    Other[Factorio, MCP, and others]
   end
 
   Web --> StageUI

@@ -356,9 +356,6 @@ pages:
     import_invalid_file: Le fichier du paquet de fiche est invalide
     upload: Téléverser
     upload_desc: Cliquez ou déposez un paquet de fiche AIRI pour l’importer
-  memory:
-    description: Endroit où les souvenirs sont stockés et organisés
-    title: Mémoire
   data:
     title: Données
     description: Gérer les données AIRI enregistrées, les exports et les réinitialisations
@@ -726,9 +723,6 @@ pages:
     memory-long-term:
       description: Paramètres et gestion de la mémoire à long terme
       title: Mémoire à long terme
-    memory-short-term:
-      description: Paramètres et gestion de la mémoire à court terme
-      title: Mémoire à court terme
     messaging-discord:
       description: Chat et chat vocal via Discord
       enable: Activer l'intégration Discord

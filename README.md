@@ -242,11 +242,7 @@ Capable of
   - [x] Play [Factorio](https://www.factorio.com) (WIP, but [PoC and demo available](https://github.com/moeru-ai/airi-factorio))
   - [x] Play [Kerbal Space Program](https://www.kerbalspaceprogram.com/) (announcement TBD)
   - [ ] Co-play [Helldivers 2](https://www.playstation.com/en-hk/games/helldivers-2/pc/) (WIP)
-  - [x] Chat in [Telegram](https://telegram.org)
   - [x] Chat in [Discord](https://discord.com)
-  - [ ] Memory
-    - [x] Pure in-browser database support (DuckDB WASM | `pglite`)
-    - [ ] Memory Alaya (WIP)
   - [ ] Pure in-browser local (WebGPU) inference
 - [x] Ears
   - [x] Audio input from browser
@@ -386,8 +382,6 @@ npx bumpp --no-commit --no-tag
 - [`hfup`](https://github.com/moeru-ai/hfup): tools to help on deploying, bundling to HuggingFace Spaces
 - [`xsai-transformers`](https://github.com/moeru-ai/xsai-transformers): Experimental [🤗 Transformers.js](https://github.com/huggingface/transformers.js) provider for [xsAI](https://github.com/moeru-ai/xsai).
 - [WebAI: Realtime Voice Chat](https://github.com/proj-airi/webai-realtime-voice-chat): Full example of implementing ChatGPT's realtime voice from scratch with VAD + STT + LLM + TTS.
-- [`@proj-airi/drizzle-duckdb-wasm`](https://github.com/moeru-ai/airi/tree/main/packages/drizzle-duckdb-wasm/README.md): Drizzle ORM driver for DuckDB WASM
-- [`@proj-airi/duckdb-wasm`](https://github.com/moeru-ai/airi/tree/main/packages/duckdb-wasm/README.md): Easy to use wrapper for `@duckdb/duckdb-wasm`
 - [AIRI Factorio](https://github.com/moeru-ai/airi-factorio): Allow AIRI to play Factorio.
 - [AIRI DomeKeeper](https://github.com/proj-airi/game-playing-ai-dome-keeper): Allow AIRI to play DomeKeeper.
 - [Factorio RCON API](https://github.com/nekomeowww/factorio-rcon-api): RESTful API wrapper for Factorio headless server console
@@ -422,7 +416,7 @@ flowchart LR
   subgraph Integrations[Source-configured integrations]
     Discord[discord-bot]
     Minecraft[minecraft-bot]
-    Other[Telegram, Factorio, MCP, and others]
+    Other[Factorio, MCP, and others]
   end
 
   Web --> StageUI

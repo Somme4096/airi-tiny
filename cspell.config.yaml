@@ -10,7 +10,6 @@ words:
   - airi
   - airi-vtuber
   - aivis
-  - Alaya
   - alexanderolsen
   - alibabacloud
   - alint
@@ -107,10 +106,6 @@ words:
   - dtolnay
   - dtype
   - dtypes
-  - duckdb
-  - DuckDBWASM
-  - DuckDBWASMQ
-  - DuckDBWASMQuery
   - eastasia
   - elevenlabs
   - elfutils
@@ -261,7 +256,6 @@ words:
   - pathe
   - pbxproj
   - pglite
-  - pgvector
   - picklist
   - picovoice
   - pinia

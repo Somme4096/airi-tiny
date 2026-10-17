@@ -188,44 +188,6 @@ Browse the live UI component storyboard at [airi.moeru.ai/ui](https://airi.moeru
 
 The documentation site lives in [moeru-ai/airi-docs](https://github.com/moeru-ai/airi-docs), see its README for development.
 
-### Telegram bot integration
-
-A Postgres database is required.
-
-```shell
-cd integrations/telegram-bot
-docker compose up -d
-```
-
-Configure `.env`
-
-```shell
-cp .env .env.local
-```
-
-Edit the credentials in `.env.local`.
-
-Migrate the database
-
-```shell
-pnpm -F @proj-airi/telegram-bot db:generate
-pnpm -F @proj-airi/telegram-bot db:push
-```
-
-Run the bot
-
-```shell
-pnpm -F @proj-airi/telegram-bot start
-```
-
-> [!NOTE]
->
-> For [@antfu/ni](https://github.com/antfu-collective/ni) users, you can
->
-> ```shell
-> nr -F @proj-airi/telegram-bot dev
-> ```
-
 ### Discord bot integration
 
 ```shell

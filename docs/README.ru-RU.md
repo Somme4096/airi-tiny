@@ -240,11 +240,7 @@
   - [x] Играть в [Factorio](https://www.factorio.com) (WIP, но [PoC и демо доступны](https://github.com/moeru-ai/airi-factorio))
   - [x] Играть в [Kerbal Space Program](https://www.kerbalspaceprogram.com/) (анонс будет позже)
   - [ ] Совместно играть в [Helldivers 2](https://www.playstation.com/en-hk/games/helldivers-2/pc/) (WIP)
-  - [x] Общаться в [Telegram](https://telegram.org)
   - [x] Общаться в [Discord](https://discord.com)
-  - [ ] Память
-    - [x] Полная поддержка базы данных в браузере (DuckDB WASM | `pglite`)
-    - [ ] Memory Alaya (WIP)
   - [ ] Полностью локальный вывод в браузере (WebGPU)
 - [x] Уши
   - [x] Аудиовход из браузера
@@ -387,8 +383,6 @@ npx bumpp --no-commit --no-tag
 - [`hfup`](https://github.com/moeru-ai/hfup): Инструменты для помощи в развертывании, упаковке в HuggingFace Spaces
 - [`xsai-transformers`](https://github.com/moeru-ai/xsai-transformers): Экспериментальный провайдер [🤗 Transformers.js](https://github.com/huggingface/transformers.js) для [xsAI](https://github.com/moeru-ai/xsai).
 - [WebAI: Realtime Voice Chat](https://github.com/proj-airi/webai-realtime-voice-chat): Полный пример реализации реального времени голосового чата ChatGPT с нуля с VAD + STT + LLM + TTS.
-- [`@proj-airi/drizzle-duckdb-wasm`](https://github.com/moeru-ai/airi/tree/main/packages/drizzle-duckdb-wasm/README.md): Драйвер Drizzle ORM для DuckDB WASM
-- [`@proj-airi/duckdb-wasm`](https://github.com/moeru-ai/airi/tree/main/packages/duckdb-wasm/README.md): Простой обертка для `@duckdb/duckdb-wasm`
 - [AIRI Factorio](https://github.com/moeru-ai/airi-factorio): Позволяет AIRI играть в Factorio
 - [Factorio RCON API](https://github.com/nekomeowww/factorio-rcon-api): RESTful API-обертка для консоли headless-сервера Factorio
 - [`autorio`](https://github.com/moeru-ai/airi-factorio/tree/main/packages/autorio): Библиотека автоматизации Factorio
@@ -422,7 +416,7 @@ flowchart LR
   subgraph Integrations[Source-configured integrations]
     Discord[discord-bot]
     Minecraft[minecraft-bot]
-    Other[Telegram, Factorio, MCP, and others]
+    Other[Factorio, MCP, and others]
   end
 
   Web --> StageUI

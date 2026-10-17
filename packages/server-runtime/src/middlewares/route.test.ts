@@ -200,13 +200,13 @@ describe('route middleware', () => {
   it('matches destinations by label selector', () => {
     const peer = createPeer({
       id: 'peer-2',
-      name: 'telegram-bot',
-      extension: 'telegram-bot',
-      instanceId: 'telegram-1',
-      labels: { app: 'telegram', env: 'prod' },
+      name: 'discord-bot',
+      extension: 'discord-bot',
+      instanceId: 'discord-1',
+      labels: { app: 'discord', env: 'prod' },
     })
 
-    expect(matchesDestinations(['label:app=telegram'], peer)).toBe(true)
+    expect(matchesDestinations(['label:app=discord'], peer)).toBe(true)
     expect(matchesDestinations(['label:env=dev'], peer)).toBe(false)
   })
 
@@ -258,7 +258,7 @@ describe('route middleware', () => {
 
   it('policy middleware filters targets', () => {
     const peers = new Map<string, AuthenticatedPeer>([
-      ['peer-1', createPeer({ id: 'peer-1', name: 'telegram', extension: 'telegram-bot', instanceId: 'telegram-1', labels: { env: 'prod' } })],
+      ['peer-1', createPeer({ id: 'peer-1', name: 'discord', extension: 'discord-bot', instanceId: 'discord-1', labels: { env: 'prod' } })],
       ['peer-2', createPeer({ id: 'peer-2', name: 'stage-ui', extension: 'stage-ui', instanceId: 'stage-ui-1', labels: { env: 'dev' } })],
     ])
 
@@ -283,7 +283,7 @@ describe('route middleware', () => {
 
   it('policy middleware excludes unauthenticated peers', () => {
     const peers = new Map<string, AuthenticatedPeer>([
-      ['peer-1', createPeer({ id: 'peer-1', name: 'telegram', extension: 'telegram-bot', instanceId: 'telegram-1', labels: { env: 'prod' } })],
+      ['peer-1', createPeer({ id: 'peer-1', name: 'discord', extension: 'discord-bot', instanceId: 'discord-1', labels: { env: 'prod' } })],
       ['peer-2', createPeer({ id: 'peer-2', name: 'stage-ui', extension: 'stage-ui', instanceId: 'stage-ui-1', labels: { env: 'prod' }, authenticated: false })],
     ])
 
@@ -304,7 +304,7 @@ describe('route middleware', () => {
 
   it('policy middleware does not authorize bypass by itself', () => {
     const peers = new Map<string, AuthenticatedPeer>([
-      ['peer-1', createPeer({ id: 'peer-1', name: 'telegram', extension: 'telegram-bot', instanceId: 'telegram-1', labels: { env: 'prod' } })],
+      ['peer-1', createPeer({ id: 'peer-1', name: 'discord', extension: 'discord-bot', instanceId: 'discord-1', labels: { env: 'prod' } })],
       ['peer-2', createPeer({ id: 'peer-2', name: 'stage-ui', extension: 'stage-ui', instanceId: 'stage-ui-1', labels: { env: 'dev' } })],
     ])
 

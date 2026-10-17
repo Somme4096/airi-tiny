@@ -19,6 +19,7 @@ const contextUpdateHooks: HookCallback[] = []
 const serverEventHooks = new Map<string, HookCallback[]>()
 
 const chatContextIngestMock = vi.fn()
+const removeContextSourceMock = vi.fn()
 const beginStreamMock = vi.fn()
 const appendStreamLiteralMock = vi.fn()
 const finalizeStreamMock = vi.fn()
@@ -217,6 +218,7 @@ vi.mock('../../chat', () => ({
 vi.mock('../../chat/context-store', () => ({
   useChatContextStore: () => ({
     ingestContextMessage: chatContextIngestMock,
+    removeContextSource: removeContextSourceMock,
   }),
 }))
 
@@ -267,6 +269,27 @@ vi.mock('./channel-server', () => ({
   }),
 }))
 
+const chatPreparerModule = { name: 'dusha', identity: { id: 'dusha', extension: { id: 'airi-plugin-dusha' }, labels: { 'chat-prepare': 'true' } } }
+
+async function syncModules(modules: unknown[]) {
+  await emitServerEvent('registry:modules:sync', { type: 'registry:modules:sync', data: { modules } })
+}
+
+/** Runs the before-compose hooks of one turn. `isComposed` tells whether the bridge released the turn. */
+function composeTurn(turnId: string, text: string) {
+  let composed = false
+  const composing = emitHooks(beforeComposeHooks, text, {
+    sessionId: 'session-1',
+    turnId,
+    message: { role: 'user', content: text },
+    contexts: {},
+    composedMessage: [],
+  }).then(() => {
+    composed = true
+  })
+  return { composing, isComposed: () => composed }
+}
+
 describe('context bridge contract', () => {
   beforeEach(() => {
     localStorage.clear()
@@ -275,6 +298,7 @@ describe('context bridge contract', () => {
     consciousness = useConsciousnessStore(pinia)
 
     chatContextIngestMock.mockReset()
+    removeContextSourceMock.mockReset()
     beginStreamMock.mockReset()
     appendStreamLiteralMock.mockReset()
     finalizeStreamMock.mockReset()
@@ -422,6 +446,72 @@ describe('context bridge contract', () => {
     expect(chatOrchestratorMock.send).toHaveBeenCalledTimes(1)
     expect(chatOrchestratorMock.send.mock.calls[0]?.[0]).toMatchObject({ sessionId: 'bound:discord:channel:a' })
     await store.dispose()
+  })
+
+  it('holds the turn until a chat preparer has sent its context', async () => {
+    const store = useContextBridgeStore()
+    await store.initialize()
+    await syncModules([chatPreparerModule])
+
+    const turn = composeTurn('turn-1', 'I am angry at you')
+    await vi.waitFor(() => expect(serverSendMock).toHaveBeenCalledWith({
+      type: 'chat:prepare:request',
+      data: { turnId: 'turn-1', sessionId: 'session-1', text: 'I am angry at you' },
+    }))
+
+    await emitContextUpdate({ ...createContextUpdateEvent({ text: 'irritability rose' }), metadata: createMetadata('airi-plugin-dusha', 'dusha') })
+    // An answer for another turn, or from a module without the label, does not release this turn.
+    await emitServerEvent('chat:prepare:response', { type: 'chat:prepare:response', data: { turnId: 'turn-0' }, metadata: createMetadata('airi-plugin-dusha', 'dusha') })
+    await emitServerEvent('chat:prepare:response', { type: 'chat:prepare:response', data: { turnId: 'turn-1' }, metadata: createMetadata('weather', 'station-1') })
+    expect(chatContextIngestMock).toHaveBeenCalledWith(expect.objectContaining({ text: 'irritability rose' }))
+    expect(turn.isComposed()).toBe(false)
+
+    await emitServerEvent('chat:prepare:response', { type: 'chat:prepare:response', data: { turnId: 'turn-1' }, metadata: createMetadata('airi-plugin-dusha', 'dusha') })
+    await turn.composing
+
+    expect(turn.isComposed()).toBe(true)
+  })
+
+  it('composes at once and sends no request when no module has the chat-prepare label', async () => {
+    const store = useContextBridgeStore()
+    await store.initialize()
+    await syncModules([{ name: 'web', identity: { id: 'web', extension: { id: 'web-extension' }, labels: { runtime: 'web-extension' } } }])
+
+    await composeTurn('turn-1', 'hello').composing
+
+    expect(serverSendMock.mock.calls.filter(([event]) => event.type === 'chat:prepare:request')).toEqual([])
+  })
+
+  it('releases the turn when the chat preparer disconnects', async () => {
+    const store = useContextBridgeStore()
+    await store.initialize()
+    await syncModules([chatPreparerModule])
+
+    const turn = composeTurn('turn-1', 'hello')
+    await syncModules([])
+    await turn.composing
+
+    expect(turn.isComposed()).toBe(true)
+  })
+
+  it('releases the turn after 20 seconds when the chat preparer never answers', async () => {
+    const store = useContextBridgeStore()
+    await store.initialize()
+    await syncModules([chatPreparerModule])
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] })
+
+    try {
+      const turn = composeTurn('turn-1', 'hello')
+      await vi.advanceTimersByTimeAsync(19_999)
+      expect(turn.isComposed()).toBe(false)
+
+      await vi.advanceTimersByTimeAsync(1)
+      await turn.composing
+      expect(turn.isComposed()).toBe(true)
+    }
+    finally {
+      vi.useRealTimers()
+    }
   })
 
   it('records core ingest result for broadcast context updates', async () => {

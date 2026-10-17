@@ -82,6 +82,7 @@
     "@tresjs/cientos": "catalog:",
     "@tresjs/core": "catalog:",
     "@unocss/reset": "catalog:",
+    "@valibot/to-json-schema": "catalog:",
     "@vueuse/core": "catalog:",
     "@vueuse/motion": "catalog:",
     "@vueuse/shared": "catalog:",

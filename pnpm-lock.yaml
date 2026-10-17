@@ -1806,6 +1806,9 @@ importers:
       '@unocss/reset':
         specifier: 'catalog:'
         version: 66.7.5
+      '@valibot/to-json-schema':
+        specifier: 'catalog:'
+        version: 1.0.0-rc.0(valibot@1.4.2(typescript@6.0.3))
       '@vueuse/core':
         specifier: 'catalog:'
         version: 14.4.0(vue@3.5.41(typescript@6.0.3))
@@ -1859,7 +1862,7 @@ importers:
         version: 0.5.1
       '@xsai/tool':
         specifier: 'catalog:'
-        version: 0.5.1(@valibot/to-json-schema@1.7.1(valibot@1.4.2(typescript@6.0.3)))(zod-to-json-schema@3.25.2(zod@4.4.3))(zod@4.4.3)
+        version: 0.5.1(@valibot/to-json-schema@1.0.0-rc.0(valibot@1.4.2(typescript@6.0.3)))(zod-to-json-schema@3.25.2(zod@4.4.3))(zod@4.4.3)
       '@xsai/utils-chat':
         specifier: 'catalog:'
         version: 0.5.1
@@ -2003,7 +2006,7 @@ importers:
         version: 5.0.0
       xsschema:
         specifier: 'catalog:'
-        version: 0.5.1(@valibot/to-json-schema@1.7.1(valibot@1.4.2(typescript@6.0.3)))(zod-to-json-schema@3.25.2(zod@4.4.3))(zod@4.4.3)
+        version: 0.5.1(@valibot/to-json-schema@1.0.0-rc.0(valibot@1.4.2(typescript@6.0.3)))(zod-to-json-schema@3.25.2(zod@4.4.3))(zod@4.4.3)
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -24169,6 +24172,19 @@ snapshots:
     dependencies:
       '@xsai/shared': 0.5.1
       '@xsai/shared-stream': 0.5.1
+
+  '@xsai/tool@0.5.1(@valibot/to-json-schema@1.0.0-rc.0(valibot@1.4.2(typescript@6.0.3)))(zod-to-json-schema@3.25.2(zod@4.4.3))(zod@4.4.3)':
+    dependencies:
+      '@xsai/shared': 0.5.1
+      '@xsai/shared-chat': 0.5.1
+      xsschema: 0.5.1(@valibot/to-json-schema@1.0.0-rc.0(valibot@1.4.2(typescript@6.0.3)))(zod-to-json-schema@3.25.2(zod@4.4.3))(zod@4.4.3)
+    transitivePeerDependencies:
+      - '@valibot/to-json-schema'
+      - arktype
+      - effect
+      - sury
+      - zod
+      - zod-to-json-schema
 
   '@xsai/tool@0.5.1(@valibot/to-json-schema@1.7.1(valibot@1.4.2(typescript@6.0.3)))(zod-to-json-schema@3.25.2(zod@4.4.3))(zod@4.4.3)':
     dependencies:

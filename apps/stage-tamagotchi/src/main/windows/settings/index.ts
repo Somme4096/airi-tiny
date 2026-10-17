@@ -20,7 +20,7 @@ import { electronSettingsNavigate } from '../../../shared/eventa'
 import { SETTINGS_WINDOW_WIDTH } from '../../../shared/settings-window'
 import { baseUrl, getElectronMainDirname, load, withHashRoute } from '../../libs/electron/location'
 import { createReusableWindow } from '../../libs/electron/window-manager'
-import { protectPrivilegedWindowNavigation, toggleWindowShow } from '../shared'
+import { protectPrivilegedWindowNavigation, providerRequestWebPreferences, toggleWindowShow } from '../shared'
 import { setupSettingsWindowInvokes } from './rpc/index.electron'
 
 export interface SettingsWindowManager {
@@ -61,6 +61,7 @@ export function setupSettingsWindowReusableFunc(params: {
       webPreferences: {
         preload: join(getElectronMainDirname(), '../preload/index.mjs'),
         sandbox: false,
+        ...providerRequestWebPreferences(),
       },
     })
 

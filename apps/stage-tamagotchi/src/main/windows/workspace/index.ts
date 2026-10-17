@@ -35,7 +35,7 @@ import {
 import { baseUrl, getElectronMainDirname, load, withHashRoute } from '../../libs/electron/location'
 import { createReusableWindow } from '../../libs/electron/window-manager'
 import { setupSettingsWindowInvokes } from '../settings/rpc/index.electron'
-import { protectPrivilegedWindowNavigation } from '../shared'
+import { protectPrivilegedWindowNavigation, providerRequestWebPreferences } from '../shared'
 
 /** The page of the window. A surface without a page of its own, such as the chat, shows on it. */
 const WORKSPACE_PAGE = '/workspace'
@@ -120,6 +120,7 @@ export function setupWorkspaceWindowManager(params: {
       webPreferences: {
         preload: join(getElectronMainDirname(), '../preload/index.mjs'),
         sandbox: false,
+        ...providerRequestWebPreferences(),
       },
     })
 

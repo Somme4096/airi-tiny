@@ -1,1 +1,1 @@
-export { protectPrivilegedWindowNavigation, setWindowAlwaysOnTop, toggleWindowShow, transparentWindowConfig } from './window'
+export { protectPrivilegedWindowNavigation, providerRequestWebPreferences, setWindowAlwaysOnTop, toggleWindowShow, transparentWindowConfig } from './window'

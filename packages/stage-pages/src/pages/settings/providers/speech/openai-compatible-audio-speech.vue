@@ -11,10 +11,10 @@ import { getDefinedProvider } from '@proj-airi/stage-ui/libs'
 import { useSpeechStore } from '@proj-airi/stage-ui/stores/modules/speech'
 import { useProviderConfigStore } from '@proj-airi/stage-ui/stores/providers/config'
 import { useProviderStore } from '@proj-airi/stage-ui/stores/providers/provider'
-import { FieldInput, FieldRange } from '@proj-airi/ui'
+import { FieldInput } from '@proj-airi/ui'
 import { computedAsync } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const speechStore = useSpeechStore()
@@ -23,21 +23,10 @@ const providerStore = useProviderConfigStore()
 const { configs: providers } = storeToRefs(providerStore)
 const { t } = useI18n()
 
-const defaultVoiceSettings = {
-  speed: 1.0,
-}
-
 // Get provider metadata
 const providerId = 'openai-compatible-audio-speech'
 const defaultModel = 'tts-1'
 const defaultVoice = 'alloy'
-
-// Initialize speed from provider config or default
-const speed = ref<number>(
-  (providers.value[providerId] as any)?.voiceSettings?.speed
-  || (providers.value[providerId] as any)?.speed
-  || defaultVoiceSettings.speed,
-)
 
 // Model selection (store raw string; empty string is valid while editing — default is applied only at API call)
 const model = computed({
@@ -70,23 +59,16 @@ watch(
   () => providers.value[providerId],
   (newConfig) => {
     if (newConfig) {
-      // Sync speed from voiceSettings or direct speed property
-      const config = newConfig as any
-      const newSpeed = config.voiceSettings?.speed || config.speed || defaultVoiceSettings.speed
-      if (Math.abs(speed.value - newSpeed) > 0.001) // Use small epsilon for float comparison
-        speed.value = newSpeed
-
       // Sync model if property was cleared externally (undefined/null), not when user sets empty string
-      if (config.model == null && model.value !== defaultModel)
+      if (newConfig.model == null && model.value !== defaultModel)
         model.value = defaultModel
 
       // Sync voice if property was cleared externally (undefined/null), not when user sets empty string
-      if (config.voice == null && voice.value !== defaultVoice)
+      if (newConfig.voice == null && voice.value !== defaultVoice)
         voice.value = defaultVoice
     }
     else {
       // Provider config was reset, reset our local refs to defaults
-      speed.value = defaultVoiceSettings.speed
       model.value = defaultModel
       voice.value = defaultVoice
     }
@@ -123,19 +105,9 @@ async function handleGenerateSpeech(input: string, voiceId: string, _useSSML: bo
     modelToUse,
     input,
     voiceId || voice.value || defaultVoice,
-    {
-      ...providerConfig,
-      ...defaultVoiceSettings,
-      speed: speed.value,
-    },
+    providerConfig,
   )
 }
-
-watch(speed, async () => {
-  if (!providers.value[providerId])
-    providers.value[providerId] = {}
-  providers.value[providerId].speed = speed.value
-})
 
 // Use the composable to get validation logic and state
 const {
@@ -165,7 +137,6 @@ const apiKeyPlaceholder = computedAsync(async () => {
   <SpeechProviderSettings
     :provider-id="providerId"
     :default-model="defaultModel"
-    :additional-settings="defaultVoiceSettings"
     :placeholder="apiKeyPlaceholder"
   >
     <!-- Voice settings specific to OpenAI Compatible -->
@@ -176,14 +147,6 @@ const apiKeyPlaceholder = computedAsync(async () => {
         label="Model"
         description="Enter the TTS model to use for speech generation"
         placeholder="tts-1"
-      />
-      <!-- Speed control - common to most providers -->
-      <FieldRange
-        v-model="speed"
-        :label="t('settings.pages.providers.provider.common.fields.field.speed.label')"
-        :description="t('settings.pages.providers.provider.common.fields.field.speed.description')"
-        :min="0.5"
-        :max="2.0" :step="0.01"
       />
     </template>
 

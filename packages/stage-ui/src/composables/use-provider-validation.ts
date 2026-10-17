@@ -19,12 +19,7 @@ import { useAnalytics } from './use-analytics'
  * Classifies provider ids into bounded analytics buckets.
  */
 function providerModeForAnalytics(providerId: string): ProviderMode {
-  if (!providerId)
-    return 'unknown'
-
-  return providerId.startsWith('official-provider') || providerId.startsWith('vision-official-provider')
-    ? 'official'
-    : 'custom'
+  return providerId ? 'custom' : 'unknown'
 }
 
 export function useProviderValidation(providerId: string) {

@@ -1,6 +1,5 @@
 import type { LeadershipMode, SyncedPiniaRuntime } from 'pinia-plugin-synced'
 
-import { PiniaColada } from '@pinia/colada'
 import { createPinia, disposePinia, setActivePinia } from 'pinia'
 import { createSyncedPiniaPlugin } from 'pinia-plugin-synced'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -25,7 +24,7 @@ function createSyncedContext(namespace: string, leadership: LeadershipMode) {
     namespace,
   })
   pinia.use(runtime.plugin)
-  createApp({}).use(pinia).use(PiniaColada)
+  createApp({}).use(pinia)
   syncedContexts.push({ pinia, runtime })
   return { pinia, runtime }
 }

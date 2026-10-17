@@ -46,8 +46,6 @@ docs:
   'close': Close
   'expand': Expand
   'collapse': Collapse
-  'login': Sign in
-  'logging-in': Signing in...
   'account': Account
   'logout': Sign out
 
@@ -139,7 +137,6 @@ about:
       checking: Checking...
       latest-version: Latest version
       disabled-dev: Updates disabled in Dev
-      managed-by-store: Updates managed by your app store
       retry-check: Retry Check
       restart-silent: Restart to update silently
       restart-install: Restart to install update

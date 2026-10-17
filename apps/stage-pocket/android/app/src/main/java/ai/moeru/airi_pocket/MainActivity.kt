@@ -28,7 +28,6 @@ class MainActivity : BridgeActivity() {
 
     override fun load() {
         registerPlugin(MicrophonePermissionPlugin::class.java)
-        registerPlugin(WebAuthenticationPlugin::class.java)
         super.load()
 
         val bridge = bridge ?: return

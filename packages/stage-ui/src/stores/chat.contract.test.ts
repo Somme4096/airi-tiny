@@ -1,7 +1,6 @@
 import type { ChatOrchestratorSessionPort, Conversation, StreamOptions, Turn } from '@proj-airi/core-agent'
 import type { GenerationProvider } from '@proj-airi/provider-inference'
 import type { Tool } from '@xsai/shared-chat'
-import type { SyncedPiniaRuntime } from 'pinia-plugin-synced'
 
 import type { ChatHistoryItem, StreamingAssistantMessage } from '../types/chat'
 import type { ChatSessionMeta } from '../types/chat-session'
@@ -16,11 +15,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { computed, createApp, nextTick, reactive, ref } from 'vue'
 
 import { getAnalytics } from '../libs/product-signals'
-import {
-  AIRI_CHAT_APP_SURFACE_HEADER,
-  AIRI_CHAT_ROUND_ID_HEADER,
-  AIRI_CHAT_SESSION_ID_HEADER,
-} from '../libs/product-signals/headers'
 import { composeMemoryPrompt } from '../tools/memory'
 import { useChatStore } from './chat'
 import { CHAT_FORMAT_RULES } from './chat/prompt-recipe'
@@ -79,7 +73,6 @@ const ingestContextMessageMock = vi.fn()
 const getContextsSnapshotMock = vi.fn()
 const createRuntimePromptContextMock = vi.fn()
 const createMinecraftContextMock = vi.fn()
-const createUserAccountContextMock = vi.fn()
 const persistSessionMessagesMock = vi.fn()
 const forkSessionMock = vi.fn()
 const createSessionMock = vi.fn()
@@ -87,7 +80,6 @@ const ensureSessionMock = vi.fn()
 const loadSessionMock = vi.fn()
 const deleteSessionMock = vi.fn()
 const initializeSessionMock = vi.fn()
-const disposeSessionMock = vi.fn()
 const ensureCurrentSessionMock = vi.fn()
 const getChatProviderInstanceMock = vi.fn()
 const getToolsByNamesMock = vi.fn<(names: string[]) => Tool[]>()
@@ -121,7 +113,6 @@ vi.mock('../composables/use-io-tracer', () => ({
 vi.mock('./chat/context-providers', () => ({
   createMinecraftContext: () => createMinecraftContextMock(),
   createRuntimePromptContext: (prompt: string) => createRuntimePromptContextMock(prompt),
-  createUserAccountContext: () => createUserAccountContextMock(),
 }))
 
 vi.mock('vue-i18n', () => ({
@@ -197,7 +188,6 @@ vi.mock('./chat/session-store', () => ({
     loadSession: loadSessionMock,
     deleteSession: deleteSessionMock,
     initialize: initializeSessionMock,
-    dispose: disposeSessionMock,
     ensureCurrentSession: ensureCurrentSessionMock,
     persistSessionMessages: persistSessionMessagesMock,
     getSessionGeneration: () => currentGeneration,
@@ -209,9 +199,6 @@ vi.mock('./chat/session-store', () => ({
     deleteMessage: async ({ sessionId, messageId }: { sessionId: string, messageId: string }) => {
       sessionMessages[sessionId] = (sessionMessages[sessionId] ?? []).filter(message => message.id !== messageId)
     },
-    // Cloud sync surface used by `chat.ts performSend`. Mocked as a no-op so
-    // the orchestrator contract tests do not need a real WS / cloud mapper.
-    pushMessageToCloud: vi.fn().mockResolvedValue(undefined),
   })),
 }))
 
@@ -343,7 +330,6 @@ describe('chat store contract', () => {
     ingestContextMessageMock.mockReset()
     getContextsSnapshotMock.mockReset()
     getContextsSnapshotMock.mockReturnValue({})
-    createUserAccountContextMock.mockReset().mockReturnValue(null)
     createRuntimePromptContextMock.mockReset()
     createRuntimePromptContextMock.mockReturnValue(undefined)
     createMinecraftContextMock.mockReset()
@@ -360,7 +346,6 @@ describe('chat store contract', () => {
     })
     deleteSessionMock.mockReset().mockResolvedValue(undefined)
     initializeSessionMock.mockReset().mockResolvedValue(undefined)
-    disposeSessionMock.mockReset()
     ensureCurrentSessionMock.mockReset().mockResolvedValue('session-1')
     getChatProviderInstanceMock.mockReset().mockResolvedValue(provider)
     getToolsByNamesMock.mockReset().mockImplementation(names => names.map(name => ({
@@ -516,7 +501,7 @@ describe('chat store contract', () => {
     llmStreamMock.mockImplementation(async (_model: string, _provider: GenerationProvider, _messages: Conversation, options: StreamOptions) => {
       steps.push(await options.resolveStep!())
       // A tool round edits the character before the next model request.
-      cardSelections.set('alice', { provider: 'official-provider', model: 'chat-auto' })
+      cardSelections.set('alice', { provider: 'edited-provider', model: 'chat-auto' })
       cardPrompt.value = 'Edited Alice prompt'
       steps.push(await options.resolveStep!())
       await options.onStreamEvent?.({ type: 'finish' })
@@ -527,13 +512,8 @@ describe('chat store contract', () => {
     // The session prompt also carries the format rules and the memory index, so only its parts are checked.
     expect(steps[0]).toMatchObject({ model: 'alice-model', providerId: 'alice-provider', systemPrompt: expect.stringContaining('Alice prompt') })
     expect(steps[0]?.systemPrompt).toMatch(/Plugin toolset guidance\.$/)
-    expect(steps[0]?.headers).not.toHaveProperty(AIRI_CHAT_SESSION_ID_HEADER)
-    expect(steps[1]).toMatchObject({ model: 'chat-auto', providerId: 'official-provider', systemPrompt: expect.stringContaining('Edited Alice prompt') })
-    expect(steps[1]?.headers).toMatchObject({
-      [AIRI_CHAT_SESSION_ID_HEADER]: 'session-1',
-      [AIRI_CHAT_ROUND_ID_HEADER]: expect.any(String),
-    })
-    expect(getChatProviderInstanceMock).toHaveBeenLastCalledWith('official-provider', { reasoning: 'disabled' })
+    expect(steps[1]).toMatchObject({ model: 'chat-auto', providerId: 'edited-provider', systemPrompt: expect.stringContaining('Edited Alice prompt') })
+    expect(getChatProviderInstanceMock).toHaveBeenLastCalledWith('edited-provider', { reasoning: 'disabled' })
   })
 
   it('projects stored audio again when a tool step changes to a text-only model', async () => {
@@ -1174,52 +1154,6 @@ describe('chat store contract', () => {
     })).rejects.toThrow('Select this tool before running it again.')
   })
 
-  // https://github.com/moeru-ai/airi/pull/2394#discussion_r3883162024
-  it('restarts chat consumers when this renderer becomes the leader', async () => {
-    // ROOT CAUSE:
-    //
-    // The application stopped observing chat leadership changes. If the Web
-    // leader closed, the promoted renderer kept the replicated session state
-    // but did not start a new cloud WebSocket.
-    //
-    // The chat store now owns the leadership subscription. It starts the
-    // session consumers after promotion and stops local consumers after
-    // demotion or disposal.
-    let leadershipListener: ((isLeader: boolean) => void) | undefined
-    const stopLeadershipListener = vi.fn()
-    const syncedPinia: SyncedPiniaRuntime = {
-      dispose: vi.fn(),
-      getLeaderId: vi.fn(),
-      getParticipantCount: vi.fn(() => 1),
-      isLeader: vi.fn(() => false),
-      onCoordinationChange: vi.fn(() => vi.fn()),
-      onLeadershipChange: vi.fn((listener) => {
-        leadershipListener = listener
-        listener(false)
-        return stopLeadershipListener
-      }),
-      participantId: 'chat-test',
-      plugin: vi.fn(),
-    }
-    const store = useChatStore()
-
-    await store.initialize(syncedPinia)
-
-    expect(initializeSessionMock).toHaveBeenCalledOnce()
-    expect(disposeSessionMock).toHaveBeenCalledOnce()
-    expect(ensureCurrentSessionMock).not.toHaveBeenCalled()
-
-    leadershipListener?.(true)
-    await vi.waitFor(() => expect(ensureCurrentSessionMock).toHaveBeenCalledOnce())
-
-    leadershipListener?.(false)
-    expect(disposeSessionMock).toHaveBeenCalledTimes(2)
-
-    store.dispose()
-    expect(stopLeadershipListener).toHaveBeenCalledOnce()
-    expect(disposeSessionMock).toHaveBeenCalledTimes(3)
-  })
-
   it('passes the current consciousness reasoning option to the chat provider', async () => {
     const settings = useConsciousnessSettingsStore()
     await settings.setReasoning(true)
@@ -1328,7 +1262,7 @@ describe('chat store contract', () => {
     expect(chatAnalyticsMocks.trackMessageRound).toHaveBeenCalledWith(expect.objectContaining(correlation))
   })
 
-  it('keeps custom and official provider usage in completed message rounds', async () => {
+  it('keeps provider usage in completed message rounds for each provider', async () => {
     llmStreamMock.mockImplementation(async (_model: string, _chatProvider: GenerationProvider, _messages: Conversation, options: any) => {
       await options.onStreamEvent({ type: 'text-delta', text: 'ok' })
       await options.onStreamEvent({ type: 'finish' })
@@ -1355,8 +1289,8 @@ describe('chat store contract', () => {
       total_tokens: 20,
     }))
 
-    activeProviderRef.value = 'official-provider'
-    await store.ingest('official turn', {
+    activeProviderRef.value = 'other-provider'
+    await store.ingest('other provider turn', {
       model: 'chat-auto',
       chatProvider: provider,
     })
@@ -1366,15 +1300,9 @@ describe('chat store contract', () => {
       model: 'chat-auto',
       total_tokens: 20,
     }))
-    expect(llmStreamMock.mock.calls[1]?.[3]?.headers).toEqual({
-      [AIRI_CHAT_APP_SURFACE_HEADER]: 'web',
-      [AIRI_CHAT_SESSION_ID_HEADER]: 'session-1',
-      [AIRI_CHAT_ROUND_ID_HEADER]: expect.any(String),
-    })
   })
 
   it('uses turn_index on message_sent instead of a second-turn alias', async () => {
-    activeProviderRef.value = 'official-provider'
     llmStreamMock.mockImplementation(async (_model: string, _chatProvider: GenerationProvider, _messages: Conversation, options: any) => {
       await options.onStreamEvent({ type: 'text-delta', text: 'ok' })
       await options.onStreamEvent({ type: 'finish' })
@@ -1905,37 +1833,6 @@ describe('chat store contract', () => {
     await store.send({ sessionId: 'scene-session', text: 'Hello from Discord' })
 
     expect(speaks).toEqual([true, false])
-  })
-
-  it('adds account context only to the signed-in request without retaining it in the registry', async () => {
-    const account = {
-      id: 'account',
-      contextId: 'system:user-account',
-      strategy: 'replace-self',
-      text: 'Account display name: "Alice". Edit it at /settings/account.',
-      createdAt: 123,
-    }
-    const registry = {}
-    // Registry reads return independent snapshots. Request overlays do not mutate the retained registry.
-    getContextsSnapshotMock.mockImplementation(() => structuredClone(registry))
-    createUserAccountContextMock.mockReturnValue(account)
-    const prompts: string[] = []
-    llmStreamMock.mockImplementation(async (_model: string, _provider: GenerationProvider, messages: Conversation, options: StreamOptions) => {
-      prompts.push(JSON.stringify(messages))
-      await options.onStreamEvent?.({ type: 'finish' })
-    })
-    const store = useChatStore()
-    await store.ingest('hello', { model: 'gpt-test', chatProvider: provider })
-    expect(prompts[0]).toContain('Alice')
-    expect(prompts[0]).toContain('/settings/account')
-    expect(registry).toEqual({})
-    expect(ingestContextMessageMock).not.toHaveBeenCalledWith(account)
-
-    createUserAccountContextMock.mockReturnValue(null)
-    await store.ingest('hello again', { model: 'gpt-test', chatProvider: provider })
-    expect(prompts[1]).not.toContain('system:user-account')
-    expect(prompts[1]).not.toContain('Alice')
-    expect(prompts[1]).not.toContain('/settings/account')
   })
 
   it('rejects cancelled queued sends before they start', async () => {

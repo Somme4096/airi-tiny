@@ -9,8 +9,6 @@ animations:
     title: Usar Transiciones Específicas de Página
 dialogs:
   onboarding:
-    official:
-      title: Proveedor Oficial de AIRI
     title: '¡Bienvenido a AIRI!'
     description: Configuremos tu primer proveedor de IA para comenzar.
     selectProvider: Elige un Proveedor de IA
@@ -41,13 +39,6 @@ dialogs:
     enableChatCheck: >-
       Permitir a airi enviar un mensaje "ping" al primer modelo de chat disponible para comprobar la disponibilidad
     start: '¡Hagámoslo!'
-    loginPrompt: Inicia sesión para utilizar el proveedor oficial de AIRI para obtener la mejor experiencia.
-    loginAction: Iniciar sesión
-    setupWithoutSigningIn: Configurar con su proveedor
-    pricingLink: Precios
-    termsLink: Términos de servicio
-    flux: Flujo
-    buyFlux: Flujo de Carga
     select-model: Elegir modelo
     no-models: Ningún modelo disponible
     no-models-help: >-
@@ -253,173 +244,11 @@ live2d:
 microphone: Micrófono
 models: Modelo
 pages:
-  account:
-    title: Cuenta
-    description: Ver tu perfil y administrar tu cuenta
-    notLoggedIn: Inicia sesión para ver tu cuenta y acceder a todas las funciones
-    login: Iniciar sesión
-    logout: Cerrar sesión
-    fluxBalance: Saldo de Flux
-    viewFluxDetails: Ver detalles
-    viewCapacitor: Ver
-    signedInAs: Sesión iniciada como
-    profile:
-      tab: Perfil
-      title: Perfil
-      description: Administra tu nombre público.
-      name:
-        label: Mostrar nombre
-        placeholder: Cómo otros te ven
-      avatar:
-        gravatarNotice: Avatar de Gravatar.
-        gravatarLink: Gestionar en gravatar.com
-      action:
-        save: Guardar cambios
-      message:
-        saved: Perfil actualizado.
-      error:
-        fallback: No pudimos guardar sus cambios.
-    connections:
-      tab: Cuentas conectadas
-      title: Cuentas conectadas
-      description: Inicia sesión en AIRI a través de estos proveedores. Desvincula tu cuenta para revocar el acceso y, a continuación, vuelve a vincularla para cambiar a otra cuenta.
-      status:
-        linked: Vinculado
-        notLinked: No vinculado
-        linkedSince: Enlazado en {date}
-      action:
-        link: Vincular
-        unlink: Desvincular
-      message:
-        loading: Cargando cuentas conectadas...
-        unlinked: '{provider} desconectado.'
-        linked: '{provider} conectado.'
-        linkStarted: Redirigiendo a {provider}…
-      error:
-        listFailed: No se pudo cargar las cuentas conectadas.
-        unlinkFailed: No se pudo desvincular esta cuenta.
-        linkFailed: No se pudo iniciar el flujo de vinculación.
-        accountAlreadyLinkedToDifferentUser: Esta cuenta OAuth ya está vinculada a otra cuenta de AIRI. Elige otra cuenta del proveedor o desvincúlala primero de la otra cuenta de AIRI.
-        oauthCallbackFailed: No pudimos conectar esta cuenta OAuth. Inténtalo de nuevo o elige otra cuenta del proveedor.
-        lastAccount: Este es tu único método de inicio de sesión. Establece primero una contraseña antes de desvincularlo.
-    security:
-      tab: Seguridad
-      title: Seguridad
-      description: Cambia tu contraseña. Tus otros dispositivos cerrarán sesión.
-      setDescription: Te has registrado a través de una red social, por lo que aún no tienes contraseña. Te enviaremos por correo electrónico un enlace seguro para que puedas establecer una.
-      currentPassword:
-        label: Contraseña actual
-        placeholder: Introduce tu contraseña actual
-      newPassword:
-        label: Nueva contraseña
-        placeholder: Mínimo 8 caracteres
-      confirmPassword:
-        label: Confirmar nueva contraseña
-        placeholder: Repite tu nueva contraseña
-      action:
-        changePassword: Cambiar contraseña
-        sendSetLink: Envíame un enlace para establecer mi contraseña
-      message:
-        changed: Contraseña cambiada. Otras sesiones han sido desconectadas.
-        setLinkSent: Revisa {email} para ver el enlace para establecer tu contraseña.
-      error:
-        fallback: No pudimos cambiar tu contraseña.
-        setLinkFailed: No se pudo enviar el enlace de configuración de contraseña.
-        passwordMismatch: Las contraseñas no coinciden.
-        passwordSameAsCurrent: La nueva contraseña debe ser diferente de la actual.
-    danger:
-      tab: Zona peligrosa
-      title: Zona peligrosa
-      description: Las acciones irreversibles relacionadas con la cuenta se muestran aquí.
-      deleteAccount:
-        title: Eliminar cuenta
-        description: Elimina permanentemente tu cuenta y tus datos personales.
-        action: Eliminar cuenta
-        modal:
-          title: '¿Eliminar cuenta?'
-          warning: Esto no se puede deshacer. Se cancelará la suscripción activa, se limpiará el saldo de Flux.
-          confirmEmail:
-            label: Escriba su correo electrónico para confirmar
-            mismatch: El correo electrónico no coincide.
-          confirm: Enviar correo de confirmación
-          deleteNow: Eliminar permanentemente
-          confirmPhrase: Escribe DELETE para confirmar
-          signInAgain: Volver a iniciar sesión
-          cancel: Cancelar
-        message:
-          deleted: Tu cuenta se ha eliminado.
-          emailSent: Compruebe {email} para el enlace de eliminación.
-        error:
-          reauthenticate: Vuelve a iniciar sesión y regresa aquí para confirmar la eliminación. No se envía ningún correo.
-          fallback: No se pudo iniciar la eliminación. Inténtalo de nuevo más tarde.
-          subscriptionActive: Tu suscripción sigue activa. Cancélala primero en la página Capacitor y después elimina tu cuenta.
   card:
     wake-word-conflicts:
       title: 'Una pronunciación compartida necesita un personaje | {count} pronunciaciones compartidas necesitan un personaje'
       description: Dos tarjetas usan la misma pronunciación. Ningún personaje responderá hasta que elijas uno.
       action: Elegir quién responde
-    sync:
-      notice: Las tarjetas de personaje se sincronizan con tu cuenta. Puedes restaurar una tarjeta eliminada durante 30 días.
-      off_notice: Has iniciado sesión, pero la sincronización de tarjetas de personaje está desactivada.
-      off_notice_link: Actívala en Funciones experimentales.
-      state:
-        synced: Sincronizado con tu cuenta
-        pending: Pendiente de subir
-        refused: No se ha subido. Tu cuenta no tiene espacio para más tarjetas, por lo que esta tarjeta permanece en este dispositivo.
-      conflict_copy_name: '{name} (copia por conflicto)'
-      conflict_notice: Otro dispositivo modificó el mismo personaje. AIRI conservó la versión de este dispositivo como una copia.
-      history:
-        tab: Historial
-        empty: Esta tarjeta aún no tiene historial.
-        loading: Cargando historial…
-        load_failed: No se pudo cargar el historial de esta tarjeta.
-        current: Actual
-        changed_label: Modificado
-        removed_label: Eliminado
-        fields:
-          name: Nombre
-          nickname: Apodo
-          version: Versión
-          creator: Creador
-          description: Descripción
-          personality: Personalidad
-          scenario: Escenario
-          systemPrompt: Instrucciones del sistema
-          postHistoryInstructions: Instrucciones posteriores al historial
-          notes: Notas del creador
-          greetings: Saludos
-          tags: Etiquetas
-          metadata: Metadatos
-          assets: Recursos
-          characterBook: Libro de contexto
-          source: Origen
-          wakeWords: Palabras de activación
-          agents: Agentes
-          consciousness: Modelo de consciencia
-          vision: Modelo de visión
-          speech: Modelo de habla
-          vrm: Modelo VRM
-          live2d: Modelo Live2D
-          displayModelId: Modelo de apariencia
-          activeBackgroundId: Fondo fijado
-          artistry: Generación de imágenes
-        restore: Restaurar esta versión
-        restore_confirm_title: '¿Restaurar esta versión?'
-        restore_confirm_body: Se reemplazará el contenido actual de {name} por el de {date}.
-        restore_confirm_confirm: Restaurar
-        restore_confirm_cancel: Cancelar
-        restore_success: Se ha restaurado {name} a una versión anterior.
-        restore_failed: No se pudo restaurar esta versión. Es posible que el servidor ya no la tenga.
-      deleted:
-        title: Eliminadas recientemente
-        empty: No hay tarjetas eliminadas recientemente.
-        loading: Cargando tarjetas eliminadas recientemente…
-        load_failed: No se pudieron cargar las tarjetas eliminadas recientemente.
-        deleted_when: 'Eliminada {when}'
-        days_left: 'Quedan {days} días para restaurar'
-        restore: Restaurar
-        restore_success: Se ha restaurado {name}.
-        restore_failed: No se pudo restaurar esta tarjeta. Es posible que el servidor ya no tenga su contenido.
     activate: Activar
     active: Activo
     active_badge: Actualmente Activo
@@ -933,12 +762,6 @@ pages:
             select-voice:
               loading: Cargando modelo...
               required: Por favor selecciona una voz
-          voice-pack:
-            description: Selecciona una voz seleccionada para el personaje activo
-            empty: No hay paquetes de voz disponibles
-            error: Error al cargar los paquetes de voz
-            loading: Cargando paquetes de voz...
-            title: Paquete de voz
           provider-voice-selection:
             custom_model_placeholder: Ingresa el nombre del modelo personalizado...
             custom_voice_placeholder: Ingresa el ID de voz personalizado...
@@ -1359,60 +1182,6 @@ pages:
         opened: Abierto {path} en tu gestor de archivos
         json-applied: JSON aplicado al formulario. Haz clic en "Guardar y reiniciar" para guardarlo en el disco.
         restarted: '¡Todo reiniciado! {started} iniciado, {failed} falló, {skipped} omitido.'
-  flux:
-    title: Flujo
-    buy: Cobro
-    currency: Divisa
-    description: Flujo actual
-    terms: Términos
-    privacy: Política de Privacidad
-    packagesError: Error al cargar paquetes. Por favor, inténtalo de nuevo más tarde.
-    checkout:
-      success: '¡Pago exitoso! Tu Flujo ha sido recargado.'
-      canceled: Se ha anulado el pago
-      error: Algo ha ido mal, inténtalo más tarde.
-    audit:
-      title: Historial de Transacciones
-      time: Tiempo
-      type: Tipo
-      detail: Detalles
-      amount: Cantidad
-      typeAddition: Recargar
-      typeConsumption: Uso
-      typeInitial: Oferta inicial
-      typePromo: Subsidio de Promoción
-      loading: Cargando historial...
-      empty: No hay registros de transacción todavía.
-      loadMore: Cargar más
-      delayHint: Los registros de uso se pueden retrasar hasta 1 minuto
-      ttsRequests: peticiones
-    packages:
-      title: Paquetes de flujo
-      buy: Carga
-      description: Paquetes Flujo entre los que elegir.
-  capacitor:
-    description: Un Capacitor almacena Flux y se recarga automáticamente.
-    statusError: No se pudo cargar tu Capacitor. Inténtalo más tarde.
-    packagesError: No se pudieron cargar los Capacitor. Inténtalo más tarde.
-    preferenceError: No se pudo guardar la preferencia. Inténtalo más tarde.
-    noCapacitor: Sin Capacitor
-    remaining: 'Queda {percent}'
-    rechargesAt: Se recarga {date}
-    renewsAt: Se renueva {date}
-    expiresAt: Caduca {date}
-    perMonth: / mes
-    currentPackage: Actual
-    install: Instalar
-    upgrade: Mejorar
-    downgrade: Reducir
-    manageSubscription: Gestionar suscripción
-    fallbackToFlux: Usar Flux cuando el Capacitor esté vacío
-    fallbackToFluxHint: Si se desactiva, el uso se detiene cuando el Capacitor está vacío.
-    checkout:
-      success: Tu Capacitor está instalado y cargado.
-      pending: Pago recibido. Tu Capacitor se cargará pronto.
-      canceled: Se canceló la compra.
-      error: Algo ha ido mal, inténtalo más tarde.
   providers:
     catalog:
       edit:
@@ -1529,10 +1298,6 @@ pages:
           title: Configuraciones de Voz
     labels:
       recommended: Recomendado
-    sync:
-      synced: Sincronizado
-      pending: Pendiente de subir
-      not-uploaded: No se ha subido. Completa la configuración de este proveedor en este dispositivo.
     filters:
       pricing: Precios
       deployment: Despliegue
@@ -1645,7 +1410,6 @@ pages:
       common:
         status:
           validating: Validando
-          valid: La configuración parece ser válida.
         fields:
           field:
             pitch:
@@ -1874,15 +1638,6 @@ pages:
       prompt-api:
         description: Con la API de Prompt, puedes enviar solicitudes de lenguaje natural al modelo de base en Chrome.
         title: La API de Prompt
-      official:
-        title: Proveedor Oficial
-        description: Proveedor oficial de IA por AIRI.
-        speech-title: Proveedor oficial de voz
-        speech-description: Proveedor oficial de texto a voz de AIRI.
-        speech-streaming-title: Proveedor oficial de voz en streaming
-        speech-streaming-description: Proveedor oficial de texto a voz de baja latencia de AIRI, mediante WebSocket bidireccional.
-        transcription-title: Proveedor Oficial de Transcripción
-        transcription-description: Proveedor oficial de voz a texto por AIRI.
       transcriptions:
         playground:
           title: Playground de Transcripción
@@ -1928,23 +1683,14 @@ pages:
         failed: Fallo al escanear o conectar con el código QR.
   system:
     experimental:
-      refresh: Actualizar políticas
       title: Funciones experimentales
       description: Prueba funciones en desarrollo y gestiona tus preferencias.
       notice: Las funciones experimentales pueden cambiar o eliminarse. Tus preferencias se aplican a este dispositivo.
       empty-title: No hay experimentos disponibles
-      load-error: Las funciones en la nube no están disponibles. Las funciones locales siguen disponibles.
-      retry: Reintentar
       reset: Usar predeterminado
       sources:
         default: Valor predeterminado de la aplicación
         local: Tu preferencia en este dispositivo
-        global: Disponible para cuentas con sesión iniciada
-        account: Disponible para tu cuenta
-      features:
-        character_card_sync:
-          title: Sincronización de tarjetas de personaje en la nube
-          description: Sincroniza tus tarjetas de personaje con tu cuenta cuando inicias sesión para usarlas en otros dispositivos. Desactivado por defecto. Las tarjetas eliminadas permanecen en el historial durante 30 días.
     color-scheme:
       description: Cambiar el esquema de colores del escenario.
       title: Esquema de Colores

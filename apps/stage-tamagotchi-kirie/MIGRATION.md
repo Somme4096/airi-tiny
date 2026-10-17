@@ -29,7 +29,7 @@ The single-host adapter and deferred-bootstrap changes require their own checks 
 Six Windows passes include user acceptance decisions.
 The user accepted native resize despite the unchanged cursor during the Windows review.
 On 2026-09-30, the user requested resize cursor indicators. See [resize cursor indicators](docs/ablation-review.md#resize-cursor-indicators-2026-09-30).
-The review does not imply unreported coverage of multiple displays or every onboarding and login branch.
+The review does not imply unreported coverage of multiple displays or every onboarding branch.
 
 | ID | Capability | Original macOS decision | Windows | Windows evidence |
 | --- | --- | --- | --- | --- |
@@ -51,7 +51,7 @@ The review does not imply unreported coverage of multiple displays or every onbo
 | GAP-016 | Microphone permission state | Accepted | Pass (user review) | Permission state and reset worked. The user accepted the result and excluded the renderer exception from migration failures. See [Windows microphone permission evidence](docs/verification.md#windows-microphone-permission-evidence). |
 | GAP-017 | Microphone access policy | Accepted | Pass | Allow, deny, repeated requests, follower denial, grant persistence, and application-owned stream revocation passed. One capture after restart failed transiently. See [Windows microphone permission evidence](docs/verification.md#windows-microphone-permission-evidence) and [additional observations](#additional-observations). |
 | GAP-018 | Notice window | Accepted | Pass | Confirmation returned `true`. Native title-bar close and the cancel contract each returned `false`. Each operation closed the window. |
-| GAP-019 | Account sign-in | Accepted | Pass (user review) | The user confirmed Windows sign-in behavior. The automated session also displayed existing account state. Individual cancellation branches lack separate evidence. |
+| GAP-019 | Account sign-in | Removed | Not applicable | This fork removed account sign-in. The host has no authentication service. |
 | GAP-020 | Window transparency | Accepted | Pass | AUV desktop captures showed desktop and Explorer pixels around the character and controls, without an opaque window rectangle. |
 | GAP-021 | External links | Accepted | Pass | External URL RPC resolved. A later AUV desktop capture showed the requested GitHub page in Chrome. |
 | GAP-022 | Application data directory | Accepted | Pass | Data directory RPC returned the expected Godot user directory. A later AUV capture showed that directory in Explorer. |
@@ -98,7 +98,7 @@ A later exit returned code 0 with two ObjectDB leaks. This intermittent success 
 | GAP-007 | Repeat the physical Windows shortcut and macOS regression checks for the visibility correction. |
 | Lifecycle | Investigate disposed-context rejections and ObjectDB leaks. Exit code 0 does not resolve them. |
 | Later source changes | Repeat relevant native flows. Historical passes do not cover the current simplifications. |
-| Coverage | Preserve the [limits](docs/ablation-review.md#coverage-and-blockers) for physical input, multiple displays, mixed DPI, and authentication. |
+| Coverage | Preserve the [limits](docs/ablation-review.md#coverage-and-blockers) for physical input, multiple displays, and mixed DPI. |
 
 ## Scope and change rules
 

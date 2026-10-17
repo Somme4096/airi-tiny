@@ -134,30 +134,6 @@
       note: Neither the codename nor the name a user sees.
 
 # ---------------------------------------------------------------------------------------
-# Payment
-# ---------------------------------------------------------------------------------------
-
-- id: flux
-  subject: payment
-  translatable: false
-  definition: The currency inside the application.
-  terms:
-    - text: Flux
-      part-of-speech: proper noun
-      status: preferred
-      context: Payment successful! Your Flux has been topped up.
-- id: capacitor
-  subject: payment
-  translatable: false
-  definition: The store of Flux that a subscription gives and recharges each billing period.
-  note: Do not call it a plan or credits. The Flux inside it is the same Flux that a user buys.
-  terms:
-    - text: Capacitor
-      part-of-speech: proper noun
-      status: preferred
-      context: Use Flux when the Capacitor is empty.
-
-# ---------------------------------------------------------------------------------------
 # Rendering
 # ---------------------------------------------------------------------------------------
 
@@ -527,8 +503,7 @@
       part-of-speech: noun
       status: admitted
       type: variant
-      note: >
-        The stage switcher means this concept; the Account page means the user's own details.
+      note: The stage switcher means this concept.
 
 - id: character-card
   subject: character
@@ -566,16 +541,6 @@
       part-of-speech: noun
       status: preferred
       context: Enroll your voice to turn on speaker recognition.
-
-- id: voice-pack
-  subject: sound
-  translatable: true
-  definition: A prepared voice the user selects for the active character.
-  terms:
-    - text: Voice Pack
-      part-of-speech: noun
-      status: preferred
-      context: No Voice Packs available
 
 - id: voiceprint
   subject: sound

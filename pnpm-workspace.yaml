@@ -26,7 +26,6 @@ packages:
   - engines/**
   - evals/**
   - apps/**
-  - server/**
   - '!**/dist/**'
 
 overrides:
@@ -55,17 +54,10 @@ catalog:
   '@alint-js/plugin-js': ^0.6.0
   '@antfu/eslint-config': 8.2.0
   '@anthropic-ai/claude-code': ^2.1.241
-  '@apple/app-store-server-library': ^3.1.0
   '@arethetypeswrong/core': ^0.18.5
   '@auv-js/cli': 0.0.28
   '@auv-js/sdk': 0.0.28
-  '@aws-sdk/client-s3': ^3.1135.0
-  '@aws-sdk/s3-request-presigner': ^3.1135.0
   '@ax-llm/ax': ^24.0.5
-  '@better-auth/cli': ^1.4.22
-  '@better-auth/drizzle-adapter': 1.6.25
-  '@better-auth/oauth-provider': 1.6.25
-  '@better-fetch/fetch': ^1.3.1
   '@capacitor/android': ^8.5.0
   '@capacitor/app': ^8.1.1
   '@capacitor/barcode-scanner': ^3.1.1
@@ -78,7 +70,6 @@ catalog:
   '@discordjs/voice': ^0.19.2
   '@dotenvx/dotenvx': ^2.21.0
   '@electric-sql/pglite': ^0.5.6
-  '@electric-sql/pglite-pgvector': 0.0.7
   '@electron-toolkit/eslint-config-ts': ^3.1.0
   '@electron-toolkit/preload': ^3.0.2
   '@electron-toolkit/tsconfig': ^2.0.0
@@ -103,9 +94,6 @@ catalog:
   '@grammyjs/files': ^1.2.0
   '@guiiai/logg': ^1.2.12
   '@histoire/plugin-vue': 1.0.0-beta.1
-  '@hono/node-server': ^2.1.1
-  '@hono/node-ws': ^1.3.1
-  '@hono/otel': ^1.1.2
   '@huggingface/transformers': 3.8.1
   '@iconify-json/carbon': ^1.2.25
   '@iconify-json/eos-icons': ^1.2.4
@@ -136,29 +124,19 @@ catalog:
   '@moeru/three-mmd-physics-ammo': 0.2.0-beta.2
   '@napi-rs/image': ^1.14.0
   '@nekopaw/tempora': 0.4.0-alpha.1
-  '@openpanel/sdk': 1.3.1
   '@openpanel/web': 1.4.1
   '@opentelemetry/api': ^1.9.1
-  '@opentelemetry/api-logs': ^0.221.0
   '@opentelemetry/auto-instrumentations-node': ^0.79.0
   '@opentelemetry/core': ^2.10.0
-  '@opentelemetry/exporter-logs-otlp-proto': ^0.221.0
   '@opentelemetry/exporter-metrics-otlp-proto': ^0.221.0
   '@opentelemetry/exporter-trace-otlp-proto': ^0.221.0
-  '@opentelemetry/instrumentation': ^0.221.0
-  '@opentelemetry/instrumentation-http': ^0.221.0
-  '@opentelemetry/instrumentation-ioredis': ^0.69.0
   '@opentelemetry/instrumentation-pg': ^0.73.0
-  '@opentelemetry/instrumentation-runtime-node': ^0.34.0
-  '@opentelemetry/instrumentation-undici': ^0.31.0
   '@opentelemetry/resources': ^2.10.0
-  '@opentelemetry/sdk-logs': ^0.221.0
   '@opentelemetry/sdk-metrics': ^2.10.0
   '@opentelemetry/sdk-node': ^0.221.0
   '@opentelemetry/sdk-trace-base': ^2.10.0
   '@opentelemetry/sdk-trace-node': ^2.10.0
   '@opentelemetry/semantic-conventions': ^1.43.0
-  '@pinia/colada': ^1.4.2
   '@pinia/testing': ^2.0.1
   '@pixi/app': ^6.5.10
   '@pixi/constants': ^6.5.10
@@ -184,7 +162,6 @@ catalog:
   '@proj-airi/unocss-preset-chromatic': ^1.1.4
   '@proj-airi/unplugin-fetch': ^0.2.3
   '@proj-airi/unplugin-live2d-sdk': ^0.1.7
-  '@revenuecat/purchases-js': ^1.15.0
   '@rive-app/canvas-lite': ^2.40.1
   '@sherpaw/asr': 0.3.0
   '@sherpaw/kws': 0.3.0
@@ -201,7 +178,6 @@ catalog:
   '@types/culori': ^4.0.1
   '@types/d3': ^7.4.3
   '@types/hast': ^3.0.5
-  '@types/ioredis-mock': ^8.2.8
   '@types/mdast': ^4.0.4
   '@types/node': ^26.2.0
   '@types/nprogress': ^0.2.3
@@ -254,7 +230,6 @@ catalog:
   '@xsai/model': 0.5.1
   '@xsai/shared': 0.5.1
   '@xsai/shared-chat': 0.5.1
-  '@xsai/shared-stream': 0.5.1
   '@xsai/stream-text': 0.5.1
   '@xsai/stream-transcription': 0.5.1
   '@xsai/tool': 0.5.1
@@ -264,7 +239,6 @@ catalog:
   async-mutex: 0.5.0
   awilix: ^13.0.5
   best-effort-json-parser: ^1.5.1
-  better-auth: 1.6.25
   builder-util-runtime: ^9.7.0
   bumpp: ^12.2.1
   cac: ^7.0.0
@@ -287,7 +261,6 @@ catalog:
   driver.js: ^1.8.0
   drizzle-kit: ^0.31.10
   drizzle-orm: ^0.45.2
-  drizzle-valibot: ^0.4.2
   electron: ^43.4.1
   electron-builder: ^26.16.1
   electron-click-drag-plugin: ^2.0.2
@@ -311,21 +284,15 @@ catalog:
   h3: 2.0.1-rc.29
   hfup: ^1.0.4
   histoire: 1.0.0-beta.1
-  hono: 4.13.3
-  hono-rate-limiter: ^0.5.3
   html2canvas: ^1.4.1
   idb-keyval: ^6.3.0
   injeca: ^0.2.0
-  ioredis: ^6.0.0
-  ioredis-mock: ^8.13.1
   is-network-error: ^1.3.2
   isolated-vm: ^7.0.1
-  jose: ^6.2.10
   jsdom: ^30.0.1
   jszip: ^3.10.1
   knip: ^6.32.2
   kokoro-js: ^1.2.1
-  kysely: 0.29.5
   less: ^4.9.0
   libsodium-wrappers: ^0.8.4
   localforage: ^1.10.0
@@ -376,7 +343,6 @@ catalog:
   remark-parse: ^11.0.0
   remark-rehype: ^11.1.2
   replicate: ^1.4.0
-  resend: ^6.22.0
   rollup: ^4.62.5
   semver: ^7.8.5
   shiki: ^4.4.3
@@ -387,7 +353,6 @@ catalog:
   srvx: ^0.12.7
   std-env: ^4.2.0
   stockfish: ^18.0.8
-  stripe: ^22.5.0
   superjson: ^2.2.6
   taze: ^21.1.0
   telegram: ^2.26.22

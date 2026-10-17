@@ -49,7 +49,6 @@ afterEach(() => {
   vi.restoreAllMocks()
   for (const pinia of stores.splice(0)) {
     useModsServerChannelStore(pinia).dispose()
-    useChatStore(pinia).dispose()
     disposePinia(pinia)
   }
   localStorage.removeItem('settings/stickers/enabled')

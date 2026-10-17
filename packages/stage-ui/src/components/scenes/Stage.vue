@@ -456,7 +456,7 @@ const disconnectVoiceOutput = voice.connectOutput((turn) => {
     const characterId = chatSession.sessionMetas[turn.sessionId]?.characterId
     if (!characterId)
       throw new Error('The response session has no character')
-    return speechStore.createOutput(turn, cards.getModules(characterId).speech, output, audioContext)
+    return speechStore.createOutput(cards.getModules(characterId).speech, output)
   }
   catch (error) {
     // Text replies remain available when optional speech output is not configured.

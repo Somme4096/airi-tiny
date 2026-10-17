@@ -1,24 +1,14 @@
-import type { InferOutput } from 'valibot'
+import { boolean, record, string } from 'valibot'
 
-import { array, boolean, object, picklist, record, string } from 'valibot'
-
-export const featureFlagPolicySchema = object({
-  key: string(),
-  mode: picklist(['cloud-opt-in', 'cloud-controlled']),
-  source: picklist(['global', 'account']),
-})
-
-export const featureFlagResponseSchema = object({ flags: array(featureFlagPolicySchema) })
 export const featureFlagPreferencesSchema = record(string(), boolean())
 export const featureFlagVariantPreferencesSchema = record(string(), string())
 
-/** A client-owned experiment. Server policy cannot introduce executable client features. */
+/** A client-owned experiment. Each choice is a device choice, and no server can change it. */
 export interface FeatureFlag {
   key: string
   titleKey: string
   descriptionKey: string
   defaultEnabled: boolean
-  availability: 'local' | 'cloud'
   /** Only the desktop app has the feature, so other apps neither list nor enable it. */
   desktopOnly?: boolean
   /**
@@ -34,29 +24,7 @@ export interface FeatureFlag {
 
 export interface FeatureFlagDecision {
   enabled: boolean
-  source: 'default' | 'local' | 'global' | 'account'
-  selectable: boolean
-}
-
-/**
- * Cloud sync for character cards has no server policy. It is a device choice,
- * off by default, so a user opts in before a card leaves the device.
- */
-export const CHARACTER_CARD_SYNC_FLAG: FeatureFlag = {
-  key: 'character-card-sync',
-  titleKey: 'settings.pages.system.experimental.features.character_card_sync.title',
-  descriptionKey: 'settings.pages.system.experimental.features.character_card_sync.description',
-  defaultEnabled: false,
-  availability: 'local',
-}
-
-/** Cloud sync for imported Live2D and VRM models. A device choice, off by default, so no model file leaves the device without opt-in. */
-export const DISPLAY_MODEL_SYNC_FLAG: FeatureFlag = {
-  key: 'display-model-sync',
-  titleKey: 'settings.pages.system.experimental.features.display_model_sync.title',
-  descriptionKey: 'settings.pages.system.experimental.features.display_model_sync.description',
-  defaultEnabled: false,
-  availability: 'local',
+  source: 'default' | 'local'
 }
 
 /**
@@ -71,7 +39,6 @@ export const FULLSCREEN_WORKSPACE_FLAG = {
   titleKey: 'settings.pages.system.experimental.features.fullscreen_workspace.title',
   descriptionKey: 'settings.pages.system.experimental.features.fullscreen_workspace.description',
   defaultEnabled: false,
-  availability: 'local',
   desktopOnly: true,
   variants: {
     titleKey: 'settings.pages.system.experimental.features.fullscreen_workspace.window_mode.title',
@@ -84,7 +51,7 @@ export const FULLSCREEN_WORKSPACE_FLAG = {
 } as const satisfies FeatureFlag
 
 /** Only implemented experiments belong here. An empty catalog produces an empty settings page. */
-export const featureFlags: readonly FeatureFlag[] = [CHARACTER_CARD_SYNC_FLAG, DISPLAY_MODEL_SYNC_FLAG, FULLSCREEN_WORKSPACE_FLAG]
+export const featureFlags: readonly FeatureFlag[] = [FULLSCREEN_WORKSPACE_FLAG]
 
 /** The variant of a feature: the saved one while the feature still offers it, otherwise the first one. */
 export function resolveFeatureVariant(feature: FeatureFlag | undefined, saved: string | undefined): string | undefined {
@@ -99,19 +66,7 @@ export function offeredFeatureFlags(desktop: boolean): readonly FeatureFlag[] {
   return featureFlags.filter(feature => desktop || !feature.desktopOnly)
 }
 
-/** Missing cloud grants disable features. Only local and account-granted opt-in features expose settings. */
-export function resolveFeatureFlag(feature: FeatureFlag, preference: boolean | undefined, policy: InferOutput<typeof featureFlagPolicySchema> | undefined, authenticated: boolean): FeatureFlagDecision {
-  if (feature.availability === 'local')
-    return { enabled: preference ?? feature.defaultEnabled, source: preference === undefined ? 'default' : 'local', selectable: true }
-
-  if (!policy || policy.key !== feature.key)
-    return { enabled: false, source: 'default', selectable: false }
-
-  if (policy.mode === 'cloud-controlled')
-    return { enabled: true, source: policy.source, selectable: false }
-
-  if (!authenticated)
-    return { enabled: false, source: 'default', selectable: false }
-
-  return { enabled: preference ?? false, source: preference === undefined ? policy.source : 'local', selectable: true }
+/** A saved device choice wins. Without one, the feature uses its default. */
+export function resolveFeatureFlag(feature: FeatureFlag, preference: boolean | undefined): FeatureFlagDecision {
+  return { enabled: preference ?? feature.defaultEnabled, source: preference === undefined ? 'default' : 'local' }
 }

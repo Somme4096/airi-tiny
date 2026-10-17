@@ -4,12 +4,16 @@ import localforage from 'localforage'
 
 import { afterEach, expect, it } from 'vitest'
 
-import { sha256Hex } from '../../libs/file-transfer/transfer'
 import { DisplayModelFormat } from '../../stores/display-models'
 import { createDisplayModelsRepo } from './display-models.repo'
 
 // Browser test files share one origin and one IndexedDB. Remove only the keys that this test writes.
 const store = localforage.createInstance({ name: 'airi-display-models-browser-test' })
+
+async function sha256Hex(blob: Blob) {
+  const digest = await crypto.subtle.digest('SHA-256', await blob.arrayBuffer())
+  return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('')
+}
 const id = 'display-model-browser-test'
 
 function bytes(size: number) {
@@ -40,14 +44,12 @@ it('reads a model that the previous release wrote, with the same bytes', async (
   expect(await sha256Hex(listed.file)).toBe(await sha256Hex(new Blob([content])))
 })
 
-it('keeps a saved model and a pending upload across repository instances', async () => {
+it('keeps a saved model across repository instances', async () => {
   const model: DisplayModelFile = { id, format: DisplayModelFormat.Live2dZip, type: 'file', file: new File(['zip'], 'model.zip'), name: 'Renamed', importedAt: 1 }
   await createDisplayModelsRepo(store).save(model)
-  await createDisplayModelsRepo(store).saveUpload({ id, kind: 'upload', ownerId: 'owner', payload: null, status: 'queued' })
 
   const repo = createDisplayModelsRepo(store)
 
   expect(await repo.list()).toMatchObject([{ id, name: 'Renamed' }])
   expect(await (await repo.get(id))!.file.text()).toBe('zip')
-  expect(await repo.listUploads()).toMatchObject([{ id, kind: 'upload' }])
 })

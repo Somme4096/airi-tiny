@@ -13,7 +13,6 @@ import { useI18n } from 'vue-i18n'
 import StatusIsland from '../status-island/index.vue'
 import ControlButtonTooltip from './control-button-tooltip.vue'
 import ControlButton from './control-button.vue'
-import ControlsIslandAuthButton from './controls-island-auth-button.vue'
 import ControlsIslandChatButton from './controls-island-chat-button.vue'
 import ControlsIslandFadeOnHover from './controls-island-fade-on-hover.vue'
 import ControlsIslandProfilePicker from './controls-island-profile-picker.vue'
@@ -359,12 +358,6 @@ function resetMainWindowPosition() {
                   'bg-neutral-100/80 shadow-2xl shadow-black/20 backdrop-blur-xl dark:bg-neutral-900/80',
                 ]"
               >
-                <ControlsIslandAuthButton
-                  :active="expanded"
-                  :button-style="adjustStyleClasses.button"
-                  :icon-class="adjustStyleClasses.icon"
-                />
-
                 <div :class="['grid grid-cols-3 gap-2']">
                   <ControlButtonTooltip disable-hoverable-content>
                     <ControlButton

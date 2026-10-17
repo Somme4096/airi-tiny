@@ -19,19 +19,13 @@ import { defineStore, storeToRefs } from 'pinia'
 import { computed, shallowRef, toRaw } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { getConversationAnalyticsSurface } from '../composables'
 import { useAiriRuntimePrompt } from '../composables/use-airi-runtime-prompt'
 import { registerTurnSpan, startSpan, takeComposerVoiceParent, takeVoiceTurnParent } from '../composables/use-io-tracer'
 import { useChatVision } from '../composables/vision/use-chat-vision'
 import { useVisionInference } from '../composables/vision/use-vision-inference'
 import { chatAssetIdFrom, inlineConversationAssets, storeChatAttachments } from '../libs/chat-assets'
-import { extractMessageText, isCloudSyncableMessage } from '../libs/chat-sync'
-import { createChatAnalyticsHooks, getProviderMode } from '../libs/product-signals/events/chat'
-import {
-  AIRI_CHAT_APP_SURFACE_HEADER,
-  AIRI_CHAT_ROUND_ID_HEADER,
-  AIRI_CHAT_SESSION_ID_HEADER,
-} from '../libs/product-signals/headers'
+import { extractMessageText } from '../libs/chat-message-text'
+import { createChatAnalyticsHooks } from '../libs/product-signals/events/chat'
 import { getSpeechBusContext, voiceGenerationEnded } from '../services/speech/bus'
 import { createJudgeRecipeTool, judgmentSkillText } from '../tools/judge-recipe'
 import { composeMemoryPrompt, createMemoryTools } from '../tools/memory'
@@ -42,12 +36,10 @@ import { useLLM } from './ai/chat-llm/llm'
 import { resolveLlmTools } from './ai/chat-llm/tool-resolver'
 import { useLlmToolsStore } from './ai/chat-llm/tools'
 import { useLlmToolsetPromptsStore } from './ai/chat-llm/toolset-prompts'
-import { useAuthStore } from './auth'
-import { createMinecraftContext, createRuntimePromptContext, createUserAccountContext } from './chat/context-providers'
+import { createMinecraftContext, createRuntimePromptContext } from './chat/context-providers'
 import { useChatContextStore } from './chat/context-store'
 import { describeChatImages, replaceToolResultImages } from './chat/image-projection'
 import { composeRecipeSpacePrompt, composeSystemPrompt } from './chat/prompt-recipe'
-import { staysLocal } from './chat/session-locality'
 import { useChatSessionStore } from './chat/session-store'
 import { useChatStreamStore } from './chat/stream-store'
 import { useContextObservabilityStore } from './devtools/context-observability'
@@ -248,7 +240,6 @@ const UNREADABLE_EARLIER_IMAGE = 'The user attached an image here earlier. The v
 export const useChatStore = defineStore('chat', () => {
   const { t } = useI18n()
   const runtimePrompt = useAiriRuntimePrompt()
-  const authStore = useAuthStore()
   const llmStore = useLLM()
   const llmToolsStore = useLlmToolsStore()
   const llmToolsetPromptsStore = useLlmToolsetPromptsStore()
@@ -324,19 +315,14 @@ export const useChatStore = defineStore('chat', () => {
   })
 
   /**
-   * Initializes chat state and binds local consumers to synchronized leadership.
-   * A promoted renderer restarts the leader-owned cloud consumer.
+   * Initializes chat state and binds background task recovery to synchronized leadership.
+   * Only the leader runs background tasks, so only a new leader marks the tasks of a closed leader as interrupted.
    */
   async function initialize(syncedPinia: SyncedPiniaRuntime) {
     stopLeadershipListener ??= syncedPinia.onLeadershipChange((isLeader) => {
-      if (!isLeader) {
-        chatSession.dispose()
+      if (!isLeader)
         return
-      }
 
-      void chatSession.ensureCurrentSession().catch((error) => {
-        console.error('[chat] Failed to start chat consumers after leader promotion:', error)
-      })
       void interruptOrphanedTasks().catch((error) => {
         console.warn('[chat] Failed to mark interrupted background tasks:', errorMessageFrom(error))
       })
@@ -348,11 +334,10 @@ export const useChatStore = defineStore('chat', () => {
       await interruptOrphanedTasks()
   }
 
-  /** Stops chat consumers that belong to this window. */
+  /** Stops the leadership listener of this window. */
   function dispose() {
     stopLeadershipListener?.()
     stopLeadershipListener = undefined
-    chatSession.dispose()
   }
 
   /**
@@ -416,12 +401,6 @@ export const useChatStore = defineStore('chat', () => {
   function isOwnerTurn(sessionId: string, sessionMessages: ChatHistoryItem[]) {
     const lastUserMessage = sessionMessages.findLast(message => message.role === 'user')
     return !isTaskSession(sessionId) && (lastUserMessage?.role !== 'user' || !lastUserMessage.notice)
-  }
-
-  /** Whether a session reaches cloud sync. A local-only session, such as a task or a scene, never syncs. */
-  function syncsToCloud(sessionId: string) {
-    const meta = chatSession.sessionMetas[sessionId]
-    return Boolean(meta && !staysLocal(meta))
   }
 
   /** Runs one task: its own send without voice, then its status and a notice to the parent conversation. */
@@ -636,17 +615,6 @@ export const useChatStore = defineStore('chat', () => {
       ? openTurnSpan({ sessionId: correlation.conversationId, turnId: correlation.turnId })
       : undefined
 
-    // Analytics correlation goes only to the official provider. A resolved step can change the provider, so each request rebuilds it.
-    function requestHeaders(providerId: string | undefined) {
-      const headers = { ...options?.headers }
-      if (getProviderMode(providerId ?? activeProvider.value) === 'official' && options?.requestCorrelation) {
-        headers[AIRI_CHAT_SESSION_ID_HEADER] = options.requestCorrelation.conversationId
-        headers[AIRI_CHAT_ROUND_ID_HEADER] = options.requestCorrelation.turnId
-        headers[AIRI_CHAT_APP_SURFACE_HEADER] = getConversationAnalyticsSurface()
-      }
-      return headers
-    }
-
     // Stored messages reference their images and recordings. The provider request carries the bytes.
     context = await inlineConversationAssets(context)
 
@@ -809,13 +777,7 @@ export const useChatStore = defineStore('chat', () => {
         ...options,
         tools: withRunTools(options?.tools, options?.requestCorrelation),
         prepareStringContent: prepareTextOnlyAudioContext,
-        headers: requestHeaders(options?.providerId),
-        resolveStep: resolveStep
-          ? async () => {
-            const step = await resolveStep()
-            return { ...step, headers: requestHeaders(step.providerId) }
-          }
-          : undefined,
+        resolveStep,
         // Audio projection follows the model of each request. A tool step can switch between audio and text models.
         prepareConversation: async (conversation, target) => {
           if (conversation === providerContext && isInitialTarget(target))
@@ -946,15 +908,7 @@ export const useChatStore = defineStore('chat', () => {
     },
     context: {
       ingest: envelope => chatContext.ingestContextMessage(envelope),
-      snapshot: () => {
-        const snapshot = { ...chatContext.getContextsSnapshot() }
-        // Account data belongs to this request, not the persistent context registry.
-        // A signed-out request therefore cannot inherit the previous account snapshot.
-        const account = createUserAccountContext(authStore)
-        if (account)
-          snapshot[account.contextId] = [account]
-        return snapshot
-      },
+      snapshot: () => chatContext.getContextsSnapshot(),
     },
     foregroundStream: {
       patch: (message) => {
@@ -1002,24 +956,6 @@ export const useChatStore = defineStore('chat', () => {
         roundId,
         turnIndex,
       })
-      if (isCloudSyncableMessage(message) && syncsToCloud(sessionId)) {
-        void chatSession.pushMessageToCloud(sessionId, {
-          id: message.id,
-          role: 'user',
-          content: messageText,
-          replyToMessageId: message.replyToMessageId,
-        })
-      }
-    },
-    onAssistantMessageAppended: ({ sessionId, message, roundId }) => {
-      const source = chatSession.getSessionMessages(sessionId).find(message => message.role === 'user' && message.id === roundId)
-      if (source && isCloudSyncableMessage(source) && isCloudSyncableMessage(message) && message.id && syncsToCloud(sessionId)) {
-        void chatSession.pushMessageToCloud(sessionId, {
-          id: message.id,
-          role: 'assistant',
-          content: extractMessageText(message),
-        })
-      }
     },
     onUserTurnReady: ({ sessionId, messageText, sessionMessages }) => {
       if (!isOwnerTurn(sessionId, sessionMessages))

@@ -3,7 +3,6 @@ import type { App } from 'vue'
 
 import en from '@proj-airi/i18n/locales/en'
 
-import { PiniaColada } from '@pinia/colada'
 import { createPinia, disposePinia } from 'pinia'
 import { createSyncedPiniaPlugin } from 'pinia-plugin-synced'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
@@ -15,7 +14,6 @@ import { createI18n } from 'vue-i18n'
 import OnboardingDialog from './onboarding.vue'
 import StepProviderConfiguration from './step-provider-configuration.vue'
 
-import { useAuthStore } from '../../../../stores/auth'
 import { useProviderConfigStore } from '../../../../stores/providers/config'
 import { useProviderStore } from '../../../../stores/providers/provider'
 
@@ -92,23 +90,6 @@ afterEach(() => {
   localStorage.clear()
 })
 
-it('publishes the onboarding login click on the leader', async () => {
-  vi.stubEnv('RUNTIME_ENVIRONMENT', 'electron')
-  const namespace = `onboarding-login:${crypto.randomUUID()}`
-  const leader = createSyncedContext(namespace, 'leader-only')
-  await expect.poll(() => leader.runtime.isLeader()).toBe(true)
-  const follower = createSyncedContext(namespace, 'follower-only')
-  await expect.poll(() => follower.runtime.getLeaderId()).toBe(leader.runtime.participantId)
-  const screen = await render(OnboardingDialog, {
-    global: { plugins: [follower.pinia, PiniaColada, createTestI18n()] },
-  })
-
-  await screen.getByRole('button', { name: 'Sign in' }).click()
-
-  await expect.poll(() => useAuthStore(leader.pinia).needsLogin).toBe(true)
-  await expect.poll(() => useAuthStore(follower.pinia).needsLogin).toBe(true)
-})
-
 // ROOT CAUSE:
 //
 // saveProviderConfiguration wrote credentials through the `configs` computed
@@ -127,10 +108,10 @@ it('persists configured credentials through the leader and loads the model list'
   await expect.poll(() => follower.runtime.getLeaderId()).toBe(leader.runtime.participantId)
 
   const screen = await render(OnboardingDialog, {
-    global: { plugins: [follower.pinia, PiniaColada, createTestI18n()] },
+    global: { plugins: [follower.pinia, createTestI18n()] },
   })
 
-  await screen.getByRole('button', { name: 'Setup with your provider' }).click()
+  await screen.getByRole('button', { name: 'Let\'s do it!' }).click()
 
   // The provider card is a label with a visually hidden radio input; click the
   // card title text instead of the input, which decorative elements overlap.
@@ -197,7 +178,7 @@ it('rehydrates the configuration form from the saved provider configuration', as
       onNext: () => {},
       onPrevious: () => {},
     },
-    global: { plugins: [context.pinia, PiniaColada, createTestI18n()] },
+    global: { plugins: [context.pinia, createTestI18n()] },
   })
 
   await expect.element(page.getByPlaceholder('API Key')).toHaveValue('sk-saved-key')

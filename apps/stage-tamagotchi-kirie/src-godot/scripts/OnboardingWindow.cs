@@ -9,7 +9,6 @@ public partial class OnboardingWindow : Window
     private KirieEventaContextHandle? _eventa;
     private GdKiriePlatformHost? _platform;
     private WebViewPermissionHandler? _permissions;
-    private IDisposable? _authRegistration;
     private IDisposable? _microphonePermissionRegistration;
     private IDisposable? _closeRegistration;
     private bool _ready;
@@ -19,7 +18,6 @@ public partial class OnboardingWindow : Window
     internal void Initialize(
         KirieEventaJsonRegistry registry,
         string rendererUrl,
-        AuthService auth,
         MicrophonePermissionService microphonePermissions)
     {
         if (!IsInsideTree())
@@ -45,7 +43,6 @@ public partial class OnboardingWindow : Window
 
         _eventa = _kirie.CreateEventaContext(registry);
         _platform = GdKiriePlatform.Attach(_eventa.Context, this);
-        _authRegistration = auth.Attach(_eventa.Context);
         _microphonePermissionRegistration = microphonePermissions.Attach(_eventa.Context);
         _permissions = new WebViewPermissionHandler(_kirie, rendererUrl);
         _closeRegistration = _eventa.Context.RegisterInvokeHandler(
@@ -89,7 +86,6 @@ public partial class OnboardingWindow : Window
 
         _closeRegistration?.Dispose();
         _microphonePermissionRegistration?.Dispose();
-        _authRegistration?.Dispose();
         WindowInput -= OnWindowInput;
         _permissions?.Dispose();
         _platform?.Dispose();

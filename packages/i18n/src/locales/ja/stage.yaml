@@ -4,8 +4,6 @@ character-switcher:
   empty: キャラクターはまだいません
   failed: キャラクターを切り替えられませんでした。もう一度お試しください。
 mobile-tools:
-  sign-in: AIRI にログイン
-  account-description: アカウントと設定
   sound: サウンド
   character-voice: キャラクターの声
   title: 設定
@@ -131,7 +129,6 @@ chat:
     confirm-delete: この会話とメッセージを削除しますか？
     cancel: キャンセル
     empty: 会話はまだありません
-    cloud-badge: クラウドに同期しました
     new-chat-fallback: 新しいチャット
     delete: 会話を削除
 render-error:
@@ -207,43 +204,6 @@ profile-switcher:
   save-as-new: 新規プロファイルとして保存
   new-profile-name: プロファイル名
   manage: プロファイルを管理
-promo-banner:
-  items:
-    signin:
-      watermark: 月
-      fallbackLabel: 月の贈り物
-      title: 7日間のログイン
-      eventName: スターダストやアバターフレーム、ローンチ特典を受け取るにはログインしてください。
-      reward: 最大120スターダスト
-      cta: サインイン
-    build:
-      watermark: ビルド
-      fallbackLabel: ビルドボーナス
-      title: 補給箱ボーナス
-      eventName: ビルド作業を完了してボーナスバウチャーを獲得し、資材を2倍にしよう。
-      reward: 供給券5枚＋アップグレード用資材
-      cta: タスクを表示
-    spring:
-      watermark: 春
-      fallbackLabel: 春の抽選会
-      title: カプセルカーニバル
-      eventName: 春の抽選会に参加して、バブルやチャーム、テーマ家具を解放しよう。
-      reward: 初回半額＋レアチャーム付き
-      cta: 今すぐ抽選
-    coupon:
-      watermark: トーク
-      fallbackLabel: クーポン
-      title: チャージクーポン
-      eventName: チャットでのやり取りを完了して、拡張パックやボイスパック用のクーポンを獲得しましょう。
-      reward: 30のご利用で6お得 / 68のご利用で15お得
-      cta: クーポンを受け取る
-    home:
-      watermark: ホーム
-      fallbackLabel: 部屋のテーマ
-      title: 春のテーマアップデート
-      eventName: 窓・机・ナイトランプのテーマをアンロックして、部屋を刷新しましょう。
-      reward: ログイン時の無料テーマ抽選チケット
-      cta: テーマを表示
 waiting: 待機中
 websocket-status:
   connected: 接続済み
@@ -259,10 +219,4 @@ status:
   transcribing: 文字起こし中
   hearing-error: 音声を文字起こしできませんでした
   no-transcript: 認識された音声はここに表示されます。
-  signing-in: ブラウザーでログインを完了してください
-  confirming: ログインを確認中
-  signed-in: ログインしました
-  sign-in-error: ログインに失敗しました
-  sign-in-unconfirmed: セッションを確認できませんでした。もう一度ログインしてください。
-  dismiss: 閉じる
   configure-hearing: 設定で聴覚のプロバイダーを選択し、設定してください。

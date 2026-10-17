@@ -1,4 +1,3 @@
-import type { TransferTask } from '../../libs/file-transfer/transfer-queue'
 import type { DisplayModelFile } from '../../stores/display-models'
 
 import localforage from 'localforage'
@@ -14,10 +13,9 @@ export interface DisplayModelStore {
 type StoredDisplayModel = Omit<DisplayModelFile, 'id' | 'type' | 'name'> & { name?: string }
 
 const modelPrefix = 'display-model-'
-const uploadPrefix = 'transfer-task-'
 
 /**
- * Device storage for imported display models and their pending uploads.
+ * Device storage for imported display models.
  * Models keep the localforage keys that earlier releases wrote, so existing imports stay in place.
  */
 export function createDisplayModelsRepo(store: DisplayModelStore) {
@@ -41,23 +39,6 @@ export function createDisplayModelsRepo(store: DisplayModelStore) {
 
     async remove(id: string) {
       await store.removeItem(id)
-    },
-
-    async listUploads() {
-      const tasks: TransferTask[] = []
-      await store.iterate<TransferTask, void>((task, key) => {
-        if (key.startsWith(uploadPrefix))
-          tasks.push(task)
-      })
-      return tasks
-    },
-
-    async saveUpload(task: TransferTask) {
-      await store.setItem(`${uploadPrefix}${task.id}`, task)
-    },
-
-    async removeUpload(id: string) {
-      await store.removeItem(`${uploadPrefix}${id}`)
     },
   }
 }

@@ -66,7 +66,7 @@ afterEach(() => {
 // without handling transport disposal. Passing assertions hid a teardown rejection.
 it.each(['mount', 'provider change'])('handles interrupted model discovery after %s', async (trigger) => {
   localStorage.clear()
-  vi.stubGlobal('fetch', vi.fn<typeof fetch>(async () => Response.json({ voices: [], models: [], flux: 0 })))
+  vi.stubGlobal('fetch', vi.fn<typeof fetch>(async () => Response.json({ voices: [], models: [] })))
   const namespace = `speech-settings:${crypto.randomUUID()}`
   const leader = mountRenderer(namespace)
   await vi.waitFor(() => expect(leader.runtime.isLeader()).toBe(true))
@@ -114,7 +114,7 @@ it('reports the committed provider and model after a settings-page click', async
   vi.mocked(captureAnalyticsEvent).mockReset().mockReturnValue(true)
   vi.mocked(enableAnalyticsCapture).mockReturnValue(true)
   vi.mocked(isAnalyticsAvailableInBuild).mockReturnValue(true)
-  vi.stubGlobal('fetch', vi.fn<typeof fetch>(async () => Response.json({ voices: [], models: [], flux: 0 })))
+  vi.stubGlobal('fetch', vi.fn<typeof fetch>(async () => Response.json({ voices: [], models: [] })))
   const namespace = `speech-settings:${crypto.randomUUID()}`
   const leader = mountRenderer(namespace)
   await vi.waitFor(() => expect(leader.runtime.isLeader()).toBe(true))

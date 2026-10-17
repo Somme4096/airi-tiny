@@ -2,7 +2,7 @@ import { defineEvent } from '../../../utils/dsl'
 
 export const messageSentEvent = defineEvent<{
   conversation_id: string
-  provider_type: 'official' | 'custom' | 'unknown'
+  provider_type: 'custom' | 'unknown'
   provider_name: string
   model: string
   message_id: string

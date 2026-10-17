@@ -1,6 +1,5 @@
 import type { AiriCard } from '../../types/airiCard'
 
-import { PiniaColada } from '@pinia/colada'
 import { createPinia, disposePinia } from 'pinia'
 import { afterEach, beforeEach, expect, it } from 'vitest'
 import { render } from 'vitest-browser-vue'
@@ -73,7 +72,7 @@ async function mountSwitcher(name = 'ReLU') {
     template: '<header style="display:flex;width:100%"><span style="width:44px;flex-shrink:0" /><CharacterSwitcherDrawer /><span style="width:44px;flex-shrink:0" /></header>',
   }), {
     global: {
-      plugins: [pinia, PiniaColada, router, createI18n({
+      plugins: [pinia, router, createI18n({
         legacy: false,
         locale: 'en',
         missingWarn: false,

@@ -43,16 +43,13 @@ describe('displayModelsRepo', () => {
     expect(await repo.get('display-model-a')).toBeUndefined()
   })
 
-  it('keeps models, pending uploads, and other keys apart', async () => {
+  it('keeps models and other keys apart', async () => {
     const records: Record<string, unknown> = { 'background-1': { id: 'background-1' } }
     const repo = createDisplayModelsRepo(createStore(records))
 
     await repo.save(model('display-model-a'))
-    await repo.saveUpload({ id: 'display-model-a', kind: 'upload', ownerId: 'owner', payload: null, status: 'queued' })
 
     expect(await repo.list()).toMatchObject([{ id: 'display-model-a' }])
-    expect(await repo.listUploads()).toMatchObject([{ kind: 'upload' }])
-    await repo.removeUpload('display-model-a')
     expect(await repo.list()).toHaveLength(1)
     expect(records['background-1']).toEqual({ id: 'background-1' })
   })

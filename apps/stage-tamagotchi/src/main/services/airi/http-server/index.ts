@@ -20,12 +20,10 @@ export interface BuiltInServer {
  * - A lifecycle service with ordered startup/shutdown behavior
  */
 export function setupBuiltInServer(params: {
-  authServer?: ServerManager
   staticAssetServer?: ServerManager
   servers?: ServerManager[]
 }): BuiltInServer {
   const servers = [
-    ...(params.authServer ? [params.authServer] : []),
     ...(params.staticAssetServer ? [params.staticAssetServer] : []),
     ...(params.servers ?? []),
   ]

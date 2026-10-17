@@ -6,7 +6,6 @@ import {
   normalizeGeneratedTranscriptionText,
   resolveActiveTranscriptionModel,
   resolveActiveTranscriptionProviderError,
-  resolveStreamTranscriptionExecutor,
   resolveTranscriptionFileName,
   resolveTranscriptionProviderOptions,
 } from './hearing'
@@ -36,18 +35,6 @@ describe('filterTranscriptionByConfidence', () => {
 
   it('trims whitespace from result', () => {
     expect(filterTranscriptionByConfidence([{ text: '  hello  ', avg_logprob: -0.5 }], -1)).toBe('hello')
-  })
-})
-
-describe('resolveStreamTranscriptionExecutor', () => {
-  /**
-   * @example
-   * resolveStreamTranscriptionExecutor('official-provider-transcription')
-   */
-  it('routes the official transcription provider through the Aliyun streaming executor', () => {
-    const executor = resolveStreamTranscriptionExecutor('official-provider-transcription')
-
-    expect(executor).toBe(resolveStreamTranscriptionExecutor('aliyun-nls-transcription'))
   })
 })
 

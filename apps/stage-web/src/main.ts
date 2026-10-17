@@ -5,11 +5,9 @@ import Tres from '@tresjs/core'
 import NProgress from 'nprogress'
 
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
-import { PiniaColada } from '@pinia/colada'
 import { isEnvTruthy } from '@proj-airi/stage-shared'
 import { pushToTalkTriggerKey } from '@proj-airi/stage-ui/composables/push-to-talk-trigger'
 import { trackButtonPlugin } from '@proj-airi/stage-ui/directives/track-button'
-import { browserAuthorizationHandler, registerAuthorizationHandler } from '@proj-airi/stage-ui/libs/auth'
 import { piniaPluginTracing, setupSynced } from '@proj-airi/stage-ui/libs/pinia'
 import { configureAnalyticsAdapter } from '@proj-airi/stage-ui/libs/product-signals'
 import { useMediaQuery } from '@vueuse/core'
@@ -36,7 +34,6 @@ configureAnalyticsAdapter(async (options) => {
   const { createOpenpanelAdapter } = await import('@proj-airi/stage-ui/libs/product-signals/openpanel')
   return createOpenpanelAdapter(options)
 })
-registerAuthorizationHandler(browserAuthorizationHandler)
 
 const pinia = createPinia()
 const synced = setupSynced()
@@ -69,7 +66,6 @@ createApp(App)
   .use(autoAnimatePlugin as unknown as Plugin)
   .use(router)
   .use(pinia)
-  .use(PiniaColada)
   .use(i18n)
   .use(Tres)
   .use(trackButtonPlugin)

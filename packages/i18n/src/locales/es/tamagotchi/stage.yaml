@@ -37,8 +37,6 @@ docs:
   'close': Cerrar
   'expand': Expandir
   'collapse': Contraer
-  'login': Iniciar sesión
-  'logging-in': Iniciando sesión...
   'account': Cuenta
   'logout': Cerrar sesión
 'chat-window':
@@ -118,7 +116,6 @@ about:
       checking: Verificando...
       latest-version: Última versión
       disabled-dev: Actualizaciones desactivadas en Dev
-      managed-by-store: Las actualizaciones se gestionan desde la tienda de aplicaciones
       retry-check: Reintentar verificación
       restart-silent: Reiniciar para actualizar silenciosamente
       restart-install: Reiniciar e instalar actualización

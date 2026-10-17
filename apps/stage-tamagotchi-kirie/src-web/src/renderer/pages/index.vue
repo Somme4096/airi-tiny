@@ -11,7 +11,7 @@ import {
   useHostRelativeMouse,
 } from '@proj-airi/stage-host-context'
 import { useModelStore, useThreeSceneIsTransparentAtPoint } from '@proj-airi/stage-ui-three'
-import { HoloCoupon, VoiceDrafts } from '@proj-airi/stage-ui/components'
+import { VoiceDrafts } from '@proj-airi/stage-ui/components'
 import {
   createEmptyModelSettingsRuntimeSnapshot,
   resolveComponentStateToRuntimePhase,
@@ -345,7 +345,6 @@ const cursorPosition = computed(() => ({
           :paused="stagePaused"
           @select-avatar-model="openSettings({ route: '/settings/models' })"
         />
-        <HoloCoupon />
         <div :class="['absolute bottom-3 left-1/2 z-30 w-fit -translate-x-1/2']">
           <VoiceDrafts />
         </div>

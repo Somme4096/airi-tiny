@@ -4,8 +4,6 @@ character-switcher:
   empty: 아직 캐릭터가 없습니다
   failed: 캐릭터를 전환하지 못했습니다. 다시 시도하세요.
 mobile-tools:
-  sign-in: AIRI에 로그인
-  account-description: 계정 및 환경설정
   sound: 소리
   character-voice: 캐릭터 음성
   title: 설정
@@ -131,7 +129,6 @@ chat:
     confirm-delete: 이 대화와 메시지를 삭제할까요?
     cancel: 취소
     empty: 아직 대화가 없습니다
-    cloud-badge: 클라우드에 동기화됨
     new-chat-fallback: 새 채팅
     delete: 대화 삭제
 render-error:
@@ -208,43 +205,6 @@ profile-switcher:
   save-as-new: 새로운 프로필로 저장하기
   new-profile-name: 프로필 이름
   manage: 프로필 관리
-promo-banner:
-  items:
-    signin:
-      watermark: 달
-      fallbackLabel: 달의 선물
-      title: 7일 출석
-      eventName: 출석하고 별가루, 아바타 프레임, 출시 기념 선물을 받으세요.
-      reward: 최대 별가루 120개
-      cta: 로그인
-    build:
-      watermark: 빌드
-      fallbackLabel: 빌드 보너스
-      title: 보급 상자 보너스
-      eventName: 건설 과제를 완료하고 보너스 교환권과 두 배의 재료를 받으세요.
-      reward: 보급 교환권 5장 + 업그레이드 재료
-      cta: 작업 보기
-    spring:
-      watermark: 봄
-      fallbackLabel: 봄 추첨
-      title: 캡슐 카니발
-      eventName: 봄 추첨에 참여해 말풍선, 장식, 테마 가구를 잠금 해제하세요.
-      reward: 첫 추첨 반값 + 희귀 장식
-      cta: 지금 추첨하기
-    coupon:
-      watermark: 대화
-      fallbackLabel: 쿠폰
-      title: 충전 쿠폰
-      eventName: 채팅 상호작용을 완료하고 확장 및 음성 팩 쿠폰을 받으세요.
-      reward: 30에 6 할인 / 68에 15 할인
-      cta: 쿠폰 받기
-    home:
-      watermark: 홈
-      fallbackLabel: 방 테마
-      title: 봄 테마 업데이트
-      eventName: ........
-      reward: 출석 시 무료 테마 추첨권
-      cta: 테마 보기
 waiting: 대기 중
 websocket-status:
   connected: 연결됨
@@ -260,10 +220,4 @@ status:
   transcribing: 전사 중
   hearing-error: 오디오를 전사할 수 없습니다
   no-transcript: 인식된 음성이 여기에 표시됩니다.
-  signing-in: 브라우저에서 로그인을 완료하세요
-  confirming: 로그인 확인 중
-  signed-in: 로그인됨
-  sign-in-error: 로그인 실패
-  sign-in-unconfirmed: 세션을 확인할 수 없습니다. 다시 로그인하세요.
-  dismiss: 무시
   configure-hearing: 설정에서 청력 제공자를 선택하고 구성하세요.

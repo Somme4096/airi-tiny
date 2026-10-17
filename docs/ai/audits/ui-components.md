@@ -43,18 +43,6 @@ The Kirie application repeats several desktop control implementations. Treat the
 
 | Source | Finding | Direction |
 | --- | --- | --- |
-| [packages/stage-layouts/src/components/Widgets/ChatToolbarButton.vue:12](../../../packages/stage-layouts/src/components/Widgets/ChatToolbarButton.vue#L12) | A local button owns size, surface, active state, focus, and press feedback. | Compose GhostButton or BasicButton. Preserve its active surface and slot contract. |
-| [apps/stage-tamagotchi/src/renderer/components/chat-window/chat-speech-mute-button.vue:22](../../../apps/stage-tamagotchi/src/renderer/components/chat-window/chat-speech-mute-button.vue#L22) | A native icon button duplicates shared focus and press behavior. | Keep speech state local. Use GhostButton or IconButton for the control. |
-| [packages/stage-ui/src/components/scenarios/chat/components/image-attachment-preview.vue:14](../../../packages/stage-ui/src/components/scenarios/chat/components/image-attachment-preview.vue#L14) | A native delete button owns an overlay surface and interaction styles. | Use IconButton. Preserve the circular overlay, accessible name, and stopped click propagation. |
-| [packages/stage-ui/src/components/layouts/page-header.vue:82](../../../packages/stage-ui/src/components/layouts/page-header.vue#L82) | The back action uses a native button without its own accessible label. | Use IconButton and provide a localized accessible name. |
-| [packages/stage-ui/src/components/scenarios/providers/provider-validation-alerts.vue:34](../../../packages/stage-ui/src/components/scenarios/providers/provider-validation-alerts.vue#L34) | Validation actions use multiple native buttons. | Use Button or GhostButton. Retain the validation state and action handlers. |
-| [packages/stage-pages/src/pages/settings/providers/index.vue:223](../../../packages/stage-pages/src/pages/settings/providers/index.vue#L223) | Category and filter controls use native buttons. | Compare SelectTab and GhostButton. Preserve selected state and navigation. |
-| [apps/stage-pocket/src/components/websocket-status-button.vue:59](../../../apps/stage-pocket/src/components/websocket-status-button.vue#L59) | Connection state owns a custom surface and native button. | Build the status surface on BasicButton. Preserve connection labels and state colors. |
-| [packages/stage-ui/src/components/scenarios/chat/components/tool-call-shell.vue:33](../../../packages/stage-ui/src/components/scenarios/chat/components/tool-call-shell.vue#L33) | A local trigger button sits inside shared Collapsible. | Use GhostButton or BasicButton. Keep the collapsible contract. |
-| [packages/stage-ui/src/components/misc/steppers/steppers.vue:125](../../../packages/stage-ui/src/components/misc/steppers/steppers.vue#L125) | Stepper actions use native buttons. | Compare Button and GhostButton for the action surface. |
-| [packages/stage-ui/src/components/data-pane/property-number.vue:159](../../../packages/stage-ui/src/components/data-pane/property-number.vue#L159) | Numeric controls include custom drag and pointer behavior. | Retain the domain interaction. Evaluate shared Input only after comparing behavior. |
-| [packages/stage-ui/src/components/menu/radio-card-many-select.vue:164](../../../packages/stage-ui/src/components/menu/radio-card-many-select.vue#L164) | Selection cards own their custom composition. | Compare Radio and Reka selection contracts. A direct replacement needs behavior verification. |
-| [packages/stage-ui/src/components/data-pane/color-picker.vue:446](../../../packages/stage-ui/src/components/data-pane/color-picker.vue#L446) | The color editor combines native selectors and channel inputs. | Evaluate Select and Input. Preserve color conversion and channel editing. |
 
 These are source-reviewed candidates. This audit does not migrate their runtime behavior.
 
@@ -65,7 +53,6 @@ The following table contains every stage-ui component without direct coverage. C
 | Component | Status |
 | --- | --- |
 | [animations/Replayable.vue](../../../packages/stage-ui/src/components/animations/Replayable.vue) | Needs a dedicated scenario and fixture |
-| [auth/SignInPanel.vue](../../../packages/stage-ui/src/components/auth/SignInPanel.vue) | Needs a dedicated scenario and fixture |
 | [data-pane/color-picker.vue](../../../packages/stage-ui/src/components/data-pane/color-picker.vue) | Composed in an existing story |
 | [data-pane/container.vue](../../../packages/stage-ui/src/components/data-pane/container.vue) | Needs a dedicated scenario and fixture |
 | [data-pane/pane.vue](../../../packages/stage-ui/src/components/data-pane/pane.vue) | Needs a dedicated scenario and fixture |
@@ -104,8 +91,6 @@ The following table contains every stage-ui component without direct coverage. C
 | [scenarios/chat/components/tool-call-block.vue](../../../packages/stage-ui/src/components/scenarios/chat/components/tool-call-block.vue) | Needs a dedicated scenario and fixture |
 | [scenarios/chat/components/user-item.vue](../../../packages/stage-ui/src/components/scenarios/chat/components/user-item.vue) | Composed in an existing story |
 | [scenarios/chat/components/voice-drafts.vue](../../../packages/stage-ui/src/components/scenarios/chat/components/voice-drafts.vue) | Needs a dedicated scenario and fixture |
-| [scenarios/chat/components/voice-message-controls.vue](../../../packages/stage-ui/src/components/scenarios/chat/components/voice-message-controls.vue) | Needs a dedicated scenario and fixture |
-| [scenarios/chat/components/voice-message-preview.vue](../../../packages/stage-ui/src/components/scenarios/chat/components/voice-message-preview.vue) | Needs a dedicated scenario and fixture |
 | [scenarios/connection/settings/index.vue](../../../packages/stage-ui/src/components/scenarios/connection/settings/index.vue) | Needs a dedicated scenario and fixture |
 | [scenarios/dialogs/about.vue](../../../packages/stage-ui/src/components/scenarios/dialogs/about.vue) | Needs a dedicated scenario and fixture |
 | [scenarios/dialogs/about/about-dialog.vue](../../../packages/stage-ui/src/components/scenarios/dialogs/about/about-dialog.vue) | Needs a dedicated scenario and fixture |
@@ -127,7 +112,6 @@ The following table contains every stage-ui component without direct coverage. C
 | [scenarios/dialogs/onboarding/step-provider-selection.vue](../../../packages/stage-ui/src/components/scenarios/dialogs/onboarding/step-provider-selection.vue) | Needs a dedicated scenario and fixture |
 | [scenarios/dialogs/onboarding/step-welcome.vue](../../../packages/stage-ui/src/components/scenarios/dialogs/onboarding/step-welcome.vue) | Needs a dedicated scenario and fixture |
 | [scenarios/dialogs/validation-details/provider-validation-details-dialog.vue](../../../packages/stage-ui/src/components/scenarios/dialogs/validation-details/provider-validation-details-dialog.vue) | Needs a dedicated scenario and fixture |
-| [scenarios/hologram/holo-coupon.vue](../../../packages/stage-ui/src/components/scenarios/hologram/holo-coupon.vue) | Needs a dedicated scenario and fixture |
 | [scenarios/providers/provider-download-model.vue](../../../packages/stage-ui/src/components/scenarios/providers/provider-download-model.vue) | Needs a dedicated scenario and fixture |
 | [scenarios/providers/provider-generation-settings.vue](../../../packages/stage-ui/src/components/scenarios/providers/provider-generation-settings.vue) | Needs a dedicated scenario and fixture |
 | [scenarios/providers/provider-validation-alerts.vue](../../../packages/stage-ui/src/components/scenarios/providers/provider-validation-alerts.vue) | Needs a dedicated scenario and fixture |

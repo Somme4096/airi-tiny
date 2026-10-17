@@ -6,7 +6,7 @@ import { useI18n } from 'vue-i18n'
 
 import RecipeDetails from './recipe-details.vue'
 
-import { extractMessageText } from '../../../../libs/chat-sync'
+import { extractMessageText } from '../../../../libs/chat-message-text'
 
 /** A stored notice, for example a finished background task. The owner did not write it, so it shows as a compact label with its text folded. */
 const props = withDefaults(defineProps<{

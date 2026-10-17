@@ -9,8 +9,6 @@ animations:
     title: Использовать переходы для страниц
 dialogs:
   onboarding:
-    official:
-      title: Официальный провайдер AIRI
     title: Добро пожаловать в AIRI!
     description: Давайте настроим вашего первого AI-провайдера, чтобы начать работу.
     selectProvider: Выберите AI-провайдера
@@ -41,12 +39,6 @@ dialogs:
     enableChatCheck: >-
       Разрешить airi отправить "ping" сообщение первой доступной чат модели для проверки доступности
     start: Поехали!
-    loginPrompt: Войдите, чтобы использовать официального провайдера AIRI для наилучшего опыта.
-    loginAction: Войти
-    setupWithoutSigningIn: Настройка с вашим провайдером
-    pricingLink: Цены
-    termsLink: Условия использования
-    buyFlux: Пополнить Flux
     select-model: Выберите модель
     no-models: Нет доступных моделей
     no-models-help: >-
@@ -253,173 +245,11 @@ live2d:
 microphone: Микрофон
 models: Модель
 pages:
-  account:
-    title: Аккаунт
-    description: Просматривайте свой профиль и управляйте своей учетной записью
-    notLoggedIn: Войдите, чтобы просмотреть аккаунт и получить доступ ко всем функциям
-    login: Войти
-    logout: Выйти
-    fluxBalance: Баланс Flux
-    viewFluxDetails: Подробнее
-    viewCapacitor: Посмотреть
-    signedInAs: Вы вошли как
-    profile:
-      tab: Профиль
-      title: Профиль
-      description: Управление вашим публичным именем.
-      name:
-        label: Отображаемое имя
-        placeholder: Как видят вас другие
-      avatar:
-        gravatarNotice: Аватар из Gravatar.
-        gravatarLink: Управление на gravatar.com
-      action:
-        save: Сохранить изменения
-      message:
-        saved: Профиль обновлен.
-      error:
-        fallback: Мы не смогли сохранить ваши изменения.
-    connections:
-      tab: Подключенные аккаунты
-      title: Подключенные аккаунты
-      description: Войдите в AIRI через этих поставщиков. Отмените связь, чтобы отозвать доступ, затем установите связь снова, чтобы переключиться на другую учетную запись.
-      status:
-        linked: Связанно
-        notLinked: Не привязано
-        linkedSince: Связанно в {date}
-      action:
-        link: Связать
-        unlink: Отвязать
-      message:
-        loading: Загрузка подключенных аккаунтов...
-        unlinked: '{provider} отключен.'
-        linked: '{provider} подключен.'
-        linkStarted: Перенаправление на {provider}…
-      error:
-        listFailed: Не удалось загрузить подключенные учетные записи.
-        unlinkFailed: Не удалось отвязать эту учетную запись.
-        linkFailed: Не удалось запустить поток ссылок.
-        accountAlreadyLinkedToDifferentUser: Этот OAuth-аккаунт уже привязан к другому аккаунту AIRI. Выберите другой аккаунт провайдера или сначала отвяжите его от другого аккаунта AIRI.
-        oauthCallbackFailed: Не удалось подключить этот OAuth-аккаунт. Попробуйте еще раз или выберите другой аккаунт провайдера.
-        lastAccount: Это единственный способ входа в систему. Установите пароль перед отсоединением.
-    security:
-      tab: Безопасность
-      title: Безопасность
-      description: Измените пароль. Остальные устройства будут отключены.
-      setDescription: Вы вошли через социального провайдера, так что текущего пароля пока нет. Мы отправим по электронной почте ссылку, чтобы установить его.
-      currentPassword:
-        label: Текущий пароль
-        placeholder: Введите ваш текущий пароль
-      newPassword:
-        label: Новый пароль
-        placeholder: Как минимум 8 символов
-      confirmPassword:
-        label: Подтвердить новый пароль
-        placeholder: Повторите новый пароль
-      action:
-        changePassword: Изменить пароль
-        sendSetLink: Прислать мне ссылку для установки пароля
-      message:
-        changed: Пароль изменен. Другие сессии были отключены.
-        setLinkSent: Проверьте {email} на наличие ссылки для установки пароля.
-      error:
-        fallback: Мы не смогли изменить ваш пароль.
-        setLinkFailed: Не удалось отправить ссылку для установки пароля.
-        passwordMismatch: Пароли не совпадают.
-        passwordSameAsCurrent: Новый пароль должен отличаться от текущего.
-    danger:
-      tab: Опасная зона
-      title: Опасная зона
-      description: Необратимые действия учётных записей здесь.
-      deleteAccount:
-        title: Удалить аккаунт
-        description: Окончательно удалить учетную запись, сеансы и личные данные.
-        action: Удалить аккаунт
-        modal:
-          title: Удалить аккаунт?
-          warning: Это не может быть отменено. Активная подписка будет отменена, Flux баланс сброшен.
-          confirmEmail:
-            label: Введите ваш адрес электронной почты для подтверждения
-            mismatch: Адрес электронной почты не совпадает.
-          confirm: Отправить письмо с подтверждением
-          deleteNow: Удалить навсегда
-          confirmPhrase: Введите DELETE для подтверждения
-          signInAgain: Войти снова
-          cancel: Отмена
-        message:
-          deleted: Ваш аккаунт удалён.
-          emailSent: Проверьте {email} на наличие ссылки на удаление.
-        error:
-          reauthenticate: Войдите снова и вернитесь сюда, чтобы подтвердить удаление. Письмо не отправляется.
-          fallback: Не удалось начать удаление. Повторите попытку позже.
-          subscriptionActive: Подписка ещё активна. Сначала отмените её на странице Capacitor, затем удалите аккаунт.
   card:
     wake-word-conflicts:
       title: 'Для общего произношения слова активации нужен персонаж | Для {count} общих произношений слов активации нужны персонажи'
       description: Две карточки используют одно произношение. Пока вы не выберете персонажа, никто не ответит.
       action: Выбрать, кто отвечает
-    sync:
-      notice: Карточки персонажей синхронизируются с аккаунтом. Удалённую карточку можно восстановить в течение 30 дней.
-      off_notice: Вы вошли в аккаунт, но синхронизация карточек персонажей отключена.
-      off_notice_link: Включите её в экспериментальных функциях.
-      state:
-        synced: Синхронизировано с аккаунтом
-        pending: Ожидание загрузки
-        refused: Не загружено. В аккаунте нет места для новых карточек, поэтому эта карточка остаётся на этом устройстве.
-      conflict_copy_name: '{name} (копия из-за конфликта)'
-      conflict_notice: Другое устройство изменило того же персонажа. AIRI сохранил версию с этого устройства как копию.
-      history:
-        tab: История
-        empty: У этой карточки пока нет истории.
-        loading: Загрузка истории…
-        load_failed: Не удалось загрузить историю этой карточки.
-        current: Текущая
-        changed_label: Изменено
-        removed_label: Удалено
-        fields:
-          name: Имя
-          nickname: Ник
-          version: Версия
-          creator: Автор
-          description: Описание
-          personality: Личность
-          scenario: Сценарий
-          systemPrompt: Системный промпт
-          postHistoryInstructions: Инструкции после истории
-          notes: Заметки автора
-          greetings: Приветствия
-          tags: Теги
-          metadata: Метаданные
-          assets: Ресурсы
-          characterBook: Книга мира
-          source: Источник
-          wakeWords: Слова активации
-          agents: Агенты
-          consciousness: Модель сознания
-          vision: Модель зрения
-          speech: Модель речи
-          vrm: Модель VRM
-          live2d: Модель Live2D
-          displayModelId: Модель внешности
-          activeBackgroundId: Закреплённый фон
-          artistry: Создание изображений
-        restore: Восстановить эту версию
-        restore_confirm_title: Восстановить эту версию?
-        restore_confirm_body: Текущее содержимое {name} будет заменено содержимым от {date}.
-        restore_confirm_confirm: Восстановить
-        restore_confirm_cancel: Отмена
-        restore_success: '{name} восстановлен до предыдущей версии.'
-        restore_failed: Не удалось восстановить эту версию. Возможно, она больше не хранится на сервере.
-      deleted:
-        title: Недавно удалённые
-        empty: Нет недавно удалённых карточек.
-        loading: Загрузка недавно удалённых карточек…
-        load_failed: Не удалось загрузить недавно удалённые карточки.
-        deleted_when: 'Удалено {when}'
-        days_left: 'Осталось {days} дней для восстановления'
-        restore: Восстановить
-        restore_success: '{name} восстановлен.'
-        restore_failed: Не удалось восстановить эту карточку. Возможно, её содержимое больше не хранится на сервере.
     activate: Активировать
     active: Активно
     active_badge: Текущая
@@ -933,12 +763,6 @@ pages:
             select-voice:
               loading: Загрузка моделей...
               required: Выберите голос
-          voice-pack:
-            description: Выберите голос для активного персонажа
-            empty: Нет доступных голосовых пакетов
-            error: Ошибка загрузки голосовых пакетов
-            loading: Загрузка голосовых пакетов...
-            title: Голосовой пакет
           provider-voice-selection:
             custom_model_placeholder: Введите название кастомной модели...
             custom_voice_placeholder: Введите ID кастомного голоса...
@@ -1365,59 +1189,6 @@ pages:
         opened: В файловом менеджере открыта {path}
         json-applied: JSON применен к форме. Нажмите «Сохранить и перезапустить», чтобы сохранить его на диск.
         restarted: Все перезапущено! {started} запущен, {failed} не удалось, {skipped} пропущен.
-  flux:
-    buy: Пополнить
-    currency: Валюта
-    description: Текущий Flux
-    terms: Условия использования
-    privacy: Политика конфиденциальности
-    packagesError: Не удалось загрузить пакеты. Пожалуйста, повторите попытку позже.
-    checkout:
-      success: Платеж выполнен! Ваш Flux пополнился.
-      canceled: Оплата была отменена.
-      error: Что-то пошло не так. Повторите попытку позже.
-    audit:
-      title: История транзакций
-      time: Время
-      type: Тип
-      detail: Сведения
-      amount: Кол-во
-      typeAddition: Пополнение
-      typeConsumption: Использование
-      typeInitial: Начальный грант
-      typePromo: Промо-начисление
-      loading: Загрузка истории...
-      empty: Пока нет записей транзакций.
-      loadMore: Загрузить ещё
-      delayHint: Записи об использовании могут задерживаться до 1 минуты
-      ttsRequests: запросы
-    packages:
-      title: Flux пакеты
-      buy: Пополнить
-      description: Пакеты Flux на выбор.
-  capacitor:
-    description: Capacitor хранит Flux и перезаряжается автоматически.
-    statusError: Не удалось загрузить ваш Capacitor. Повторите попытку позже.
-    packagesError: Не удалось загрузить список Capacitor. Повторите попытку позже.
-    preferenceError: Не удалось сохранить настройку. Повторите попытку позже.
-    noCapacitor: Нет Capacitor
-    remaining: 'Осталось {percent}'
-    rechargesAt: Перезарядка {date}
-    renewsAt: Продление {date}
-    expiresAt: Истекает {date}
-    perMonth: / месяц
-    currentPackage: Текущий
-    install: Установить
-    upgrade: Повысить уровень
-    downgrade: Понизить уровень
-    manageSubscription: Управление подпиской
-    fallbackToFlux: Использовать Flux, когда Capacitor пуст
-    fallbackToFluxHint: Если параметр отключён, использование прекращается, когда Capacitor пуст.
-    checkout:
-      success: Ваш Capacitor установлен и заряжен.
-      pending: Платёж получен. Ваш Capacitor скоро зарядится.
-      canceled: Покупка отменена.
-      error: Что-то пошло не так. Повторите попытку позже.
   providers:
     catalog:
       edit:
@@ -1535,10 +1306,6 @@ pages:
           title: Настройки голоса
     labels:
       recommended: Рекомендуется
-    sync:
-      synced: Синхронизировано
-      pending: Ожидание загрузки
-      not-uploaded: Не загружено. Завершите настройку этого провайдера на данном устройстве.
     filters:
       pricing: Цены
       deployment: Развертывание
@@ -1656,7 +1423,6 @@ pages:
       common:
         status:
           validating: Проверка
-          valid: Конфигурация выглядит корректной.
         fields:
           field:
             pitch:
@@ -1920,15 +1686,6 @@ pages:
       prompt-api:
         description: С помощью API Prompt вы можете отправлять запросы на естественном языке в базовую модель Chrome.
         title: Подсказка API
-      official:
-        title: Официальный провайдер
-        description: Официальный ИИ провайдер AIRI.
-        speech-title: Официальный провайдер синтеза речи
-        speech-description: Официальный text-to-speech провайдер AIRI.
-        speech-streaming-title: Официальный провайдер синтеза речи
-        speech-streaming-description: Официальный поставщик текстов и речи с низкими задержками AIRI (двунаправленный WebSocket).
-        transcription-title: Официальный провайдер транскрипции
-        transcription-description: Официальный speech-to-text провайдер AIRI.
       transcriptions:
         playground:
           title: Песочница транскрипции
@@ -1975,23 +1732,14 @@ pages:
         failed: Не удалось отсканировать или подключиться с помощью QR-коду.
   system:
     experimental:
-      refresh: Обновить политики
       title: Экспериментальные функции
       description: Попробуйте функции в разработке и настройте свои предпочтения.
       notice: Экспериментальные функции могут измениться или исчезнуть. Ваш выбор действует на этом устройстве.
       empty-title: Нет доступных экспериментов
-      load-error: Облачные функции недоступны. Локальные функции остаются доступны.
-      retry: Повторить
       reset: Использовать по умолчанию
       sources:
         default: По умолчанию в приложении
         local: Ваш выбор на устройстве
-        global: Доступно для вошедших в аккаунт
-        account: Доступно вашему аккаунту
-      features:
-        character_card_sync:
-          title: Облачная синхронизация карточек персонажей
-          description: Синхронизирует карточки персонажей с аккаунтом после входа, чтобы они были доступны на других устройствах. По умолчанию отключено. Удалённые карточки сохраняются в истории аккаунта 30 дней.
     color-scheme:
       description: Изменить цветовую схему сцены
       title: Цветовая схема

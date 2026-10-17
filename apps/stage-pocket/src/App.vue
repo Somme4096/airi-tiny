@@ -3,7 +3,6 @@ import { OnboardingDialog, OnboardingStepAnalyticsNotice, StartupOverlay, Toaste
 import { useStartupResourceTimeout } from '@proj-airi/stage-ui/composables/use-startup-resource-timeout'
 import { usePiniaSynced } from '@proj-airi/stage-ui/libs/pinia'
 import { initializeAnalytics, isAnalyticsAvailableInBuild } from '@proj-airi/stage-ui/libs/product-signals'
-import { useAuthStore } from '@proj-airi/stage-ui/stores/auth'
 import { useCharacterOrchestratorStore } from '@proj-airi/stage-ui/stores/character'
 import { useDisplayModelsStore } from '@proj-airi/stage-ui/stores/display-models'
 import { useModsServerChannelStore } from '@proj-airi/stage-ui/stores/mods/api/channel-server'
@@ -31,7 +30,6 @@ import OnboardingPermissionsStep from './components/onboarding/step-permissions.
 import { getHostWebSocketConnector } from './modules/websocket-bridge'
 
 const contextBridgeStore = useContextBridgeStore()
-const authStore = useAuthStore()
 const i18n = useI18n()
 const router = useRouter()
 const displayModelsStore = useDisplayModelsStore()
@@ -47,7 +45,7 @@ const { isDark } = useTheme()
 const cardStore = useAiriCardStore()
 const startup = useStartupResourcesStore()
 startup.reset()
-startup.register(['auth', 'modelIndex', 'card', 'services', 'modelData', 'modelSelection', 'audio', 'route', 'model'])
+startup.register(['modelIndex', 'card', 'services', 'modelData', 'modelSelection', 'audio', 'route', 'model'])
 useStartupResourceTimeout('model', 120_000, () => i18n.t('stage.startup.model-timeout'))
 const startupOnboarding = ref(false)
 watch(showingSetup, (visible) => {
@@ -60,27 +58,6 @@ useHearingStore()
 useSpeechStore()
 useSettingsStageModel()
 useVisionStore()
-
-let stopAuthenticatedSetup: (() => void) | undefined
-let stopLoggedOutSetup: (() => void) | undefined
-
-async function removeAuthenticationProviderConfiguration() {
-  if (!syncedPinia.isLeader())
-    return
-
-  await cardStore.configureForAuthentication(false)
-}
-
-function registerAuthenticatedSetup() {
-  stopAuthenticatedSetup ??= authStore.onAuthenticated(async () => {
-    if (!syncedPinia.isLeader())
-      return
-
-    await cardStore.configureForAuthentication(true)
-    await onboardingStore.closeAfterAuthentication()
-  })
-  stopLoggedOutSetup ??= authStore.onLogout(removeAuthenticationProviderConfiguration)
-}
 
 const primaryColor = computed(() => {
   return isDark.value
@@ -119,14 +96,8 @@ watch(settings.themeColorsHueDynamic, () => {
 async function loadStartup() {
   try {
     initializeAnalytics()
-    await startup.run('auth', () => authStore.initialize())
     await startup.run('modelIndex', () => displayModelsStore.initialize())
-    await startup.run('card', async () => {
-      await cardStore.initialize()
-      registerAuthenticatedSetup()
-      if (!authStore.isAuthenticated)
-        await removeAuthenticationProviderConfiguration()
-    })
+    await startup.run('card', () => cardStore.initialize())
     await startup.run('services', () => {
       void serverChannelStore.initialize({ possibleEvents: ['ui:configure'], connector: getHostWebSocketConnector }).catch(error => console.error('Mods server initialization failed:', error))
       contextBridgeStore.initialize()
@@ -157,8 +128,6 @@ watch(() => [startup.resources.find(resource => resource.id === 'modelSelection'
 
 onUnmounted(() => {
   characterOrchestratorStore.dispose()
-  stopAuthenticatedSetup?.()
-  stopLoggedOutSetup?.()
   contextBridgeStore.dispose()
 })
 

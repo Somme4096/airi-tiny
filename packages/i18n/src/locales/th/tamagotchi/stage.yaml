@@ -37,8 +37,6 @@ docs:
   'close': ปิด
   'expand': ขยาย
   'collapse': ย่อ
-  'login': เข้าสู่ระบบ
-  'logging-in': กำลังเข้าสู่ระบบ...
   'account': บัญชี
   'logout': ออกจากระบบ
 'chat-window':
@@ -121,7 +119,6 @@ about:
       checking: กำลังตรวจสอบ...
       latest-version: เวอร์ชันล่าสุด
       disabled-dev: ปิดการอัปเดตในโหมด Dev
-      managed-by-store: การอัปเดตจัดการผ่านร้านแอปของคุณ
       retry-check: ตรวจสอบอีกครั้ง
       restart-silent: รีสตาร์ตเพื่ออัปเดตแบบเงียบ
       restart-install: รีสตาร์ตเพื่อติดตั้งอัปเดต

@@ -5,9 +5,6 @@ import { providerInferenceProjects } from './packages/provider-inference/vitest.
 export default defineConfig({
   test: {
     projects: [
-      'server/apps/auth',
-      'server/apps/api',
-      'apps/ui-server-auth',
       'apps/stage-tamagotchi/vitest.node.config.ts',
       'packages/agents',
       'packages/cap-vite',

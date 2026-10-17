@@ -2,7 +2,7 @@
 import { errorMessageFrom } from '@moeru/std'
 import { useElectronEventaInvoke } from '@proj-airi/electron-vueuse'
 import { useAnalytics } from '@proj-airi/stage-ui/composables'
-import { extractMessageText } from '@proj-airi/stage-ui/libs/chat-sync/wire-message'
+import { extractMessageText } from '@proj-airi/stage-ui/libs/chat-message-text'
 import { useChatStore } from '@proj-airi/stage-ui/stores/chat'
 import { useChatSessionStore } from '@proj-airi/stage-ui/stores/chat/session-store'
 import { useWindowFocus } from '@vueuse/core'

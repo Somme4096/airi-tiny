@@ -13,7 +13,7 @@ Vue renderer -> AIRI Eventa contracts
 
 | Owner | Responsibility |
 | --- | --- |
-| AIRI Kirie application | Renderer integration, native application windows, authentication, and permissions |
+| AIRI Kirie application | Renderer integration, native application windows, and permissions |
 | Kirie Core | WebView lifecycle and IPC transport |
 | Kirie Platform | General desktop capabilities |
 | Electron application | Supported application and behavior reference |
@@ -34,7 +34,7 @@ A rejected operation does not establish an implementation.
 | --- | --- |
 | [src-web/src/renderer](../src-web/src/renderer) | Renderer, host adapters, routes, and entry points |
 | [src-web/src/shared](../src-web/src/shared) | AIRI Eventa contracts |
-| [src-godot/scripts](../src-godot/scripts) | C# services, managers, permissions, and authentication |
+| [src-godot/scripts](../src-godot/scripts) | C# services, managers, and permissions |
 | [src-godot](../src-godot) | Native scenes |
 | `addons/kirie/` | Installed addon and CEF metadata from the [official release](https://github.com/moeru-ai/godot-kirie/releases/tag/v0.10.0) |
 | [tests/StageTamagotchiKirie.Tests](../tests/StageTamagotchiKirie.Tests) | C# contract checks |
@@ -86,11 +86,9 @@ An explicit enable-button click resets stored denial. Automatic requests retain 
 The original Chat stall resulted from a missing handler before `chatStore.initialize()`.
 The upstream default-rejection proposal [kirie#87](https://github.com/moeru-ai/godot-kirie/pull/87) closed without merge.
 
-### Authentication and desktop services
+### Desktop services
 
-AIRI owns system-browser OIDC with PKCE, state validation, and a temporary loopback listener.
-The renderer supplies the server URL and client ID before login. Logout cancels unfinished login.
-See [RFC 8252](https://www.rfc-editor.org/rfc/rfc8252.html).
+This fork has no account sign-in. The host has no authentication service and no loopback listener.
 
 External HTTP(S) requests use Platform `openExternalUrl()`.
 AIRI rejects other schemes. Platform validates the absolute URL before `OS.shell_open()`.

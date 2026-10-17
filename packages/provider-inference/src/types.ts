@@ -100,7 +100,6 @@ export interface StreamTranscriptionSnapshot {
 
 /** Validation lifecycle for one serializable provider configuration. */
 export type ProviderValidationStatus = 'unconfigured' | 'validating' | 'configured' | 'invalid' | 'bypassed'
-export type ProviderConfiguredBy = 'user' | 'authentication'
 
 /** Serializable configuration for one provider instance. */
 export interface InferenceServiceProvider {
@@ -112,8 +111,6 @@ export interface InferenceServiceProvider {
   config: Record<string, unknown>
   /** Current validation state for this provider configuration. */
   status: ProviderValidationStatus
-  /** Lifecycle owner that creates and revokes this provider configuration. */
-  configuredBy: ProviderConfiguredBy
 }
 
 export function isModelProvider(providerInstance: ProviderInstance): providerInstance is ModelProvider | ModelProviderWithExtraOptions {
@@ -159,7 +156,7 @@ export interface ProviderExtraMethods<TConfig> {
   listModels?: (config: TConfig, provider: ProviderInstance, contextOptions?: ProviderContext) => Promise<ModelInfo[]>
   /**
    * Selects serializable configuration fields used by voice discovery. The cache
-   * fingerprints these fields separately from model and authentication ownership.
+   * fingerprints these fields separately from the model.
    * Omit synthesis-only controls. Without a selector, all config fields invalidate the cache.
    */
   voiceCatalogConfig?: (config: TConfig) => Record<string, unknown>
@@ -307,17 +304,10 @@ export interface ProviderDefinition<TConfig = Record<string, unknown>, TId exten
   isAvailableBy?: () => MaybePromise<boolean>
 
   /**
-   * If false, the provider does not require user-provided credentials (e.g. API keys).
-   * Used for built-in providers that authenticate via JWT Bearer tokens.
+   * If false, the provider does not require user-provided credentials, for example API keys.
+   * Browser and local providers use it.
    */
   requiresCredentials?: boolean
-
-  /**
-   * Lifecycle owner for provider configurations created from this definition.
-   *
-   * @default 'user'
-   */
-  configuredBy?: ProviderConfiguredBy
 
   /** Builds the validation schema and its UI metadata for the current draft. */
   createProviderConfig: (contextOptions: ProviderConfigContext<TConfig>) => MaybePromise<$ZodType<TConfig>>
@@ -354,26 +344,6 @@ export interface ProviderDefinition<TConfig = Record<string, unknown>, TId exten
       generateOutput: boolean
       streamOutput: boolean
       streamInput: boolean
-    }
-    /**
-     * Declares the TTS transport this provider speaks. The host uses it to
-     * select its TTS session adapter:
-     *
-     * - `rest` (default when this whole block is absent): the host opens
-     *   a `pipelines-audio` IntentHandle and the provider's `speech()` is
-     *   called per-segment by the speech-pipeline `tts()` callback. This
-     *   matches every OpenAI-shaped HTTP TTS provider.
-     * - `bidirectional-ws`: the host opens one streaming TTS WebSocket
-     *   for the whole LLM intent and forwards raw token chunks without
-     *   client-side segmentation. The provider's `speech()` is unused
-     *   for synthesis on this path (kept only for legacy fallback).
-     *
-     * Designed so a future provider (ElevenLabs streaming, OpenAI Realtime
-     * Voice, etc.) only needs to set this flag — Stage and the session
-     * factory do not need to know each provider's id.
-     */
-    speech?: {
-      transport: 'rest' | 'bidirectional-ws'
     }
   }
   /**

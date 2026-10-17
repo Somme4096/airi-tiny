@@ -531,19 +531,6 @@ export const widgetsIframeRequestResultEvent = defineEventa<WidgetsIframeRequest
 export const electronOnboardingClose = defineInvokeEventa('eventa:invoke:electron:windows:onboarding:close')
 export const electronOpenOnboarding = defineInvokeEventa('eventa:invoke:electron:windows:onboarding:open')
 
-// Auth — OIDC Authorization Code + PKCE flow via system browser
-export interface ElectronAuthTokens {
-  accessToken: string
-  refreshToken?: string
-  idToken?: string
-  expiresIn: number
-}
-export const electronAuthStartLogin = defineInvokeEventa<void>('eventa:invoke:electron:auth:start-login')
-export const electronAuthCallback = defineEventa<ElectronAuthTokens>('eventa:event:electron:auth:callback')
-export const electronAuthCallbackError = defineEventa<{ error: string }>('eventa:event:electron:auth:callback-error')
-export const electronAuthLogout = defineInvokeEventa<void>('eventa:invoke:electron:auth:logout')
-export const airiAuthConfigure = defineInvokeEventa<void, { clientId: string, serverUrl: string }>('eventa:invoke:airi:auth:configure')
-
 export const i18nSetLocale = defineInvokeEventa<void, Locale>('eventa:invoke:electron:i18n:set-locale')
 export const i18nGetLocale = defineInvokeEventa<string | undefined>('eventa:invoke:electron:i18n:get-locale')
 

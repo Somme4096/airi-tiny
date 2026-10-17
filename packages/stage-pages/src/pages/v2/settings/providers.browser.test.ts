@@ -1,7 +1,5 @@
 import en from '@proj-airi/i18n/locales/en'
 
-import { PiniaColada } from '@pinia/colada'
-import { registerAuthorizationHandler } from '@proj-airi/stage-ui/libs/auth'
 import { createPinia, disposePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-vue'
@@ -19,10 +17,6 @@ describe('v2 providers catalog availability (Issue #2559)', () => {
   beforeEach(() => {
     localStorage.clear()
     pinia = createPinia()
-    // The settings pages can trigger a sign-in request through the auth store.
-    // The real app runtime registers this handler; the stub keeps the harness
-    // from rejecting an unrelated OIDC flow while the catalog is under test.
-    registerAuthorizationHandler(async () => {})
   })
 
   afterEach(() => {
@@ -39,7 +33,7 @@ describe('v2 providers catalog availability (Issue #2559)', () => {
     await router.push('/')
     return await render(ProvidersCatalogPage, {
       global: {
-        plugins: [pinia, PiniaColada, router, createI18n({ legacy: false, locale: 'en', messages: { en } })],
+        plugins: [pinia, router, createI18n({ legacy: false, locale: 'en', messages: { en } })],
         directives: { autoAnimate: {} },
       },
     })

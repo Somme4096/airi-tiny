@@ -8,6 +8,10 @@ Shared character behavior belongs in `packages/stage-ui`. Use `stage-web` for br
 From the repository root, run `pnpm install`, then `pnpm dev:tamagotchi`.
 Run `pnpm -F @proj-airi/stage-tamagotchi build` to build the app.
 
+To get an unpacked app that you can start, run `pnpm build:tamagotchi:unpack` from the repository root.
+The command builds the workspace packages that the app uses, then the app. It writes the app to `dist/<platform>-unpacked`.
+On Linux, start it with `apps/stage-tamagotchi/dist/linux-unpacked/airi`.
+
 ## Local model files
 
 Sherpaw downloads remote model files into the app user data directory. The main

@@ -3,6 +3,7 @@ import type { ChatRequestOptions } from '../../../types'
 import { createDeepSeek } from '@xsai-ext/providers/create'
 import { z } from 'zod'
 
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../../headers'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
 import { defineProvider } from '../../registry'
@@ -18,6 +19,7 @@ const deepSeekConfigSchema = z.object({
     .default('https://api.deepseek.com/'),
   thinkingMode: z.enum(['auto', 'disable', 'enable'])
     .default('auto'),
+  headers: customHeadersSchema,
 })
 
 type DeepSeekConfig = z.input<typeof deepSeekConfigSchema>
@@ -92,11 +94,12 @@ export const providerDeepSeek = defineProvider<DeepSeekConfig, 'deepseek'>({
         },
       ],
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
     const baseProvider = createDeepSeek(config.apiKey, config.baseUrl)
 
-    return {
+    return withCustomHeaders({
       ...baseProvider,
       chat(model: string, options?: ChatRequestOptions) {
         const chatOptions = baseProvider.chat(model)
@@ -110,7 +113,7 @@ export const providerDeepSeek = defineProvider<DeepSeekConfig, 'deepseek'>({
 
         return { ...chatOptions, thinking }
       },
-    }
+    }, config.headers)
   },
 
   validationRequiredWhen(config) {

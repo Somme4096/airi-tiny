@@ -1,6 +1,7 @@
 import { createOpenAI } from '@xsai-ext/providers/create'
 import { z } from 'zod'
 
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../../headers'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
 import { defineProvider } from '../../registry'
@@ -13,6 +14,7 @@ const n1nConfigSchema = z.object({
     .string('Base URL')
     .optional()
     .default('https://api.n1n.ai/v1'),
+  headers: customHeadersSchema,
 })
 
 type N1NConfig = z.input<typeof n1nConfigSchema>
@@ -39,9 +41,10 @@ export const providerN1N = defineProvider<N1NConfig, 'n1n'>({
       descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
       placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
-    return createOpenAI(config.apiKey || '', config.baseUrl)
+    return withCustomHeaders(createOpenAI(config.apiKey || '', config.baseUrl), config.headers)
   },
 
   validationRequiredWhen(config) {

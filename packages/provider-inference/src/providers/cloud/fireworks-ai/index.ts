@@ -3,6 +3,7 @@ import type { ChatRequestOptions } from '../../../types'
 import { createFireworks } from '@xsai-ext/providers/create'
 import { z } from 'zod'
 
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../../headers'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
 import { defineProvider } from '../../registry'
@@ -14,6 +15,7 @@ const fireworksConfigSchema = z.object({
     .string('Base URL')
     .optional()
     .default('https://api.fireworks.ai/inference/v1/'),
+  headers: customHeadersSchema,
 })
 
 type FireworksConfig = z.input<typeof fireworksConfigSchema>
@@ -41,10 +43,11 @@ export const providerFireworksAI = defineProvider<FireworksConfig, 'fireworks-ai
       descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
       placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
     const provider = createFireworks(config.apiKey, config.baseUrl)
-    return {
+    return withCustomHeaders({
       ...provider,
       chat(model: string, options?: ChatRequestOptions) {
         const request = provider.chat(model)
@@ -53,7 +56,7 @@ export const providerFireworksAI = defineProvider<FireworksConfig, 'fireworks-ai
 
         return { ...request, reasoningEffort: options.reasoning === 'enabled' ? 'medium' : 'none' }
       },
-    }
+    }, config.headers)
   },
 
   validationRequiredWhen(config) {

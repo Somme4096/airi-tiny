@@ -5,6 +5,7 @@ import openRouterModels from 'model-bank/openrouter'
 import { createOpenRouter } from '@xsai-ext/providers/create'
 import { z } from 'zod'
 
+import { customHeadersField, customHeadersSchema, mergeRequestHeaders, withCustomHeaders } from '../../../headers'
 import { listModelCatalog } from '../../../model-catalog'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
@@ -22,6 +23,7 @@ const openRouterConfigSchema = z.object({
     .string('Base URL')
     .optional()
     .default('https://openrouter.ai/api/v1/'),
+  headers: customHeadersSchema,
 })
 
 type OpenRouterConfig = z.input<typeof openRouterConfigSchema>
@@ -49,10 +51,11 @@ export const providerOpenRouterAI = defineProvider<OpenRouterConfig, 'openrouter
       descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
       placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
     const base = createOpenRouter(config.apiKey, config.baseUrl)
-    return {
+    return withCustomHeaders({
       ...base,
       chat(model: string, options?: ChatRequestOptions) {
         const request = {
@@ -70,12 +73,12 @@ export const providerOpenRouterAI = defineProvider<OpenRouterConfig, 'openrouter
 
         return { ...request, reasoning: { effort: options.reasoning === 'enabled' ? 'medium' : 'none' } }
       },
-    }
+    }, config.headers)
   },
 
   extraMethods: {
     listModelCatalog: config => listModelCatalog(
-      { apiKey: config.apiKey, baseURL: config.baseUrl ?? 'https://openrouter.ai/api/v1/', headers: OPENROUTER_ATTRIBUTION_HEADERS },
+      { apiKey: config.apiKey, baseURL: config.baseUrl ?? 'https://openrouter.ai/api/v1/', headers: mergeRequestHeaders(OPENROUTER_ATTRIBUTION_HEADERS, config.headers) },
       { models: openRouterModels.filter(model => model.type === 'chat'), providerId: 'openrouter-ai', baseURL: 'https://openrouter.ai/api/v1/' },
     ),
   },

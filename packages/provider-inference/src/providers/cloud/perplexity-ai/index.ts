@@ -3,6 +3,7 @@ import type { ModelInfo } from '../../../types'
 import { createPerplexity } from '@xsai-ext/providers/create'
 import { z } from 'zod'
 
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../../headers'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
 import { defineProvider } from '../../registry'
@@ -14,6 +15,7 @@ const perplexityConfigSchema = z.object({
     .string('Base URL')
     .optional()
     .default('https://api.perplexity.ai/'),
+  headers: customHeadersSchema,
 })
 
 type PerplexityConfig = z.input<typeof perplexityConfigSchema>
@@ -40,9 +42,10 @@ export const providerPerplexityAI = defineProvider<PerplexityConfig, 'perplexity
       descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
       placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
-    return createPerplexity(config.apiKey, config.baseUrl)
+    return withCustomHeaders(createPerplexity(config.apiKey, config.baseUrl), config.headers)
   },
 
   validationRequiredWhen(config) {

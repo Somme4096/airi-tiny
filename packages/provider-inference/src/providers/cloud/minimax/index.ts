@@ -1,6 +1,7 @@
 import { createMinimax, createMinimaxCn } from '@xsai-ext/providers/create'
 import { z } from 'zod'
 
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../../headers'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
 import { defineProvider } from '../../registry'
@@ -12,6 +13,7 @@ const minimaxCnConfigSchema = z.object({
     .string('Base URL')
     .optional()
     .default('https://api.minimaxi.com/v1/'),
+  headers: customHeadersSchema,
 })
 
 type MinimaxCnConfig = z.input<typeof minimaxCnConfigSchema>
@@ -23,6 +25,7 @@ const minimaxGlobalConfigSchema = z.object({
     .string('Base URL')
     .optional()
     .default('https://api.minimax.io/v1/'),
+  headers: customHeadersSchema,
 })
 
 type MinimaxGlobalConfig = z.input<typeof minimaxGlobalConfigSchema>
@@ -49,9 +52,10 @@ export const providerMinimax = defineProvider<MinimaxCnConfig, 'minimax'>({
       descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
       placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
-    return createMinimaxCn(config.apiKey, config.baseUrl)
+    return withCustomHeaders(createMinimaxCn(config.apiKey, config.baseUrl), config.headers)
   },
 
   validationRequiredWhen(config) {
@@ -86,9 +90,10 @@ export const providerMinimaxGlobal = defineProvider<MinimaxGlobalConfig, 'minima
       descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
       placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
-    return createMinimax(config.apiKey, config.baseUrl)
+    return withCustomHeaders(createMinimax(config.apiKey, config.baseUrl), config.headers)
   },
 
   validationRequiredWhen(config) {

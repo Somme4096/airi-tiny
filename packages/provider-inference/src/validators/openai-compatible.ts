@@ -1,4 +1,4 @@
-import type { ProviderDefinition, ProviderExtraMethods, ProviderInstance } from '../types'
+import type { GenerationRequest, ProviderDefinition, ProviderExtraMethods, ProviderInstance } from '../types'
 
 import isNetworkError from 'is-network-error'
 
@@ -9,9 +9,10 @@ import { listModels } from '@xsai/model'
 import { message } from '@xsai/utils-chat'
 import { Mutex } from 'es-toolkit'
 
+import { mergeRequestHeaders } from '../headers'
 import { getGenerationProvider, isModelProvider, ProviderValidationCheck } from '../types'
 
-interface OpenAICompatibleValidationOptions<TConfig extends { apiKey?: string, baseUrl?: string, model?: string }> {
+interface OpenAICompatibleValidationOptions<TConfig extends { apiKey?: string, baseUrl?: string, headers?: Record<string, string>, model?: string }> {
   checks?: ProviderValidationCheck[]
   additionalHeaders?: Record<string, string>
   allowValidationWithoutModel?: boolean
@@ -71,7 +72,7 @@ function shouldSkipModelId(modelId: string): boolean {
   ].some(fragment => modelId.includes(fragment))
 }
 
-async function resolveModels<TConfig extends { apiKey?: string | null, baseUrl?: string | URL | null }>(
+async function resolveModels<TConfig extends { apiKey?: string | null, baseUrl?: string | URL | null, headers?: Record<string, string> }>(
   config: TConfig,
   provider: ProviderInstance,
   providerExtra: ProviderExtraMethods<TConfig> | undefined,
@@ -80,13 +81,13 @@ async function resolveModels<TConfig extends { apiKey?: string | null, baseUrl?:
     return providerExtra.listModels(config, provider)
   }
   if (!isModelProvider(provider)) {
-    return listModels({ baseURL: config.baseUrl!, apiKey: config.apiKey! })
+    return listModels({ baseURL: config.baseUrl!, apiKey: config.apiKey!, headers: config.headers })
   }
 
   return listModels(provider.model())
 }
 
-async function pickValidationModel<TConfig extends { apiKey?: string | null, baseUrl?: string | URL | null }>(
+async function pickValidationModel<TConfig extends { apiKey?: string | null, baseUrl?: string | URL | null, headers?: Record<string, string> }>(
   config: TConfig,
   provider: ProviderInstance,
   providerExtra: ProviderExtraMethods<TConfig> | undefined,
@@ -104,7 +105,7 @@ async function pickValidationModel<TConfig extends { apiKey?: string | null, bas
   }
 }
 
-export function createOpenAICompatibleValidators<TConfig extends { apiKey?: string, baseUrl?: string, model?: string }>(
+export function createOpenAICompatibleValidators<TConfig extends { apiKey?: string, baseUrl?: string, headers?: Record<string, string>, model?: string }>(
   options?: OpenAICompatibleValidationOptions<TConfig>,
 ): ProviderDefinition<TConfig>['validators'] {
   const checks = options?.checks ?? [ProviderValidationCheck.Connectivity, ProviderValidationCheck.ModelList]
@@ -138,15 +139,19 @@ export function createOpenAICompatibleValidators<TConfig extends { apiKey?: stri
       }
     }
 
-    const generation = getGenerationProvider(provider)?.generation(normalizedModel)
+    let generation: GenerationRequest | undefined
     try {
+      generation = getGenerationProvider(provider)?.generation(normalizedModel)
+      // The instance headers contain the custom headers and the provider's own request headers.
+      // They replace the validation headers of the same name.
+      const headers = mergeRequestHeaders(additionalHeaders, generation?.config.headers ?? config.headers)
       if (generation?.protocol === 'responses') {
         const result = responses({
           ...generation.config,
           input: 'ping',
           maxOutputTokens: 16,
           store: false,
-          headers: additionalHeaders,
+          headers,
         })
         await Promise.all([result.steps, result.input, result.usage, result.totalUsage])
         return { connectivityOk: true, chatOk: true }
@@ -154,7 +159,7 @@ export function createOpenAICompatibleValidators<TConfig extends { apiKey?: stri
       await generateText({
         apiKey: config.apiKey,
         baseURL: config.baseUrl!,
-        headers: additionalHeaders,
+        headers,
         model: normalizedModel,
         messages: message.messages(message.user('ping')),
         // NOTICE:
@@ -274,10 +279,10 @@ export function createOpenAICompatibleValidators<TConfig extends { apiKey?: stri
         try {
           const response = await fetch(modelsUrl, {
             method: 'GET',
-            headers: {
+            headers: mergeRequestHeaders({
               ...(config.apiKey ? { Authorization: `Bearer ${config.apiKey}` } : {}),
               ...additionalHeaders,
-            },
+            }, config.headers),
             signal: controller.signal,
           })
 

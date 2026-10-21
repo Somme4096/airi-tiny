@@ -3,6 +3,7 @@ import type { ChatRequestOptions } from '../../../types'
 import { createChatProvider, createEmbedProvider, createModelProvider, merge } from '@xsai-ext/providers/utils'
 import { z } from 'zod'
 
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../../headers'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
 import { defineProvider } from '../../registry'
@@ -14,6 +15,7 @@ const aihubmixConfigSchema = z.object({
     .string('Base URL')
     .optional()
     .default('https://aihubmix.com/v1/'),
+  headers: customHeadersSchema,
 })
 
 type AIHubMixConfig = z.input<typeof aihubmixConfigSchema>
@@ -42,6 +44,7 @@ export const providerAIHubMix = defineProvider<AIHubMixConfig, 'aihubmix'>({
       descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
       placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
     const provider = merge(
@@ -50,7 +53,7 @@ export const providerAIHubMix = defineProvider<AIHubMixConfig, 'aihubmix'>({
       createModelProvider({ apiKey: config.apiKey, baseURL: config.baseUrl! }),
     )
 
-    return {
+    return withCustomHeaders({
       ...provider,
       chat(model: string, options?: ChatRequestOptions) {
         const request = provider.chat(model)
@@ -59,7 +62,7 @@ export const providerAIHubMix = defineProvider<AIHubMixConfig, 'aihubmix'>({
 
         return { ...request, reasoningEffort: options.reasoning === 'enabled' ? 'medium' : 'none' }
       },
-    }
+    }, config.headers)
   },
 
   validationRequiredWhen(config) {

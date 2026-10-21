@@ -1,6 +1,7 @@
 import { createOpenAI } from '@xsai-ext/providers/create'
 import { z } from 'zod'
 
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../../headers'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
 import { defineProvider } from '../../registry'
@@ -12,6 +13,7 @@ const modelscopeConfigSchema = z.object({
     .string('Base URL')
     .optional()
     .default('https://api-inference.modelscope.cn/v1/'),
+  headers: customHeadersSchema,
 })
 
 type ModelscopeConfig = z.input<typeof modelscopeConfigSchema>
@@ -38,9 +40,10 @@ export const providerModelScope = defineProvider<ModelscopeConfig, 'modelscope'>
       descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
       placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
-    return createOpenAI(config.apiKey, config.baseUrl)
+    return withCustomHeaders(createOpenAI(config.apiKey, config.baseUrl), config.headers)
   },
 
   validationRequiredWhen(config) {

@@ -1,6 +1,7 @@
 import { createOpenAI } from '@xsai-ext/providers/create'
 import { z } from 'zod'
 
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../../headers'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
 import { defineProvider } from '../../registry'
@@ -12,6 +13,7 @@ const openPathsConfigSchema = z.object({
     .string('Base URL')
     .optional()
     .default('https://openpaths.io/v1'),
+  headers: customHeadersSchema,
 })
 
 type OpenPathsConfig = z.input<typeof openPathsConfigSchema>
@@ -37,9 +39,10 @@ export const providerOpenPaths = defineProvider<OpenPathsConfig, 'openpaths'>({
       descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
       placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
-    return createOpenAI(config.apiKey, config.baseUrl)
+    return withCustomHeaders(createOpenAI(config.apiKey, config.baseUrl), config.headers)
   },
 
   validationRequiredWhen(config) {

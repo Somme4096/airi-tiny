@@ -7,13 +7,14 @@ import type { Citation, Conversation, InputSegment, MessageSegment } from '../me
 import type { StreamEvent, StreamOptions } from '../types/llm'
 import type { ResolvedStep } from './request-context'
 
+import { mergeRequestHeaders } from '@proj-airi/provider-inference/headers'
 import { responses } from '@xsai-ext/responses'
 import { stepCountAtLeast } from '@xsai/shared-chat'
 
 import { renderSegmentText } from '../messages/render-context'
 import { projectInput, projectRound } from '../messages/turns'
 import { createGeneration } from './generation'
-import { createContinuationScope, mergeRequestHeaders, replaceProviderConfig, supportsTools } from './request-context'
+import { createContinuationScope, replaceProviderConfig, supportsTools } from './request-context'
 import { RequestSwitch } from './request-switch'
 import { toAiriStreamEvent } from './xsai-events'
 

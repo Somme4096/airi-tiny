@@ -1,6 +1,7 @@
 import { createChatProvider, createEmbedProvider, createModelProvider, merge } from '@xsai-ext/providers/utils'
 import { z } from 'zod'
 
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../../headers'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
 import { defineProvider } from '../../registry'
@@ -12,6 +13,7 @@ const ai302ConfigSchema = z.object({
     .string('Base URL')
     .optional()
     .default('https://api.302.ai/v1/'),
+  headers: customHeadersSchema,
 })
 
 type AI302Config = z.input<typeof ai302ConfigSchema>
@@ -39,13 +41,14 @@ export const provider302AI = defineProvider<AI302Config, '302-ai'>({
       descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
       placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
-    return merge(
+    return withCustomHeaders(merge(
       createChatProvider({ apiKey: config.apiKey, baseURL: config.baseUrl! }),
       createEmbedProvider({ apiKey: config.apiKey, baseURL: config.baseUrl! }),
       createModelProvider({ apiKey: config.apiKey, baseURL: config.baseUrl! }),
-    )
+    ), config.headers)
   },
 
   validationRequiredWhen(config) {

@@ -6,6 +6,7 @@ import { MODEL_REASONING_EXTEND_PARAMS, MODEL_REASONING_PARAM_LEVELS } from 'mod
 import { z } from 'zod'
 
 import { generationProtocolOptions, openAIProtocols, supportsOpenAIWebSearchEndpoint } from '../../../generation'
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../../headers'
 import { listModelCatalog } from '../../../model-catalog'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
@@ -20,6 +21,7 @@ const configSchema = z.object({
     .string('Base URL')
     .optional()
     .default('https://api.openai.com/v1'),
+  headers: customHeadersSchema,
 })
 
 type Config = z.input<typeof configSchema>
@@ -59,10 +61,11 @@ export const providerOpenAI = defineProvider<Config, 'openai'>({
       descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
       placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
     const provider = createOpenAI(config.apiKey, config.baseUrl)
-    return {
+    return withCustomHeaders({
       model: provider.model,
       generation(model: string, options?: ChatRequestOptions): GenerationRequest {
         const request = provider.chat(model)
@@ -92,12 +95,12 @@ export const providerOpenAI = defineProvider<Config, 'openai'>({
             }
         }
       },
-    }
+    }, config.headers)
   },
 
   extraMethods: {
     listModelCatalog: config => listModelCatalog(
-      { apiKey: config.apiKey, baseURL: config.baseUrl ?? 'https://api.openai.com/v1' },
+      { apiKey: config.apiKey, baseURL: config.baseUrl ?? 'https://api.openai.com/v1', headers: config.headers },
       { models: openaiChatModels, providerId: 'openai', baseURL: 'https://api.openai.com/v1' },
     ),
   },

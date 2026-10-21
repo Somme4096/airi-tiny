@@ -1,6 +1,7 @@
 import { createMistral } from '@xsai-ext/providers/create'
 import { z } from 'zod'
 
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../../headers'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
 import { defineProvider } from '../../registry'
@@ -12,6 +13,7 @@ const mistralConfigSchema = z.object({
     .string('Base URL')
     .optional()
     .default('https://api.mistral.ai/v1/'),
+  headers: customHeadersSchema,
 })
 
 type MistralConfig = z.input<typeof mistralConfigSchema>
@@ -38,9 +40,10 @@ export const providerMistralAI = defineProvider<MistralConfig, 'mistral-ai'>({
       descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
       placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
-    return createMistral(config.apiKey, config.baseUrl)
+    return withCustomHeaders(createMistral(config.apiKey, config.baseUrl), config.headers)
   },
 
   validationRequiredWhen(config) {

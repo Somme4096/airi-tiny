@@ -3,6 +3,7 @@ import type { ChatRequestOptions } from '../../../types'
 import { createGoogleGenerativeAI } from '@xsai-ext/providers/create'
 import { z } from 'zod'
 
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../../headers'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
 import { defineProvider } from '../../registry'
@@ -14,6 +15,7 @@ const googleGenerativeConfigSchema = z.object({
     .string('Base URL')
     .optional()
     .default('https://generativelanguage.googleapis.com/v1beta/openai/'),
+  headers: customHeadersSchema,
 })
 
 type GoogleGenerativeConfig = z.input<typeof googleGenerativeConfigSchema>
@@ -42,10 +44,11 @@ export const providerGoogleGenerativeAI = defineProvider<GoogleGenerativeConfig,
       descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
       placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
     const provider = createGoogleGenerativeAI(config.apiKey, config.baseUrl)
-    return {
+    return withCustomHeaders({
       ...provider,
       chat(model: string, options?: ChatRequestOptions) {
         const request = provider.chat(model)
@@ -54,7 +57,7 @@ export const providerGoogleGenerativeAI = defineProvider<GoogleGenerativeConfig,
 
         return { ...request, reasoningEffort: options.reasoning === 'enabled' ? 'medium' : 'none' }
       },
-    }
+    }, config.headers)
   },
 
   validationRequiredWhen(config) {

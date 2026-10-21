@@ -1,6 +1,7 @@
 import { createOpenAI } from '@xsai-ext/providers/create'
 import { z } from 'zod'
 
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../../headers'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
 import { defineProvider } from '../../registry'
@@ -14,6 +15,7 @@ const atlasCloudConfigSchema = z.object({
     .string('Base URL')
     .optional()
     .default(ATLASCLOUD_DEFAULT_BASE_URL),
+  headers: customHeadersSchema,
 })
 
 type AtlasCloudConfig = z.input<typeof atlasCloudConfigSchema>
@@ -40,9 +42,10 @@ export const providerAtlasCloud = defineProvider<AtlasCloudConfig, 'atlascloud'>
       descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
       placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
-    return createOpenAI(config.apiKey, config.baseUrl)
+    return withCustomHeaders(createOpenAI(config.apiKey, config.baseUrl), config.headers)
   },
 
   validationRequiredWhen(config) {

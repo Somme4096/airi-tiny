@@ -1,6 +1,7 @@
 import { createChatProvider, createEmbedProvider, createModelProvider, merge } from '@xsai-ext/providers/utils'
 import { z } from 'zod'
 
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../../headers'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
 import { defineProvider } from '../../registry'
@@ -13,6 +14,7 @@ const lmStudioConfigSchema = z.object({
     .string('Base URL')
     .optional()
     .default('http://localhost:1234/v1/'),
+  headers: customHeadersSchema,
 })
 
 type LMStudioConfig = z.input<typeof lmStudioConfigSchema>
@@ -40,13 +42,14 @@ export const providerLmStudio = defineProvider<LMStudioConfig, 'lm-studio'>({
       descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
       placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
-    return merge(
+    return withCustomHeaders(merge(
       createChatProvider({ apiKey: config.apiKey, baseURL: config.baseUrl! }),
       createEmbedProvider({ apiKey: config.apiKey, baseURL: config.baseUrl! }),
       createModelProvider({ apiKey: config.apiKey, baseURL: config.baseUrl! }),
-    )
+    ), config.headers)
   },
 
   validationRequiredWhen(config) {

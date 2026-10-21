@@ -3,6 +3,7 @@ import type { ChatRequestOptions } from '../../../types'
 import { createOllama } from '@xsai-ext/providers/create'
 import { z } from 'zod'
 
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../../headers'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
 import { defineProvider } from '../../registry'
@@ -15,8 +16,7 @@ const ollamaConfigSchema = z.object({
     .default('http://localhost:11434/v1/'),
   thinkingMode: z.enum(['auto', 'disable', 'enable', 'low', 'medium', 'high'])
     .default('auto'),
-  headers: z.record(z.string(), z.string())
-    .optional(),
+  headers: customHeadersSchema,
 })
 
 type OllamaConfig = z.input<typeof ollamaConfigSchema>
@@ -112,18 +112,12 @@ export const providerOllama = defineProvider<OllamaConfig, 'ollama'>({
           },
         ],
       }),
-    headers: ollamaConfigSchema.shape.headers
-      .meta({
-        labelLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.headers.label'),
-        descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.headers.description'),
-        section: 'advanced',
-        type: 'key-values',
-      }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
     const baseProvider = createOllama('', config.baseUrl)
 
-    return {
+    return withCustomHeaders({
       ...baseProvider,
       chat(model: string, options?: ChatRequestOptions) {
         const chatOptions = baseProvider.chat(model)
@@ -141,7 +135,7 @@ export const providerOllama = defineProvider<OllamaConfig, 'ollama'>({
 
         return { ...chatOptions, reasoningEffort }
       },
-    }
+    }, config.headers)
   },
   validationRequiredWhen: () => true,
   validators: {

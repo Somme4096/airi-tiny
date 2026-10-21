@@ -4,6 +4,7 @@ import { createOpenAI } from '@xsai-ext/providers/create'
 import { z } from 'zod'
 
 import { compatibleProtocols, generationProtocolOptions } from '../../../generation'
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../../headers'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
 import { defineProvider } from '../../registry'
@@ -17,6 +18,7 @@ const configSchema = z.object({
     .string('Base URL')
     .optional()
     .default('https://api.openai.com/v1'),
+  headers: customHeadersSchema,
 })
 
 type Config = z.input<typeof configSchema>
@@ -50,10 +52,11 @@ export const providerOpenAICompatible = defineProvider<Config, 'openai-compatibl
       descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
       placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
     const provider = createOpenAI(config.apiKey ?? '', config.baseUrl)
-    return {
+    return withCustomHeaders({
       model: provider.model,
       generation(model: string): GenerationRequest {
         const request = provider.chat(model)
@@ -64,7 +67,7 @@ export const providerOpenAICompatible = defineProvider<Config, 'openai-compatibl
             return { protocol: 'chat-completions', config: request }
         }
       },
-    }
+    }, config.headers)
   },
 
   validationRequiredWhen(config) {

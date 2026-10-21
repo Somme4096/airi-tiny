@@ -3,6 +3,7 @@ import type { ChatRequestOptions, ModelInfo } from '../../types'
 import { createOpenAI } from '@xsai-ext/providers/create'
 import { z } from 'zod'
 
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../headers'
 import { ProviderValidationCheck } from '../../types'
 import { createOpenAICompatibleValidators } from '../../validators'
 import { defineProvider } from '../registry'
@@ -12,6 +13,7 @@ const arkProviderConfigSchema = z.object({
     .string('API Key'),
   baseUrl: z
     .string('Base URL'),
+  headers: customHeadersSchema,
 })
 
 interface ArkModelSpec {
@@ -80,12 +82,13 @@ export function createArkChatProviderDefinition<const TId extends string>(option
         descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
         placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
       }),
+      headers: customHeadersField({ t }),
     }),
     createProvider(config) {
       const provider = createOpenAI(config.apiKey ?? '', config.baseUrl ?? defaultBaseUrl)
       const originalChat = provider.chat.bind(provider)
 
-      return {
+      return withCustomHeaders({
         ...provider,
         chat(model: string, requestOptions?: ChatRequestOptions) {
           const request = originalChat(stripModelPrefix(model, modelPrefix))
@@ -94,7 +97,7 @@ export function createArkChatProviderDefinition<const TId extends string>(option
 
           return { ...request, thinking: { type: requestOptions.reasoning } }
         },
-      }
+      }, config.headers)
     },
 
     extraMethods: {

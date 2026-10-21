@@ -3,6 +3,7 @@ import type { ModelInfo } from '../../../types'
 import { createChatProvider, createModelProvider, merge } from '@xsai-ext/providers/utils'
 import { z } from 'zod'
 
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../../headers'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
 import { defineProvider } from '../../registry'
@@ -14,6 +15,7 @@ const anthropicConfigSchema = z.object({
     .string('Base URL')
     .optional()
     .default('https://api.anthropic.com/v1/'),
+  headers: customHeadersSchema,
 })
 
 type AnthropicConfig = z.input<typeof anthropicConfigSchema>
@@ -60,9 +62,10 @@ export const providerAnthropic = defineProvider<AnthropicConfig, 'anthropic'>({
       descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
       placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
-    return createAnthropic(config.apiKey, config.baseUrl)
+    return withCustomHeaders(createAnthropic(config.apiKey, config.baseUrl), config.headers)
   },
 
   extraMethods: {

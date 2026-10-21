@@ -1,6 +1,7 @@
 import { createChatProvider, createModelProvider, createSpeechProvider, createTranscriptionProvider, merge } from '@xsai-ext/providers/utils'
 import { z } from 'zod'
 
+import { customHeadersField, customHeadersSchema, withCustomHeaders } from '../../../headers'
 import { ProviderValidationCheck } from '../../../types'
 import { createOpenAICompatibleValidators } from '../../../validators'
 import { defineProvider } from '../../registry'
@@ -12,6 +13,7 @@ const cometApiConfigSchema = z.object({
     .string('Base URL')
     .optional()
     .default('https://api.cometapi.com/v1/'),
+  headers: customHeadersSchema,
 })
 
 type CometApiConfig = z.input<typeof cometApiConfigSchema>
@@ -38,12 +40,13 @@ export const providerCometAPI = defineProvider<CometApiConfig, 'comet-api'>({
       descriptionLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.description'),
       placeholderLocalized: t('settings.pages.providers.catalog.edit.config.common.fields.field.base-url.placeholder'),
     }),
+    headers: customHeadersField({ t }),
   }),
   createProvider(config) {
-    return merge(
+    return withCustomHeaders(merge(
       createChatProvider({ apiKey: config.apiKey, baseURL: config.baseUrl! }),
       createModelProvider({ apiKey: config.apiKey, baseURL: config.baseUrl! }),
-    )
+    ), config.headers)
   },
 
   validationRequiredWhen(config) {
@@ -66,10 +69,10 @@ export const providerCometAPISpeech = defineProvider<CometApiConfig, 'comet-api-
   icon: 'i-lobe-icons:cometapi',
   createProviderConfig: providerCometAPI.createProviderConfig,
   createProvider(config) {
-    return merge(
+    return withCustomHeaders(merge(
       createModelProvider({ apiKey: config.apiKey, baseURL: config.baseUrl! }),
       createSpeechProvider({ apiKey: config.apiKey, baseURL: config.baseUrl! }),
-    )
+    ), config.headers)
   },
   validationRequiredWhen: config => Boolean(config.apiKey?.trim()),
   validators: createOpenAICompatibleValidators({ checks: [ProviderValidationCheck.ModelList] }),
@@ -97,7 +100,7 @@ export const providerCometAPITranscription = defineProvider<CometApiConfig, 'com
       ...transcription(model),
       ...extraOptions,
     })
-    return provider
+    return withCustomHeaders(provider, config.headers)
   },
   validationRequiredWhen: config => Boolean(config.apiKey?.trim()),
   validators: createOpenAICompatibleValidators({ checks: [ProviderValidationCheck.ModelList] }),

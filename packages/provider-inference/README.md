@@ -65,6 +65,28 @@ Explicitly enabling search sends the hosted tool on the official OpenAI endpoint
 Custom endpoints do not inherit this tool declaration. Model names never determine search support.
 Search uses the configured OpenAI key and does not require an AIRI login or Tavily key.
 
+## Custom headers
+
+Each OpenAI-compatible provider has a `headers` field in the advanced section of its settings.
+The user adds HTTP headers there as key and value rows.
+`createProvider` wraps the instance with `withCustomHeaders`.
+Chat, Responses, model listing, and the validation checks then send these headers.
+A custom header replaces a provider header of the same name. The name comparison ignores case.
+
+```ts
+const definition = getDefinedProvider('openai-compatible')
+const provider = await definition.createProvider({
+  baseUrl: 'https://gateway.example.com/v1',
+  headers: { 'X-Gateway-Team': 'airi' },
+})
+```
+
+To add the field to a new provider, add `customHeadersSchema` to its schema and `customHeadersField({ t })` to its settings schema.
+Then return `withCustomHeaders(instance, config.headers)` from `createProvider`.
+
+`@proj-airi/provider-inference/headers` exports only these helpers and `mergeRequestHeaders`.
+Use it when a package needs the header rules without the provider registry, for example `@proj-airi/core-agent`.
+
 ## Model metadata
 
 OpenAI and OpenRouter use their provider-specific [model-bank](https://github.com/lobehub/lobehub/tree/canary/packages/model-bank) catalogs.

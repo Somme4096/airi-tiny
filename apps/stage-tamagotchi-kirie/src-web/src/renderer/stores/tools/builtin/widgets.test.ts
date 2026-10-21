@@ -6,10 +6,10 @@ import type { WidgetInvokers } from './widgets'
 import { execFile as execFileCallback } from 'node:child_process'
 import { promisify } from 'node:util'
 
+import { installStrictToolSchemaMatchers } from '@proj-airi/stage-ui/testing/strict-tool-schema'
 import { beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { canRenderExtensionUi, sanitizeExtensionUiRenderProps } from '../../../widgets/extension-ui/host'
-import { installStrictToolSchemaMatchers } from '../testing/strict-tool-schema'
 import { executeWidgetAction, normalizeComponentProps, widgetsTools } from './widgets'
 
 installStrictToolSchemaMatchers()

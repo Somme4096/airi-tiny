@@ -1,5 +1,5 @@
 import { tool } from '@xsai/tool'
-import { z } from 'zod'
+import { strictObject } from 'valibot'
 
 const tools = [
   tool({
@@ -12,7 +12,7 @@ const tools = [
         }, 1000)
       })
     },
-    parameters: z.object({}),
+    parameters: strictObject({}),
   }),
 ]
 

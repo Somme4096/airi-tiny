@@ -43,6 +43,7 @@
     "./libs": "./src/libs/index.ts",
     "./models/*": "./src/models/*.ts",
     "./services/*": "./src/services/*.ts",
+    "./testing/strict-tool-schema": "./src/testing/strict-tool-schema.ts",
     "./tools/mcp": "./src/tools/mcp.ts",
     "./tools/home-assistant": "./src/tools/home-assistant.ts",
     "./tools/icons": "./src/tools/icons.ts",

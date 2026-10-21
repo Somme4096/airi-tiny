@@ -1,8 +1,8 @@
 import type { WeatherReport } from './weather-api'
 
+import { installStrictToolSchemaMatchers } from '@proj-airi/stage-ui/testing/strict-tool-schema'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { installStrictToolSchemaMatchers } from '../testing/strict-tool-schema'
 import { weatherTools } from './weather'
 import { fetchWeather, geocodeCity, mapWmoCode } from './weather-api'
 

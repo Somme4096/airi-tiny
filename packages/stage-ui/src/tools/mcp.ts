@@ -2,7 +2,7 @@ import type { Tool } from '@xsai/shared-chat'
 
 import { errorMessageFromValue } from '@proj-airi/stage-shared'
 import { tool } from '@xsai/tool'
-import { z } from 'zod'
+import { description, pipe, strictObject, string } from 'valibot'
 
 /**
  * Describes an MCP tool that can be exposed to the shared LLM runtime.
@@ -104,7 +104,8 @@ export function createMcpTools(runtime: McpToolRuntime): Array<Promise<Tool>> {
           return ''
         }
       },
-      parameters: z.object({}).strict(),
+      // Valibot writes `required: []` for an empty object. Strict tool calls need the list even without properties.
+      parameters: strictObject({}),
     }),
     tool({
       name: 'builtIn_mcpCallTool',
@@ -121,12 +122,12 @@ export function createMcpTools(runtime: McpToolRuntime): Array<Promise<Tool>> {
           }
         }
       },
-      // NOTICE: `arguments` is z.string() (JSON) because z.unknown() produces `{}` (no `type` key)
-      // and z.record() emits `propertyNames`, both rejected by OpenAI.
-      parameters: z.object({
-        name: z.string().describe('Tool name in "<serverName>::<toolName>" format'),
-        arguments: z.string().describe('JSON object of tool arguments, e.g. {"query":"hello","limit":10}'),
-      }).strict(),
+      // NOTICE: `arguments` is a JSON string because an unknown value produces `{}` (no `type` key)
+      // and a record emits `propertyNames`, both rejected by OpenAI.
+      parameters: strictObject({
+        name: pipe(string(), description('Tool name in "<serverName>::<toolName>" format')),
+        arguments: pipe(string(), description('JSON object of tool arguments, e.g. {"query":"hello","limit":10}')),
+      }),
     }),
   ]
 }

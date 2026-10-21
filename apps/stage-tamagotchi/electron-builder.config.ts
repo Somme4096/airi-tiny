@@ -4,7 +4,7 @@ import type { Configuration } from 'electron-builder'
 
 import { execSync } from 'node:child_process'
 
-import { isMacOS } from 'std-env'
+import { env, isMacOS } from 'std-env'
 
 function hasXcode26OrAbove() {
   if (!isMacOS)
@@ -39,6 +39,9 @@ else {
   // machine-readable output such as `BUNDLE_NAME=$(...)`.
   console.warn('[electron-builder/config] Xcode version is 26 or above. Using .icon format for macOS app icon.')
 }
+
+// CI sets AIRI_MAC_ADHOC_SIGN when Apple signing secrets are missing, so Apple Silicon builds still launch.
+const useMacAdHocSigning = env.AIRI_MAC_ADHOC_SIGN === 'true'
 
 export default {
   appId: 'ai.moeru.airi',
@@ -123,7 +126,7 @@ export default {
     name: 'ai.moeru.airi',
     main: 'out/main/index.js',
     homepage: 'https://airi.moeru.ai/docs/',
-    repository: 'https://github.com/moeru-ai/airi',
+    repository: 'https://github.com/Somme4096/airi-tiny',
     license: 'MIT',
   },
   win: {
@@ -134,8 +137,8 @@ export default {
     // This prevents cross-arch lookups such as arm64 clients reading x64 metadata.
     publish: {
       provider: 'github',
-      owner: 'moeru-ai',
-      repo: 'airi',
+      owner: 'Somme4096',
+      repo: 'airi-tiny',
       channel: 'latest-${arch}',
     },
   },
@@ -156,8 +159,8 @@ export default {
     // to architecture-specific update feeds on macOS (for example: `latest-x64-mac.yml`, `latest-arm64-mac.yml`).
     publish: {
       provider: 'github',
-      owner: 'moeru-ai',
-      repo: 'airi',
+      owner: 'Somme4096',
+      repo: 'airi-tiny',
       // NOTICE: `channel: 'latest-${arch}'` matters because electron-builder expands
       // `${arch}` before it writes any publish metadata, and electron-updater later
       // reuses that expanded channel string when deciding which `*.yml` file to fetch.
@@ -234,9 +237,10 @@ export default {
     // Later on when you obtained one, you can set up the necessary certificates and provisioning
     // profiles to enable these security features.
     // hardenedRuntime: false,
-    hardenedRuntime: true,
+    hardenedRuntime: !useMacAdHocSigning,
     // notarize: false,
-    notarize: true,
+    notarize: !useMacAdHocSigning,
+    identity: useMacAdHocSigning ? '-' : undefined,
     executableName: 'airi',
     icon: useIconFormattedMacAppIcon ? 'icon.icon' : 'icon.icns',
   },
@@ -251,8 +255,8 @@ export default {
     // NOTICE: Same channel rule as Windows/macOS. Keep `${arch}` to avoid x64/arm64 feed collisions on Linux.
     publish: {
       provider: 'github',
-      owner: 'moeru-ai',
-      repo: 'airi',
+      owner: 'Somme4096',
+      repo: 'airi-tiny',
       channel: 'latest-${arch}',
     },
     category: 'Utility',

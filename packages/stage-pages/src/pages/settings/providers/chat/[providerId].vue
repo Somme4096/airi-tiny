@@ -7,6 +7,7 @@ import {
   ProviderBaseUrlInput,
   ProviderBasicSettings,
   ProviderGenerationSettings,
+  ProviderHeadersInput,
   ProviderSettingsContainer,
   ProviderSettingsLayout,
   ProviderValidationAlerts,
@@ -21,6 +22,7 @@ import { computedAsync } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { z } from 'zod'
 
 const route = useRoute('/settings/providers/chat/[providerId]')
 const routeProviderId = route.params.providerId
@@ -53,6 +55,15 @@ const baseUrl = computed({
   },
 })
 
+const headers = computed<Record<string, string> | undefined>({
+  get: () => providers.value[providerId]?.headers,
+  set: (value) => {
+    if (!providers.value[providerId])
+      providers.value[providerId] = {}
+    providers.value[providerId].headers = value
+  },
+})
+
 const thinkingMode = computed({
   get: () => providers.value[providerId]?.thinkingMode || 'auto',
   set: (value) => {
@@ -81,20 +92,20 @@ const {
   runManualTest,
 } = useProviderValidation(providerId)
 
-const apiKeyPlaceholder = computedAsync(async () => {
+// The page renders its fields by hand. The schema metadata selects the API key
+// placeholder and shows the headers input for providers that send custom headers.
+const providerSchemaShape = computedAsync(async () => {
   const definition = providerDefinition.value ?? getDefinedProvider(providerId)
-  if (!definition?.createProviderConfig)
-    return 'sk-...'
+  const schema = await definition?.createProviderConfig({ t })
+  return schema instanceof z.ZodObject ? schema.shape : undefined
+})
 
-  const schema = await definition.createProviderConfig({ t }) as any
-  const shape = typeof schema?.shape === 'function' ? schema.shape() : schema?.shape
-  const apiKeySchema = shape?.apiKey
-  if (!apiKeySchema)
-    return 'sk-...'
-
-  const meta = typeof apiKeySchema.meta === 'function' ? apiKeySchema.meta() : undefined
+const apiKeyPlaceholder = computed(() => {
+  const meta = providerSchemaShape.value?.apiKey?.meta()
   return typeof meta?.placeholderLocalized === 'string' ? meta.placeholderLocalized : 'sk-...'
-}, 'sk-...')
+})
+
+const supportsCustomHeaders = computed(() => providerSchemaShape.value?.headers?.meta()?.type === 'key-values')
 
 function goToModelSelection() {
   activeProvider.value = providerId
@@ -140,6 +151,8 @@ function goToModelSelection() {
             { label: t('settings.pages.providers.catalog.edit.config.common.fields.field.thinking-mode.options.enable'), value: 'enable' },
           ]"
         />
+
+        <ProviderHeadersInput v-if="supportsCustomHeaders" v-model="headers" />
       </ProviderAdvancedSettings>
 
       <ProviderValidationAlerts

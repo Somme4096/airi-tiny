@@ -2,8 +2,10 @@
 import type { RemovableRef } from '@vueuse/core'
 
 import {
+  ProviderAdvancedSettings,
   ProviderBaseUrlInput,
   ProviderBasicSettings,
+  ProviderHeadersInput,
   ProviderSettingsContainer,
   ProviderSettingsLayout,
   ProviderValidationAlerts,
@@ -25,6 +27,15 @@ const baseUrl = computed({
     if (!providers.value[providerId])
       providers.value[providerId] = {}
     providers.value[providerId].baseUrl = value
+  },
+})
+
+const headers = computed<Record<string, string> | undefined>({
+  get: () => providers.value[providerId]?.headers,
+  set: (value) => {
+    if (!providers.value[providerId])
+      providers.value[providerId] = {}
+    providers.value[providerId].headers = value
   },
 })
 
@@ -63,6 +74,10 @@ const {
           placeholder="http://localhost:1234/v1/"
         />
       </ProviderBasicSettings>
+
+      <ProviderAdvancedSettings :title="t('settings.pages.providers.common.section.advanced.title')">
+        <ProviderHeadersInput v-model="headers" />
+      </ProviderAdvancedSettings>
 
       <ProviderValidationAlerts
         :is-valid="isValid"

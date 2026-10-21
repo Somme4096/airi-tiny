@@ -6,6 +6,7 @@ import {
   ProviderAdvancedSettings,
   ProviderBaseUrlInput,
   ProviderBasicSettings,
+  ProviderHeadersInput,
   ProviderSettingsContainer,
   ProviderSettingsLayout,
   ProviderValidationAlerts,
@@ -13,9 +14,9 @@ import {
 import { useProviderValidation } from '@proj-airi/stage-ui/composables/use-provider-validation'
 import { useProviderConfigStore } from '@proj-airi/stage-ui/stores/providers/config'
 import { useProviderStore } from '@proj-airi/stage-ui/stores/providers/provider'
-import { FieldCombobox, FieldKeyValues } from '@proj-airi/ui'
+import { FieldCombobox } from '@proj-airi/ui'
 import { storeToRefs } from 'pinia'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 
 const providerId = 'ollama'
 const providersStore = useProviderStore()
@@ -49,7 +50,14 @@ const {
   runManualTest,
 } = useProviderValidation(providerId)
 
-const headers = ref<{ key: string, value: string }[]>(Object.entries(providers.value[providerId]?.headers || {}).map(([key, value]) => ({ key, value } as { key: string, value: string })) || [{ key: '', value: '' }])
+const headers = computed<Record<string, string> | undefined>({
+  get: () => providers.value[providerId]?.headers,
+  set: (value) => {
+    if (!providers.value[providerId])
+      providers.value[providerId] = {}
+    providers.value[providerId].headers = value
+  },
+})
 const thinkingMode = computed({
   get: () => providers.value[providerId]?.thinkingMode || 'auto',
   set: (value: string) => {
@@ -59,50 +67,12 @@ const thinkingMode = computed({
   },
 })
 
-function addKeyValue(headers: { key: string, value: string }[], key: string, value: string) {
-  if (!headers)
-    return
-
-  headers.push({ key, value })
-}
-
-function removeKeyValue(index: number, headers: { key: string, value: string }[]) {
-  if (!headers)
-    return
-
-  if (headers.length === 1) {
-    headers[0].key = ''
-    headers[0].value = ''
-  }
-  else {
-    headers.splice(index, 1)
-  }
-}
-
-watch(headers, (headers) => {
-  if (headers.length > 0 && (headers.at(-1)!.key !== '' || headers.at(-1)!.value !== '')) {
-    headers.push({ key: '', value: '' })
-  }
-  if (!providers.value[providerId])
-    return
-  providers.value[providerId].headers = headers.filter(header => header.key !== '').reduce((acc, header) => {
-    acc[header.key] = header.value
-    return acc
-  }, {} as Record<string, string>)
-}, {
-  deep: true,
-  immediate: true,
-})
-
 async function refetch() {
   try {
     const validationResult = await providersStore.validateProviderConfig(providerId, {
       baseUrl: baseUrl.value,
       thinkingMode: thinkingMode.value,
-      headers: headers.value.filter(header => header.key !== '').reduce((acc, header) => {
-        acc[header.key] = header.value
-        return acc
-      }, {} as Record<string, string>),
+      headers: headers.value,
     })
 
     if (!validationResult.valid) {
@@ -124,14 +94,6 @@ onMounted(async () => {
 
   // Initialize refs with current values
   baseUrl.value = providers.value[providerId]?.baseUrl || providerMetadata.value?.defaultConfig.baseUrl || ''
-
-  // Initialize headers if not already set
-  if (!providers.value[providerId]?.headers) {
-    providers.value[providerId].headers = {}
-  }
-  if (headers.value.length === 0) {
-    headers.value = [{ key: '', value: '' }]
-  }
 
   if (!providers.value[providerId].thinkingMode) {
     providers.value[providerId].thinkingMode = 'auto'
@@ -172,15 +134,7 @@ onMounted(async () => {
           ]"
         />
 
-        <FieldKeyValues
-          v-model="headers"
-          :label="t('settings.pages.providers.common.section.advanced.fields.field.headers.label')"
-          :description="t('settings.pages.providers.common.section.advanced.fields.field.headers.description')"
-          :key-placeholder="t('settings.pages.providers.common.section.advanced.fields.field.headers.key.placeholder')"
-          :value-placeholder="t('settings.pages.providers.common.section.advanced.fields.field.headers.value.placeholder')"
-          @add="(key: string, value: string) => addKeyValue(headers, key, value)"
-          @remove="(index: number) => removeKeyValue(index, headers)"
-        />
+        <ProviderHeadersInput v-model="headers" />
       </ProviderAdvancedSettings>
 
       <ProviderValidationAlerts

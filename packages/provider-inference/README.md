@@ -87,6 +87,9 @@ Then return `withCustomHeaders(instance, config.headers)` from `createProvider`.
 `@proj-airi/provider-inference/headers` exports only these helpers and `mergeRequestHeaders`.
 Use it when a package needs the header rules without the provider registry, for example `@proj-airi/core-agent`.
 
+OpenCode Go requires an `x-opencode-session` header on each generation request.
+The provider sends one random session ID for the life of the instance. A custom header with the same name replaces it.
+
 ## Model metadata
 
 OpenAI and OpenRouter use their provider-specific [model-bank](https://github.com/lobehub/lobehub/tree/canary/packages/model-bank) catalogs.

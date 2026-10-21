@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
 
+import { portableProviderDefinitions } from '.'
 import { compatibleProtocols, generationProtocolOptions, openAIProtocols } from '../generation'
-import { getGenerationProvider, isGenerationProvider, withReasoning } from '../types'
+import { getGenerationProvider, isGenerationProvider, isModelProvider, withReasoning } from '../types'
 import { providerOpenAI } from './cloud/openai'
 import { providerOpenAICompatible } from './cloud/openai-compatible'
+import { providerOpencodeGo } from './cloud/opencode-go'
 import { providerOpenRouterAI } from './cloud/openrouter-ai'
 
 describe('generation selection', () => {
@@ -114,4 +116,34 @@ it('omits unsupported reasoning controls for OpenAI models (PR #2477)', async ()
     expect(provider.generation('gpt-5', { reasoning: 'disabled' }).config).not.toHaveProperty(api === 'responses' ? 'reasoning' : 'reasoningEffort')
     expect(provider.generation('gpt-5.1', { reasoning: 'disabled' }).config).toHaveProperty(api === 'responses' ? 'reasoning.effort' : 'reasoningEffort', 'none')
   }
+})
+
+it('sends custom headers with each request of an OpenAI-compatible provider', async () => {
+  const definitionIds: string[] = []
+  for (const definition of portableProviderDefinitions) {
+    const schema = await definition.createProviderConfig({ t: key => key })
+    if (!(schema instanceof z.ZodObject) || schema.shape.headers?.meta()?.type !== 'key-values')
+      continue
+
+    definitionIds.push(definition.id)
+    const instance = await definition.createProvider({ apiKey: 'test', baseUrl: 'https://custom.test/v1', headers: { 'X-Custom': 'yes' } })
+    const requests = [getGenerationProvider(instance)?.generation('model').config, isModelProvider(instance) ? instance.model() : undefined]
+    for (const request of requests.filter(request => request !== undefined))
+      expect(request.headers, definition.id).toMatchObject({ 'x-custom': 'yes' })
+  }
+
+  expect(definitionIds).toEqual(expect.arrayContaining(['ollama', 'openai', 'openai-compatible', 'opencode-go', 'openrouter-ai']))
+})
+
+it('sends one OpenCode Go session ID that a custom header can replace', async () => {
+  const provider = getGenerationProvider(await providerOpencodeGo.createProvider({ apiKey: 'test' }))!
+  const request = provider.generation('glm-5.3')
+  expect(request).toMatchObject({
+    protocol: 'chat-completions',
+    config: { baseURL: 'https://opencode.ai/inference/go/v1/', headers: { 'x-opencode-session': expect.stringMatching(/^[\da-f-]{36}$/) } },
+  })
+  expect(provider.generation('kimi-k3').config.headers).toEqual(request.config.headers)
+
+  const custom = getGenerationProvider(await providerOpencodeGo.createProvider({ apiKey: 'test', headers: { 'X-Opencode-Session': 'mine' } }))!
+  expect(custom.generation('glm-5.3').config.headers).toEqual({ 'x-opencode-session': 'mine' })
 })

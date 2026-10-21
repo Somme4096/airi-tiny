@@ -1881,6 +1881,9 @@ pages:
       openai-compatible:
         description: OpenAI Compatible
         title: OpenAI Compatible
+      opencode-go:
+        description: opencode.ai
+        title: OpenCode Go
       nvidia:
         description: build.nvidia.com
         title: NVIDIA NIM

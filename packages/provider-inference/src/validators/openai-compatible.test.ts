@@ -3,6 +3,7 @@ import type { ProviderExtraMethods, ProviderInstance, ProviderTranslator } from 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { providerOpenAI } from '../providers/cloud/openai'
+import { providerOpencodeGo } from '../providers/cloud/opencode-go'
 import { ProviderValidationCheck } from '../types'
 import { createOpenAICompatibleValidators } from './openai-compatible'
 
@@ -246,5 +247,23 @@ describe('createOpenAICompatibleValidators', () => {
       max_completion_tokens: 16,
     }))
     expect(generateTextMock.mock.calls[0][0]).not.toHaveProperty('max_tokens')
+  })
+
+  it('sends custom headers and the OpenCode Go session ID in each check', async () => {
+    listModelsMock.mockResolvedValue([{ id: 'glm-5.3' }])
+    const goConfig = { apiKey: 'test-key', baseUrl: 'https://opencode.test/v1/', headers: { 'X-Custom': 'yes' } }
+    const goProvider = await providerOpencodeGo.createProvider(goConfig)
+    const validators = await Promise.all((providerOpencodeGo.validators?.validateProvider || []).map(create => create({ t: mockT })))
+
+    for (const validator of validators)
+      expect((await validator.validator(goConfig, goProvider, {}, { t: mockT })).valid, validator.id).toBe(true)
+
+    expect(fetchMock).toHaveBeenCalledWith('https://opencode.test/v1/models', expect.objectContaining({
+      headers: expect.objectContaining({ 'Authorization': 'Bearer test-key', 'x-custom': 'yes' }),
+    }))
+    expect(listModelsMock).toHaveBeenCalledWith(expect.objectContaining({ headers: expect.objectContaining({ 'x-custom': 'yes' }) }))
+    expect(generateTextMock).toHaveBeenCalledWith(expect.objectContaining({
+      headers: { 'x-custom': 'yes', 'x-opencode-session': expect.any(String) },
+    }))
   })
 })

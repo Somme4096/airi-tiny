@@ -65,10 +65,15 @@ describe('configure_wake_words tool', () => {
 
     expect(agentTool.function.description).toContain('AE1')
     expect(agentTool.function.description).not.toContain('<unk>')
+    // ROOT CAUSE:
+    //
+    // The word item was a plain object. `tool()` marks only the root and its direct properties
+    // as closed, so a strict Responses provider rejected the item without `additionalProperties: false`.
     expect(agentTool.function.parameters).toMatchObject({
       type: 'object',
       required: ['words'],
-      properties: { words: { items: { required: expect.arrayContaining(['text', 'pronunciations']) } } },
+      additionalProperties: false,
+      properties: { words: { items: { required: expect.arrayContaining(['text', 'pronunciations']), additionalProperties: false } } },
     })
   })
 })

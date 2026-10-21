@@ -1374,18 +1374,6 @@ pages:
   providers:
     catalog:
       edit:
-        config-id-not-found: Provider configuration not found.
-        definition-id-not-found: Provider definition not found.
-        actions:
-          more-options: More options
-          delete: Delete
-        validation:
-          failed:
-            title: Please check your provider settings, validation failed.
-            description: >-
-              You can still save the current configuration if you want to
-              proceed.
-            action: Save anyway
         config:
           loading: Loading provider settings...
           load-error: Failed to load provider settings.
@@ -1416,10 +1404,6 @@ pages:
                 headers:
                   label: Custom HTTP Headers
                   description: Add custom HTTP headers
-                  key:
-                    placeholder: Key
-                  value:
-                    placeholder: Value
                 thinking-mode:
                   label: Thinking Mode
                   description: >
@@ -1433,9 +1417,6 @@ pages:
                     medium: Medium
                     high: High
         validators:
-          actions:
-            validate: Validate
-          empty: No validation steps available.
           openai-compatible:
             check-config:
               title: Configuration
@@ -1451,11 +1432,6 @@ pages:
           prompt-api:
             check-availability:
               title: Availability
-          status:
-            validating: Validating...
-            valid: Passed
-            invalid: Errored
-          title: Checks
         providers:
           provider:
             ollama:

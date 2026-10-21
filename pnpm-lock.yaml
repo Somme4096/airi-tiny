@@ -363,9 +363,6 @@ catalogs:
     '@types/semver':
       specifier: ^7.8.0
       version: 7.8.0
-    '@types/splitpanes':
-      specifier: ^2.2.6
-      version: 2.2.6
     '@types/three':
       specifier: ^0.185.4
       version: 0.185.4
@@ -831,9 +828,6 @@ catalogs:
     simple-git-hooks:
       specifier: ^2.13.1
       version: 2.13.1
-    splitpanes:
-      specifier: ^4.1.2
-      version: 4.1.2
     sponsorkit:
       specifier: 17.1.0
       version: 17.1.0
@@ -1493,9 +1487,6 @@ importers:
       shiki:
         specifier: 'catalog:'
         version: 4.4.3
-      splitpanes:
-        specifier: 'catalog:'
-        version: 4.1.2(vue@3.5.41(typescript@6.0.3))
       three:
         specifier: 'catalog:'
         version: 0.185.1
@@ -1611,9 +1602,6 @@ importers:
       '@types/nprogress':
         specifier: 'catalog:'
         version: 0.2.3
-      '@types/splitpanes':
-        specifier: 'catalog:'
-        version: 2.2.6
       '@types/three':
         specifier: 'catalog:'
         version: 0.185.4
@@ -1956,9 +1944,6 @@ importers:
       shiki:
         specifier: 'catalog:'
         version: 4.4.3
-      splitpanes:
-        specifier: 'catalog:'
-        version: 4.1.2(vue@3.5.41(typescript@6.0.3))
       three:
         specifier: 'catalog:'
         version: 0.185.1
@@ -2110,9 +2095,6 @@ importers:
       '@types/semver':
         specifier: 'catalog:'
         version: 7.8.0
-      '@types/splitpanes':
-        specifier: 'catalog:'
-        version: 2.2.6
       '@types/three':
         specifier: 'catalog:'
         version: 0.185.4
@@ -2492,9 +2474,6 @@ importers:
       shiki:
         specifier: 'catalog:'
         version: 4.4.3
-      splitpanes:
-        specifier: 'catalog:'
-        version: 4.1.2(vue@3.5.41(typescript@6.0.3))
       three:
         specifier: 'catalog:'
         version: 0.185.1
@@ -2634,9 +2613,6 @@ importers:
       '@types/semver':
         specifier: 'catalog:'
         version: 7.8.0
-      '@types/splitpanes':
-        specifier: 'catalog:'
-        version: 2.2.6
       '@types/three':
         specifier: 'catalog:'
         version: 0.185.4
@@ -2895,9 +2871,6 @@ importers:
       shiki:
         specifier: 'catalog:'
         version: 4.4.3
-      splitpanes:
-        specifier: 'catalog:'
-        version: 4.1.2(vue@3.5.41(typescript@6.0.3))
       three:
         specifier: 'catalog:'
         version: 0.185.1
@@ -3010,9 +2983,6 @@ importers:
       '@types/nprogress':
         specifier: 'catalog:'
         version: 0.2.3
-      '@types/splitpanes':
-        specifier: 'catalog:'
-        version: 2.2.6
       '@types/three':
         specifier: 'catalog:'
         version: 0.185.4
@@ -4213,9 +4183,6 @@ importers:
       reka-ui:
         specifier: 'catalog:'
         version: 2.10.3(vue@3.5.41(typescript@6.0.3))
-      splitpanes:
-        specifier: 'catalog:'
-        version: 4.1.2(vue@3.5.41(typescript@6.0.3))
       unspeech:
         specifier: catalog:xsai
         version: 0.1.16
@@ -4250,9 +4217,6 @@ importers:
       '@types/audioworklet':
         specifier: 'catalog:'
         version: 0.0.100
-      '@types/splitpanes':
-        specifier: 'catalog:'
-        version: 2.2.6
       '@types/three':
         specifier: 'catalog:'
         version: 0.185.4
@@ -4581,9 +4545,6 @@ importers:
       shiki:
         specifier: 'catalog:'
         version: 4.4.3
-      splitpanes:
-        specifier: 'catalog:'
-        version: 4.1.2(vue@3.5.41(typescript@6.0.3))
       unified:
         specifier: 'catalog:'
         version: 11.0.5
@@ -4732,9 +4693,6 @@ importers:
       '@types/mdast':
         specifier: 'catalog:'
         version: 4.0.4
-      '@types/splitpanes':
-        specifier: 'catalog:'
-        version: 2.2.6
       '@types/unist':
         specifier: 'catalog:'
         version: 3.0.3
@@ -10470,9 +10428,6 @@ packages:
   '@types/slice-ansi@4.0.0':
     resolution: {integrity: sha512-+OpjSaq85gvlZAYINyzKpLeiFkSC4EsC6IIiT6v6TLSU5k5U83fHGj9Lel8oKEXM0HqgrMVCjXPDPVICtxF7EQ==}
 
-  '@types/splitpanes@2.2.6':
-    resolution: {integrity: sha512-3dV5sO1Ht74iER4jJU03mreL3f+Q2h47ZqXS6Sfbqc6hkCvsDrX1GA0NbYWRdNvZemPyTDzUoApWKeoGbALwkQ==}
-
   '@types/stats.js@0.17.4':
     resolution: {integrity: sha512-jIBvWWShCvlBqBNIZt0KAshWpvSjhkwkEu4ZUcASoAvhmrgAUI2t1dXrjSL4xXVLB4FznPrIsX3nKXFl/Dt4vA==}
 
@@ -11016,9 +10971,6 @@ packages:
 
   '@vue/compiler-dom@3.5.41':
     resolution: {integrity: sha512-oKacVfNglLvGjnS6BXOlGL7EyG2h8X03pqXCjzotRZUaXGjbrTJUnVAQjrCqUnS+lyu31nwQjZY/d817GmCnfw==}
-
-  '@vue/compiler-sfc@2.7.16':
-    resolution: {integrity: sha512-KWhJ9k5nXuNtygPU7+t1rX6baZeqOYLEforUPjgNDBnLicfHCoi48H87Q8XyLZOrNNsmhuwKqtpDQWjEFe6Ekg==}
 
   '@vue/compiler-sfc@3.5.41':
     resolution: {integrity: sha512-XJhip7R2wy6vX3knCxdZN4KracFaZUef58s1KYewqluedHIJaPIVfXoYT7MF1F8nCvv6k8bWWxDC8opMkg1VTQ==}
@@ -15735,11 +15687,6 @@ packages:
     resolution: {integrity: sha512-SxToR7P8Y2lWmv/kTzVLC1t/GDI2WGjMwNhLLE9qtH8Q13C+aEmuRlzDst4Up4s0Wc8sF2M+J57iB3cMLqftfg==}
     engines: {node: '>=6.0.0'}
 
-  prettier@2.8.8:
-    resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
-    engines: {node: '>=10.13.0'}
-    hasBin: true
-
   prettier@3.9.6:
     resolution: {integrity: sha512-OpN0zzVdiaiAhxpuuj5efpIS4sY9j7bY6uR5mnj5yPzGkdkjNKSJeUThPb60Jw29QuAZgA4o+/iB49kFiaBX6g==}
     engines: {node: '>=14'}
@@ -16477,11 +16424,6 @@ packages:
   split2@4.2.0:
     resolution: {integrity: sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==}
     engines: {node: '>= 10.x'}
-
-  splitpanes@4.1.2:
-    resolution: {integrity: sha512-frNchoCv7w0nMQEuaDGgMGMU6jv3NhN6bBGQVfCNgwJdVcYaRmi1dwYDjp7SifAoUFdiQjBRB254LJNidzo15Q==}
-    peerDependencies:
-      vue: ^3.2.0
 
   sponsorkit@17.1.0:
     resolution: {integrity: sha512-CWSI9pwCgkPpbxejsFYm4/N1oP33Zz2ux/BjbbyRw8F+kYVpoPne/yX6iYEyZHSILtXnvMhrw1Grf+AyfW6i9g==}
@@ -17882,10 +17824,6 @@ packages:
     hasBin: true
     peerDependencies:
       typescript: '>=5.0.0'
-
-  vue@2.7.16:
-    resolution: {integrity: sha512-4gCtFXaAA3zYZdTp5s4Hl2sozuySsgz4jy1EnpBHNfpMa9dK1ZCG7viqBPCwXtmgc8nHqUsAu3G4gtmXkkY3Sw==}
-    deprecated: Vue 2 has reached EOL and is no longer actively maintained. See https://v2.vuejs.org/eol/ for more details.
 
   vue@3.5.41:
     resolution: {integrity: sha512-2laE0p+aK+/AOPG/XL/WepOs/GlK755LJ1XECi9kDUrz1FKNw8rb2Xzlw9JS1rqEV55nb0ttsKxVlTCcd+R5cg==}
@@ -22858,10 +22796,6 @@ snapshots:
 
   '@types/slice-ansi@4.0.0': {}
 
-  '@types/splitpanes@2.2.6':
-    dependencies:
-      vue: 2.7.16
-
   '@types/stats.js@0.17.4': {}
 
   '@types/three@0.185.4':
@@ -23742,14 +23676,6 @@ snapshots:
     dependencies:
       '@vue/compiler-core': 3.5.41
       '@vue/shared': 3.5.41
-
-  '@vue/compiler-sfc@2.7.16':
-    dependencies:
-      '@babel/parser': 7.29.8
-      postcss: 8.5.26
-      source-map: 0.6.1
-    optionalDependencies:
-      prettier: 2.8.8
 
   '@vue/compiler-sfc@3.5.41':
     dependencies:
@@ -29430,9 +29356,6 @@ snapshots:
     dependencies:
       fast-diff: 1.3.0
 
-  prettier@2.8.8:
-    optional: true
-
   prettier@3.9.6: {}
 
   pretty-bytes@5.6.0: {}
@@ -30438,10 +30361,6 @@ snapshots:
   split-skip@0.0.2: {}
 
   split2@4.2.0: {}
-
-  splitpanes@4.1.2(vue@3.5.41(typescript@6.0.3)):
-    dependencies:
-      vue: 3.5.41(typescript@6.0.3)
 
   sponsorkit@17.1.0(patch_hash=f5887da52a29ae85732e01644d05c0c274231fe76b95aebeafbfab6dc4444f88):
     dependencies:
@@ -31905,11 +31824,6 @@ snapshots:
       '@volar/typescript': 2.4.28(typescript@6.0.3)
       '@vue/language-core': 3.3.11
       typescript: 6.0.3
-
-  vue@2.7.16:
-    dependencies:
-      '@vue/compiler-sfc': 2.7.16
-      csstype: 3.2.3
 
   vue@3.5.41(typescript@6.0.3):
     dependencies:

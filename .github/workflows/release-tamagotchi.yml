@@ -633,7 +633,7 @@ jobs:
   publish-distribution:
     name: Publish Distribution
     needs: build
-    if: ${{ github.event_name == 'release' }}
+    if: ${{ github.event_name == 'release' && github.repository == 'moeru-ai/airi' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:

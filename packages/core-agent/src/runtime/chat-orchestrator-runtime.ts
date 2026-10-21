@@ -9,6 +9,7 @@ import type { ChatHistoryItem, ChatInvokedSkill, ChatSlices, ChatStreamEventCont
 import type { LlmUsage, StreamEvent, StreamOptions } from '../types/llm'
 
 import { errorMessageFrom } from '@moeru/std'
+import { conversationHeaders, mergeRequestHeaders } from '@proj-airi/provider-inference'
 import { createQueue } from '@proj-airi/stream-kit'
 
 import { chatMessagesToTurns } from '../messages/chat-completions'
@@ -1052,7 +1053,10 @@ export function createChatOrchestratorRuntime(deps: ChatOrchestratorRuntimeDeps)
       await hooks.emitBeforeSendHooks(sendingMessage, streamingMessageContext)
 
       let fullText = ''
-      const headers = (options.providerConfig?.headers || {}) as Record<string, string>
+      const headers = mergeRequestHeaders(
+        (options.providerConfig?.headers || {}) as Record<string, string>,
+        activeProvider ? conversationHeaders(activeProvider, correlation.conversationId) : {},
+      )
 
       if (shouldAbort())
         return

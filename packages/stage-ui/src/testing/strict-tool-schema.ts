@@ -27,9 +27,22 @@ function sorted(values: string[]): string[] {
   return [...values].sort((left, right) => left.localeCompare(right))
 }
 
+function isObjectSchema(schema: JsonSchema): boolean {
+  const types = Array.isArray(schema.type) ? schema.type : [schema.type]
+  return types.includes('object') || schema.properties !== undefined
+}
+
 function collectSchemaIssues(schema: unknown, path: string, issues: StrictToolSchemaIssue[]): void {
   if (!isSchemaRecord(schema)) {
     return
+  }
+
+  // Strict tool calls close every object, also one without `properties`, such as a record or a free-form value.
+  if (isObjectSchema(schema) && schema.additionalProperties !== false) {
+    issues.push({
+      path,
+      message: '`additionalProperties` must be false on every object.',
+    })
   }
 
   if (schema.properties) {
@@ -55,13 +68,6 @@ function collectSchemaIssues(schema: unknown, path: string, issues: StrictToolSc
       })
     }
 
-    if (schema.additionalProperties !== false) {
-      issues.push({
-        path,
-        message: '`additionalProperties` must be false when `properties` is present.',
-      })
-    }
-
     for (const [key, value] of Object.entries(schema.properties)) {
       collectSchemaIssues(value, `${path}.${key}`, issues)
     }
@@ -78,6 +84,12 @@ function collectSchemaIssues(schema: unknown, path: string, issues: StrictToolSc
     const schemas = schema[unionKey]
     if (Array.isArray(schemas)) {
       schemas.forEach((item, index) => collectSchemaIssues(item, `${path}.${unionKey}[${index}]`, issues))
+    }
+  }
+
+  for (const definitionsKey of ['$defs', 'definitions'] as const) {
+    for (const [key, value] of Object.entries(schema[definitionsKey] ?? {})) {
+      collectSchemaIssues(value, `${path}.${definitionsKey}.${key}`, issues)
     }
   }
 }

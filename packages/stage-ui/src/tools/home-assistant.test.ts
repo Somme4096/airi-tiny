@@ -163,6 +163,26 @@ describe('home assistant tools', () => {
     expect(parameters.required).toContain('entity_id')
   })
 
+  // ROOT CAUSE:
+  //
+  // `domain` and `data` were optional. A strict tool call requires every property,
+  // so a Responses provider rejected the whole request. Null now stands for an omitted value.
+  it('requires every property, so strict tool calls accept the schemas', async () => {
+    const mounted = await tools(createClient())
+
+    for (const entry of mounted.values()) {
+      const parameters = entry.function.parameters as { properties: Record<string, unknown>, required?: string[], additionalProperties?: boolean }
+      expect(parameters.additionalProperties, entry.function.name).toBe(false)
+      expect(parameters.required, entry.function.name).toEqual(Object.keys(parameters.properties))
+    }
+
+    const callService = vi.fn(async () => [])
+    const listed = await tools(createClient({ callService, listEntities: vi.fn(async () => [{ entityId: 'light.kitchen', state: 'off', attributes: {} }]) }))
+    expect(JSON.parse(await execute(listed.get('home_assistant_list_entities'), { domain: null }) as string).entities).toHaveLength(1)
+    await execute(listed.get('home_assistant_call_service'), { domain: 'light', service: 'turn_on', entity_id: 'light.kitchen', data: null })
+    expect(callService).toHaveBeenCalledWith(expect.objectContaining({ data: undefined }), {})
+  })
+
   it('rejects service data that is not a JSON object', async () => {
     const callService = vi.fn(async () => [])
     const mounted = await tools(createClient({ callService }))

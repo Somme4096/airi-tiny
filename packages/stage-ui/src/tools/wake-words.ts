@@ -4,7 +4,7 @@ import type { useWakeWordsStore } from '../stores/wake-words'
 
 import { errorMessageFrom } from '@moeru/std'
 import { tool } from '@xsai/tool'
-import { array, description, minLength, object, pipe, string } from 'valibot'
+import { array, description, minLength, pipe, strictObject, string } from 'valibot'
 
 import { kwsVocabulary, kwsVocabularyModel } from '../libs/voice/kws-model'
 
@@ -35,8 +35,10 @@ export async function createWakeWordTool(options: { characterId: string, setWord
       `Use only these tokens: ${[...kwsVocabulary].join(' ')}.`,
       'If the result reports conflicts, explain in your own words that another character uses the same pronunciation, and ask the user which character must answer to it.',
     ].join(' '),
-    parameters: object({
-      words: pipe(array(object({
+    // Strict tool calls need `additionalProperties: false` on every object.
+    // `tool()` adds it only to the root and its direct properties, so the word item is a strict object too.
+    parameters: strictObject({
+      words: pipe(array(strictObject({
         text: pipe(string(), minLength(1), description('The written wake word, for example the character name.')),
         pronunciations: pipe(array(pipe(array(string()), minLength(1))), minLength(1), description('Each item is the complete token sequence of one pronunciation.')),
       })), description('The complete replacement list. Use an empty list to remove all wake words.')),

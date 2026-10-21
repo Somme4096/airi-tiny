@@ -141,6 +141,26 @@ Disabling a parameter keeps its slider value but omits it from chat requests.
 Previously saved values remain disabled until the user enables them. Explicit
 per-request overrides still take precedence over these settings.
 
+## Strict tool schemas
+
+A Responses provider sends each chat tool with `strict: true`. Strict tool calls reject the whole request when one tool schema breaks these rules:
+
+- Every object has `additionalProperties: false`, also an object in array items or in a union.
+- `required` lists every key in `properties`. Use a nullable type for a value that the model can omit.
+
+`tool()` from xsAI closes only the root object and its direct properties. Use strict objects for nested values.
+Valibot `strictObject({})` writes `required: []` for a tool without arguments. Zod does not.
+
+`src/tools/strict-schemas.test.ts` checks every tool in `src/tools`. When you add a tool, add it to that test.
+Application tests use the same matcher:
+
+```ts
+import { installStrictToolSchemaMatchers } from '@proj-airi/stage-ui/testing/strict-tool-schema'
+
+installStrictToolSchemaMatchers()
+expect(tool).toSatisfyStrictToolSchema()
+```
+
 ## Chat images
 
 Web and Electron composers share image drafts and previews. They accept PNG,

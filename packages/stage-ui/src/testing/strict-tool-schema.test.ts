@@ -56,6 +56,24 @@ describe('strict tool schema matchers', () => {
     expect(() => expect(tool).toSatisfyStrictToolSchema()).toThrow(/test_tool\.parameters.*mode/)
   })
 
+  it('reports an open object inside array items', () => {
+    const tool = createTool({
+      type: 'object',
+      properties: {
+        words: {
+          type: 'array',
+          items: { type: 'object', properties: { text: { type: 'string' } }, required: ['text'] },
+        },
+        extra: { type: 'object' },
+      },
+      required: ['words', 'extra'],
+      additionalProperties: false,
+    })
+
+    expect(() => expect(tool).toSatisfyStrictToolSchema()).toThrow(/test_tool\.parameters\.words\.items: `additionalProperties`/)
+    expect(() => expect(tool).toSatisfyStrictToolSchema()).toThrow(/test_tool\.parameters\.extra: `additionalProperties`/)
+  })
+
   /**
    * @example
    * expect([tool]).toSatisfyStrictToolSchemas()
